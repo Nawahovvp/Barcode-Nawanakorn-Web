@@ -615,14 +615,21 @@
     }
 
     @media print {
-      header.app-header,
-      .tabs,
-      .print-btn,
-      .spinner-container,
-      #appRoot {
-        display: none !important;
-      }
+  header.app-header,
+  .tabs,
+  .print-btn,
+  .spinner-container,
+  #appRoot {
+    display: none !important;
+  }
+#tab-barcode {
+    display: block !important;
+  }
 
+  /* ✅ ซ่อน tab Serial ตอน print (ไม่งั้นจะเกะกะกระดาษ) */
+  #tab-serial {
+    display: none !important;
+  }
       #printArea {
         display: block !important;
       }
@@ -640,7 +647,10 @@
         margin: 0;
       }
     }
-
+.container, .sticker, .label {
+    page-break-inside: avoid;
+  }
+  
     .delete-row-btn {
       border: 1px solid #fecaca;
       background: #fee2e2;
@@ -706,6 +716,189 @@
   background: #f3f4f6;
   color: #4b5563;
   font-weight: 500;
+}
+/* ===== ฉลาก Serial 80x100 mm (ใช้ตอน Print Serial) ===== */
+.container {
+  display: block;
+  width: 80mm;
+}
+.sticker {
+  width: 80mm;
+  height: 100mm;
+  display: flex;
+  flex-direction: column;
+  background: white;
+  box-sizing: border-box;
+  margin-bottom: 0;
+  position: relative;
+}
+.label {
+  width: 80mm;
+  height: 100mm;
+  box-sizing: border-box;
+  padding: 2mm;
+  padding-bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0;
+  position: relative;
+}
+.row {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  margin-bottom: 0;   /* เดิม 0.5mm ลดให้ชิด */
+  margin-top: 5mm;
+}
+
+
+
+/* คอลัมน์ซ้าย: QR + Barcode เรียงบน–ล่าง */
+.left-col-serial {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: 3mm;
+  margin-right: 2mm;
+}
+
+/* ทำ QR ให้เล็กลง */
+.qr {
+  width: 12mm;
+  height: 12mm;
+  margin: 0 0 1mm 0;
+}
+
+/* Barcode ใต้ QR ให้พอดีกับความกว้างของ QR */
+.barcode-in-text {
+  width: 12mm !important;
+  height: 6mm !important;
+  margin: 0;
+  background: white;
+}
+
+.text-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 50mm;
+  align-items: flex-end;   /* ชิดขวา */
+  margin-right: 3mm;       /* ระยะจากขอบขวา */
+  margin-top: 0;
+}
+
+.material {
+  font-size: 30px;
+  font-weight: bold;
+  text-align: right;
+  margin: 0;
+  line-height: 1.0;
+}
+
+
+
+.barcode-in-text {
+  width: 100% !important;
+  height: 8mm !important;
+  margin-top: 1mm;
+  background: white;
+}
+
+.description {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: left;
+  line-height: 1.3;
+  width: calc(100% - 3mm);
+  margin: 0 0 0 3mm;   /* 👉 เปลี่ยน margin-left เป็น 3mm, margin-top 0 ให้ชิดใต้ row/barcode */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-wrap: break-word;
+}
+.serial-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 0 0 0 3mm;   /* 👉 เปลี่ยน margin-left เป็น 3mm, margin-top 0 ให้ชิดใต้ description */
+  width: calc(100% - 3mm);
+}
+.serial-info {
+  display: flex;
+  flex-direction: row;    /* 👉 เรียงแนวนอน */
+  align-items: baseline;  /* 👉 ให้ตัวหนังสือสูงใกล้ ๆ กัน */
+  gap: 0px;               /* 👉 เว้นระยะระหว่าง S/N: กับเลข Serial */
+  width: 100%;
+}
+
+.serial-label {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: left;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.serial-text {
+  font-size: 24px;
+  font-weight: bold;
+  text-align: left;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.firstrear-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 1mm 0 0 3mm;
+  width: calc(100% - 4mm);
+}
+.firstrear-label {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: left;
+  margin: 0;
+  line-height: 1.2;
+}
+.firstrear-text {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: left;
+  margin: 0;
+  line-height: 1.2;
+}
+.location {
+  font-size: 25px;
+  font-weight: bold;
+  text-align: left;
+  margin-top: 0;
+  margin-bottom: 0;
+  line-height: 1.3;
+  margin-left: 3mm;
+}
+.lot-line {
+  font-size: 25px;
+  font-weight: bold;
+  margin-top: 0;
+  margin-bottom: 0;
+  line-height: 1.3;
+  margin-left: 3mm;
+  margin-right: 2mm;
+}
+.center-serial-qr {
+  position: absolute;
+  top: 65%;
+  left: 50%;
+  transform: translate(-50%, -30%);
+  width: 15mm;
+  height: 15mm;
+  margin-top: 2mm;
 }
 
   </style>
@@ -927,956 +1120,1217 @@
   <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
 
-  <script>
-    // ==== ระบบสลับแท็บ ====
-    const tabButtons = document.querySelectorAll('.tab-btn');
-    const tabPanels  = {
-      barcode: document.getElementById('tab-barcode'),
-      serial:  document.getElementById('tab-serial')
-    };
+ <script>
+  // ==== ระบบสลับแท็บ ====
+  const tabButtons = document.querySelectorAll('.tab-btn');
+  const tabPanels  = {
+    barcode: document.getElementById('tab-barcode'),
+    serial:  document.getElementById('tab-serial')
+  };
 
-    tabButtons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const target = btn.getAttribute('data-tab');
+  tabButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = btn.getAttribute('data-tab');
 
-        tabButtons.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
+      tabButtons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
 
-        Object.keys(tabPanels).forEach(key => {
-          tabPanels[key].classList.toggle('active', key === target);
-        });
+      Object.keys(tabPanels).forEach(key => {
+        tabPanels[key].classList.toggle('active', key === target);
+      });
+    });
+  });
+
+  const DATA_URL_0301 = 'https://opensheet.elk.sh/1x-B1xekpMm4p7fkKucvLjaewtp66uGIp8ZIxJJZAxMk/Sheet1';
+  const EMP_URL       = 'https://opensheet.elk.sh/1eqVoLsZxGguEbRCC5rdI4iMVtQ7CK4T3uXRdx8zE3uw/Employee';
+
+  let materialDB = [];
+  let employeeDB = [];
+  let nextIndex = 1;
+
+  const dataStatusEl = document.getElementById('dataStatus');
+  const rowStatusEl  = document.getElementById('rowStatus');
+  const tableBody    = document.querySelector('#entryTable tbody');
+
+  const empCodeInput = document.getElementById('empCodeInput');
+  const empStatus    = document.getElementById('empStatus');
+  const spinner      = document.getElementById('spinner');
+
+  let employeeCode = '';
+  let employeeName = '';
+  let employeeTeam = '';
+
+  async function loadMaterialData() {
+    try {
+      const res = await fetch(DATA_URL_0301);
+      const data = await res.json();
+      materialDB = data;
+      if (dataStatusEl) {
+        dataStatusEl.textContent = `โหลดฐานข้อมูล 0301 สำเร็จ (จำนวน ${materialDB.length} รายการ)`;
+      }
+    } catch (err) {
+      console.error(err);
+      if (dataStatusEl) {
+        dataStatusEl.textContent = 'โหลดฐานข้อมูล 0301 ไม่สำเร็จ กรุณารีหน้าใหม่';
+      }
+    }
+  }
+
+  async function loadEmployeeData() {
+    try {
+      const res = await fetch(EMP_URL);
+      const data = await res.json();
+      employeeDB = data;
+      empStatus.textContent = `โหลดข้อมูลพนักงานสำเร็จ (จำนวน ${employeeDB.length} รายการ)`;
+    } catch (err) {
+      console.error(err);
+      empStatus.textContent = 'โหลดข้อมูลพนักงานไม่สำเร็จ กรุณารีหน้าใหม่';
+    }
+  }
+
+  function normalizeMaterialCode(raw) {
+    if (!raw) return '';
+    const trimmed = String(raw).trim();
+    const len = trimmed.length;
+
+    if (len === 3)  return '30000' + trimmed;
+    if (len === 4)  return '3000'  + trimmed;
+    if (len === 5)  return '300'   + trimmed;
+    return trimmed;
+  }
+
+  function findMaterialInfo(materialCode) {
+    if (!materialCode) return null;
+
+    const m = materialDB.find(row => {
+      const mat = row.Material || row.MATERIAL || row.material || row['Material Code'];
+      return mat && String(mat).trim() === String(materialCode).trim();
+    });
+
+    if (!m) return null;
+
+    const description =
+      m['Material description'] ||
+      m['material description'] ||
+      m['MATERIAL DESCRIPTION'] ||
+      '';
+
+    const storageBin =
+      m['Storage bin'] ||
+      m['STORAGE BIN'] ||
+      m.StorageBin ||
+      m['Storage Bin'] ||
+      '';
+
+    const unrestricted =
+      m['Unrestricted'] ||
+      m['unrestricted'] ||
+      m['UNRESTRICTED'] ||
+      m['Unrestrict'] ||
+      '';
+
+    return { description, storageBin, unrestricted };
+  }
+
+  function findEmployeeById(id) {
+    if (!id) return null;
+    const trimmed = String(id).trim();
+
+    return employeeDB.find(row => {
+      const rec = row.IDRec || row.idrec || row.Id || row.ID;
+      return rec && String(rec).trim() === trimmed;
+    });
+  }
+
+  function fillRowByMaterial(tr) {
+    const inputs = tr.querySelectorAll('input');
+    const [inputMat, inputDesc, inputBin, inputRemain, inputQty, inputPack] = inputs;
+
+    let matValue = inputMat.value.trim();
+    if (!matValue) {
+      rowStatusEl.textContent = 'กรุณากรอก Material';
+      return false;
+    }
+
+    const normalized = normalizeMaterialCode(matValue);
+    inputMat.value = normalized;
+
+    const info = findMaterialInfo(normalized);
+
+    if (!info || !info.description) {
+      inputDesc.value   = '';
+      inputBin.value    = '';
+      inputRemain.value = '';
+      rowStatusEl.innerHTML =
+        `<span class="not-found">ไม่พบ Material หรือไม่มี Description: ${normalized} กรุณากรอกใหม่</span>`;
+      inputMat.value = '';
+      inputMat.focus();
+      return false;
+    }
+
+    inputDesc.value   = info.description || '';
+    inputBin.value    = info.storageBin || '';
+    inputRemain.value = info.unrestricted || '';
+
+    rowStatusEl.textContent = ''; // ไม่ต้องโชว์ข้อความดึงสำเร็จแล้ว
+    return true;
+  }
+
+  function addNewRow() {
+    const tr = document.createElement('tr');
+
+    // ปุ่มลบ
+    const tdDelete = document.createElement('td');
+    const delBtn = document.createElement('button');
+    delBtn.type = 'button';
+    delBtn.className = 'delete-row-btn';
+    delBtn.textContent = 'ลบ';
+    delBtn.addEventListener('click', () => {
+      tr.remove();
+      updateRowIndices();
+
+      const rows = tableBody.querySelectorAll('tr');
+      if (rows.length === 0) {
+        nextIndex = 1;
+        addNewRow();
+      }
+    });
+    tdDelete.appendChild(delBtn);
+    tr.appendChild(tdDelete);
+
+    // ลำดับ
+    const tdIndex = document.createElement('td');
+    tdIndex.className = 'index-cell';
+    tdIndex.textContent = nextIndex;
+    tr.appendChild(tdIndex);
+
+    // Material
+    const tdMat = document.createElement('td');
+    const inputMat = document.createElement('input');
+    inputMat.type = 'text';
+    inputMat.placeholder = 'กรอก Material หรือสแกนบาร์โค้ด';
+    tdMat.appendChild(inputMat);
+    tr.appendChild(tdMat);
+
+    // Description
+    const tdDesc = document.createElement('td');
+    const inputDesc = document.createElement('input');
+    inputDesc.type = 'text';
+    inputDesc.readOnly = true;
+    tdDesc.appendChild(inputDesc);
+    tr.appendChild(tdDesc);
+
+    // Storage bin
+    const tdBin = document.createElement('td');
+    const inputBin = document.createElement('input');
+    inputBin.type = 'text';
+    inputBin.readOnly = true;
+    tdBin.appendChild(inputBin);
+    tr.appendChild(tdBin);
+
+    // คงเหลือ
+    const tdRemain = document.createElement('td');
+    const inputRemain = document.createElement('input');
+    inputRemain.type = 'text';
+    inputRemain.readOnly = true;
+    tdRemain.appendChild(inputRemain);
+    tr.appendChild(tdRemain);
+
+    // จำนวน
+    const tdQty = document.createElement('td');
+    const inputQty = document.createElement('input');
+    inputQty.type = 'number';
+    inputQty.min = '1';
+    inputQty.placeholder = '1';
+    inputQty.value = 1;
+    tdQty.appendChild(inputQty);
+    tr.appendChild(tdQty);
+
+    // Pack
+    const tdPack = document.createElement('td');
+    const inputPack = document.createElement('input');
+    inputPack.type = 'number';
+    inputPack.min = '1';
+    inputPack.placeholder = '1';
+    inputPack.value = 1;
+    tdPack.appendChild(inputPack);
+    tr.appendChild(tdPack);
+
+    inputMat.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        const ok = fillRowByMaterial(tr);
+        if (ok) {
+          inputQty.focus();
+          inputQty.select();
+        }
+      }
+    });
+
+    inputQty.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        if (!inputMat.value.trim() || !inputDesc.value.trim()) {
+          rowStatusEl.textContent = 'กรุณากรอก Material ให้ถูกต้องก่อน';
+          inputMat.focus();
+          return;
+        }
+        nextIndex++;
+        addNewRow();
+        updateRowIndices();
+      }
+    });
+
+    tableBody.appendChild(tr);
+    inputMat.focus();
+  }
+
+  if (empCodeInput) {
+    empCodeInput.addEventListener('input', () => {
+      const code = empCodeInput.value.trim();
+      employeeCode = code;
+
+      if (!code) {
+        empStatus.textContent = 'กรุณากรอกรหัสพนักงาน';
+        employeeName = '';
+        employeeTeam = '';
+        return;
+      }
+
+      const emp = findEmployeeById(code);
+      if (!emp) {
+        empStatus.innerHTML =
+          `<span class="not-found">ไม่พบรหัสพนักงาน: ${code}</span>`;
+        employeeName = '';
+        employeeTeam = '';
+        return;
+      }
+
+      const name = emp.Name || emp.NAME || emp['Employee Name'] || '';
+      const team = emp.Team || emp.TEAM || emp['Team Name'] || '';
+      employeeName = name;
+      employeeTeam = team;
+      empStatus.textContent =
+        `รหัสพนักงาน ${code} : ${name} (${team})`;
+
+      const firstMat = document.querySelector('#entryTable tbody tr:first-child input');
+      if (firstMat) {
+        firstMat.focus();
+        firstMat.select();
+      }
+    });
+  }
+
+  function updateRowIndices() {
+    const rows = tableBody.querySelectorAll('tr');
+    let idx = 1;
+    rows.forEach(tr => {
+      const indexCell = tr.querySelector('td.index-cell');
+      if (indexCell) {
+        indexCell.textContent = idx++;
+      }
+    });
+    nextIndex = idx;
+  }
+
+  function collectPrintData() {
+    const rows = Array.from(tableBody.querySelectorAll('tr'));
+    const data = [];
+
+    rows.forEach(tr => {
+      const inputs = tr.querySelectorAll('input');
+      if (inputs.length < 6) return;
+
+      const [inputMat, inputDesc, inputBin, inputRemain, inputQty, inputPack] = inputs;
+      const material = inputMat.value.trim();
+      if (!material) return;
+
+      const qty = parseInt(inputQty.value, 10) || 1;
+
+      data.push({
+        Material:   material,
+        จำนวน:      qty,
+        Pack:       inputPack.value || '',
+        IDช่าง:     employeeCode || '',
+        Serial:     '-',
+        Description:inputDesc.value || '',
+        Storagebin: inputBin.value || '',
+        ชื่อช่าง:   employeeName || '',
+        Unit:       'pc',
+        แผนก:       employeeTeam || ''
       });
     });
 
-    const DATA_URL_0301 = 'https://opensheet.elk.sh/1x-B1xekpMm4p7fkKucvLjaewtp66uGIp8ZIxJJZAxMk/Sheet1';
-    const EMP_URL       = 'https://opensheet.elk.sh/1eqVoLsZxGguEbRCC5rdI4iMVtQ7CK4T3uXRdx8zE3uw/Employee';
-
-    let materialDB = [];
-    let employeeDB = [];
-    let nextIndex = 1;
-
-    const dataStatusEl = document.getElementById('dataStatus');
-    const rowStatusEl  = document.getElementById('rowStatus');
-    const tableBody    = document.querySelector('#entryTable tbody');
-
-    const empCodeInput = document.getElementById('empCodeInput');
-    const empStatus    = document.getElementById('empStatus');
-    const spinner      = document.getElementById('spinner');
-
-    let employeeCode = '';
-    let employeeName = '';
-    let employeeTeam = '';
-
-    async function loadMaterialData() {
-      try {
-        const res = await fetch(DATA_URL_0301);
-        const data = await res.json();
-        materialDB = data;
-        if (dataStatusEl) {
-          dataStatusEl.textContent = `โหลดฐานข้อมูล 0301 สำเร็จ (จำนวน ${materialDB.length} รายการ)`;
-        }
-      } catch (err) {
-        console.error(err);
-        if (dataStatusEl) {
-          dataStatusEl.textContent = 'โหลดฐานข้อมูล 0301 ไม่สำเร็จ กรุณารีหน้าใหม่';
-        }
-      }
-    }
-
-    async function loadEmployeeData() {
-      try {
-        const res = await fetch(EMP_URL);
-        const data = await res.json();
-        employeeDB = data;
-        empStatus.textContent = `โหลดข้อมูลพนักงานสำเร็จ (จำนวน ${employeeDB.length} รายการ)`;
-      } catch (err) {
-        console.error(err);
-        empStatus.textContent = 'โหลดข้อมูลพนักงานไม่สำเร็จ กรุณารีหน้าใหม่';
-      }
-    }
-
-    function normalizeMaterialCode(raw) {
-      if (!raw) return '';
-      const trimmed = String(raw).trim();
-      const len = trimmed.length;
-
-      if (len === 3)  return '30000' + trimmed;
-      if (len === 4)  return '3000'  + trimmed;
-      if (len === 5)  return '300'   + trimmed;
-      return trimmed;
-    }
-
-    function findMaterialInfo(materialCode) {
-      if (!materialCode) return null;
-
-      const m = materialDB.find(row => {
-        const mat = row.Material || row.MATERIAL || row.material || row['Material Code'];
-        return mat && String(mat).trim() === String(materialCode).trim();
-      });
-
-      if (!m) return null;
-
-      const description =
-        m['Material description'] ||
-        m['material description'] ||
-        m['MATERIAL DESCRIPTION'] ||
-        '';
-
-      const storageBin =
-        m['Storage bin'] ||
-        m['STORAGE BIN'] ||
-        m.StorageBin ||
-        m['Storage Bin'] ||
-        '';
-
-      const unrestricted =
-        m['Unrestricted'] ||
-        m['unrestricted'] ||
-        m['UNRESTRICTED'] ||
-        m['Unrestrict'] ||
-        '';
-
-      return { description, storageBin, unrestricted };
-    }
-
-    function findEmployeeById(id) {
-      if (!id) return null;
-      const trimmed = String(id).trim();
-
-      return employeeDB.find(row => {
-        const rec = row.IDRec || row.idrec || row.Id || row.ID;
-        return rec && String(rec).trim() === trimmed;
-      });
-    }
-
-    function fillRowByMaterial(tr) {
-      const inputs = tr.querySelectorAll('input');
-      const [inputMat, inputDesc, inputBin, inputRemain, inputQty, inputPack] = inputs;
-
-      let matValue = inputMat.value.trim();
-      if (!matValue) {
-        rowStatusEl.textContent = 'กรุณากรอก Material';
-        return false;
-      }
-
-      const normalized = normalizeMaterialCode(matValue);
-      inputMat.value = normalized;
-
-      const info = findMaterialInfo(normalized);
-
-      if (!info || !info.description) {
-        inputDesc.value   = '';
-        inputBin.value    = '';
-        inputRemain.value = '';
-        rowStatusEl.innerHTML =
-          `<span class="not-found">ไม่พบ Material หรือไม่มี Description: ${normalized} กรุณากรอกใหม่</span>`;
-        inputMat.value = '';
-        inputMat.focus();
-        return false;
-      }
-
-      inputDesc.value   = info.description || '';
-      inputBin.value    = info.storageBin || '';
-      inputRemain.value = info.unrestricted || '';
-
-      rowStatusEl.textContent = `ดึงข้อมูล Material ${normalized} สำเร็จ`;
-      return true;
-    }
-
-    function addNewRow() {
-      const tr = document.createElement('tr');
-
-      // ปุ่มลบ
-      const tdDelete = document.createElement('td');
-      const delBtn = document.createElement('button');
-      delBtn.type = 'button';
-      delBtn.className = 'delete-row-btn';
-      delBtn.textContent = 'ลบ';
-      delBtn.addEventListener('click', () => {
-        tr.remove();
-        updateRowIndices();
-
-        const rows = tableBody.querySelectorAll('tr');
-        if (rows.length === 0) {
-          nextIndex = 1;
-          addNewRow();
-        }
-      });
-      tdDelete.appendChild(delBtn);
-      tr.appendChild(tdDelete);
-
-      // ลำดับ
-      const tdIndex = document.createElement('td');
-      tdIndex.className = 'index-cell';
-      tdIndex.textContent = nextIndex;
-      tr.appendChild(tdIndex);
-
-      // Material
-      const tdMat = document.createElement('td');
-      const inputMat = document.createElement('input');
-      inputMat.type = 'text';
-      inputMat.placeholder = 'กรอก Material หรือสแกนบาร์โค้ด';
-      tdMat.appendChild(inputMat);
-      tr.appendChild(tdMat);
-
-      // Description
-      const tdDesc = document.createElement('td');
-      const inputDesc = document.createElement('input');
-      inputDesc.type = 'text';
-      inputDesc.readOnly = true;
-      tdDesc.appendChild(inputDesc);
-      tr.appendChild(tdDesc);
-
-      // Storage bin
-      const tdBin = document.createElement('td');
-      const inputBin = document.createElement('input');
-      inputBin.type = 'text';
-      inputBin.readOnly = true;
-      tdBin.appendChild(inputBin);
-      tr.appendChild(tdBin);
-
-      // คงเหลือ
-      const tdRemain = document.createElement('td');
-      const inputRemain = document.createElement('input');
-      inputRemain.type = 'text';
-      inputRemain.readOnly = true;
-      tdRemain.appendChild(inputRemain);
-      tr.appendChild(tdRemain);
-
-      // จำนวน
-      const tdQty = document.createElement('td');
-      const inputQty = document.createElement('input');
-      inputQty.type = 'number';
-      inputQty.min = '1';
-      inputQty.placeholder = '1';
-      inputQty.value = 1;
-      tdQty.appendChild(inputQty);
-      tr.appendChild(tdQty);
-
-      // Pack
-      const tdPack = document.createElement('td');
-      const inputPack = document.createElement('input');
-      inputPack.type = 'number';
-      inputPack.min = '1';
-      inputPack.placeholder = '1';
-      inputPack.value = 1;
-      tdPack.appendChild(inputPack);
-      tr.appendChild(tdPack);
-
-      inputMat.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-          e.preventDefault();
-          const ok = fillRowByMaterial(tr);
-          if (ok) {
-            inputQty.focus();
-            inputQty.select();
-          }
-        }
-      });
-
-      inputQty.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-          e.preventDefault();
-          if (!inputMat.value.trim() || !inputDesc.value.trim()) {
-            rowStatusEl.textContent = 'กรุณากรอก Material ให้ถูกต้องก่อน';
-            inputMat.focus();
-            return;
-          }
-          nextIndex++;
-          addNewRow();
-          updateRowIndices();
-        }
-      });
-
-      tableBody.appendChild(tr);
-      inputMat.focus();
-    }
-
-    if (empCodeInput) {
-      empCodeInput.addEventListener('input', () => {
-        const code = empCodeInput.value.trim();
-        employeeCode = code;
-
-        if (!code) {
-          empStatus.textContent = 'กรุณากรอกรหัสพนักงาน';
-          employeeName = '';
-          employeeTeam = '';
-          return;
-        }
-
-        const emp = findEmployeeById(code);
-        if (!emp) {
-          empStatus.innerHTML =
-            `<span class="not-found">ไม่พบรหัสพนักงาน: ${code}</span>`;
-          employeeName = '';
-          employeeTeam = '';
-          return;
-        }
-
-        const name = emp.Name || emp.NAME || emp['Employee Name'] || '';
-        const team = emp.Team || emp.TEAM || emp['Team Name'] || '';
-        employeeName = name;
-        employeeTeam = team;
-        empStatus.textContent =
-          `รหัสพนักงาน ${code} : ${name} (${team})`;
-
-        const firstMat = document.querySelector('#entryTable tbody tr:first-child input');
-        if (firstMat) {
-          firstMat.focus();
-          firstMat.select();
-        }
-      });
-    }
-
-    function updateRowIndices() {
-      const rows = tableBody.querySelectorAll('tr');
-      let idx = 1;
-      rows.forEach(tr => {
-        const indexCell = tr.querySelector('td.index-cell');
-        if (indexCell) {
-          indexCell.textContent = idx++;
-        }
-      });
-      nextIndex = idx;
-    }
-
-    function collectPrintData() {
-      const rows = Array.from(tableBody.querySelectorAll('tr'));
-      const data = [];
-
-      rows.forEach(tr => {
-        const inputs = tr.querySelectorAll('input');
-        if (inputs.length < 6) return;
-
-        const [inputMat, inputDesc, inputBin, inputRemain, inputQty, inputPack] = inputs;
-        const material = inputMat.value.trim();
-        if (!material) return;
-
-        const qty = parseInt(inputQty.value, 10) || 1;
-
-        data.push({
-          Material:   material,
-          จำนวน:      qty,
-          Pack:       inputPack.value || '',
-          IDช่าง:     employeeCode || '',
-          Serial:     '-',
-          Description:inputDesc.value || '',
-          Storagebin: inputBin.value || '',
-          ชื่อช่าง:   employeeName || '',
-          Unit:       'pc',
-          แผนก:       employeeTeam || ''
-        });
-      });
-
-      return data;
-    }
-
-    // Small label
-    function createPrintLabelSmall(row) {
-      const label = document.createElement('div');
-      label.className = 'label-small';
-
-      const rowDiv = document.createElement('div');
-      rowDiv.className = 'row-small';
-
-      const qrCanvas = document.createElement('canvas');
-      qrCanvas.className = 'qr-small';
-      rowDiv.appendChild(qrCanvas);
-
-      const textContainer = document.createElement('div');
-      textContainer.style.display = 'flex';
-      textContainer.style.flexDirection = 'column';
-
-      const materialDiv = document.createElement('div');
-      materialDiv.className = 'material-small';
-      materialDiv.textContent = row.Material;
-      textContainer.appendChild(materialDiv);
-
-      const techNameRaw = row.ชื่อช่าง || '';
-      const technicianName = techNameRaw.replace(/^นาย\s+/, '').trim();
-      if (technicianName) {
-        const technicianDiv = document.createElement('div');
-        technicianDiv.className = 'technician-small';
-        technicianDiv.textContent = technicianName;
-        textContainer.appendChild(technicianDiv);
-      }
-
-      const dept = (row.แผนก || '').trim();
-      if (dept) {
-        const departmentDiv = document.createElement('div');
-        departmentDiv.className = 'department-small';
-        departmentDiv.textContent = dept;
-        textContainer.appendChild(departmentDiv);
-      }
-
-      rowDiv.appendChild(textContainer);
-      label.appendChild(rowDiv);
-
-      const descText = (row.Description || '').trim();
-      if (descText) {
-        const desc = document.createElement('div');
-        desc.className = 'description-small';
-        desc.textContent = descText;
-        label.appendChild(desc);
-      }
-
-      const locLine = document.createElement('div');
-      locLine.style.display = 'flex';
-      locLine.style.alignItems = 'center';
-      locLine.style.fontSize = '12px';
-      locLine.style.fontWeight = 'bold';
-      locLine.style.lineHeight = '1.1';
-      locLine.style.marginLeft = '2mm';
-      locLine.style.marginTop = '1px';
-      locLine.style.marginBottom = '0';
-
-      const locTextStr = (row.Storagebin || '').trim();
-      if (locTextStr) {
-        const locText = document.createElement('span');
-        locText.textContent = `Loc: ${locTextStr}`;
-        locLine.appendChild(locText);
-      }
-
-      const barcodeCanvas = document.createElement('canvas');
-      barcodeCanvas.className = 'barcode-small';
-      locLine.appendChild(barcodeCanvas);
-      label.appendChild(locLine);
-
-      const now = new Date();
-      const formattedDate =
-        `${now.getFullYear().toString().slice(2)}` +
-        `${String(now.getMonth() + 1).padStart(2, '0')}` +
-        `${String(now.getDate()).padStart(2, '0')}` +
-        `${String(now.getHours()).padStart(2, '0')}` +
-        `${String(now.getMinutes()).padStart(2, '0')}`;
-
-      const lot = document.createElement('div');
-      lot.className = 'lot-line-small';
-
-      const parts = [];
-      parts.push(`Lot: ${formattedDate}`);
-      const qtyText  = row.จำนวน ? `(${row.จำนวน})` : '';
-      if (qtyText) parts.push(qtyText);
-      const packText = (row.Pack || '').trim();
-      if (packText) parts.push(packText);
-      const unitText = (row.Unit || '').trim();
-      if (unitText) parts.push(unitText);
-
-      lot.innerHTML = `<span>${parts.join(' ')}</span>`;
-      label.appendChild(lot);
-
-      if (typeof QRCode !== 'undefined') {
-        QRCode.toCanvas(qrCanvas, row.Material || 'N/A', {
-          width: 40,
-          height: 40,
-          margin: 0,
-          errorCorrectionLevel: 'L'
-        }, err => { if (err) console.error('QR Error:', err); });
-      }
-
-      if (typeof JsBarcode !== 'undefined' && row.Material) {
-        JsBarcode(barcodeCanvas, row.Material, {
-          format: 'CODE128',
-          width: 1,
-          height: 15,
-          displayValue: false,
-          margin: 0
-        });
-      }
-
-      return label;
-    }
-
-    function buildPrintLabelsSmall(data) {
-      const printArea = document.getElementById('printArea');
-      printArea.innerHTML = '';
-
-      const container = document.createElement('div');
-      container.className = 'container-small';
-      printArea.appendChild(container);
-
-      const expanded = [];
-      data.forEach(row => {
-        const qty = Math.max(1, row.จำนวน);
-        for (let i = 0; i < qty; i++) {
-          expanded.push({ ...row });
-        }
-      });
-
-      for (let i = 0; i < expanded.length; i += 2) {
-        const sticker = document.createElement('div');
-        sticker.className = 'sticker-small';
-
-        const label1 = createPrintLabelSmall(expanded[i]);
-        sticker.appendChild(label1);
-
-        if (i + 1 < expanded.length) {
-          const label2 = createPrintLabelSmall(expanded[i + 1]);
-          sticker.appendChild(label2);
-        } else {
-          const emptyLabel = document.createElement('div');
-          emptyLabel.className = 'label-small';
-          const emptyDiv = document.createElement('div');
-          emptyDiv.className = 'description-small';
-          emptyDiv.textContent = 'ไม่มีข้อมูล';
-          emptyLabel.appendChild(emptyDiv);
-          sticker.appendChild(emptyLabel);
-        }
-
-        container.appendChild(sticker);
-      }
-    }
-
-    // Big label
-    function createPrintLabelBig(row) {
-      const label = document.createElement('div');
-      label.className = 'label-big';
-
-      const rowDiv = document.createElement('div');
-      rowDiv.className = 'row-big';
-
-      const leftCol = document.createElement('div');
-      leftCol.style.display = 'flex';
-      leftCol.style.flexDirection = 'column';
-      leftCol.style.alignItems = 'flex-start';
-
-      const qrCanvas = document.createElement('canvas');
-      qrCanvas.className = 'qr-big';
-      leftCol.appendChild(qrCanvas);
-
-      const barcodeCanvas = document.createElement('canvas');
-      barcodeCanvas.className = 'barcode-big';
-      leftCol.appendChild(barcodeCanvas);
-
-      rowDiv.appendChild(leftCol);
-
-      const textContainer = document.createElement('div');
-      textContainer.className = 'text-container-big';
-
-      const materialDiv = document.createElement('div');
-      materialDiv.className = 'material-big';
-      materialDiv.textContent = row.Material;
-      textContainer.appendChild(materialDiv);
-
-      const techNameRaw = row.ชื่อช่าง || '';
-      const technicianName = techNameRaw.replace(/^นาย\s+/, '').trim();
-      if (technicianName) {
-        const technicianDiv = document.createElement('div');
-        technicianDiv.className = 'technician-big';
-        technicianDiv.textContent = technicianName;
-        textContainer.appendChild(technicianDiv);
-      }
-
-      const dept = (row.แผนก || '').trim();
-      if (dept) {
-        const departmentDiv = document.createElement('div');
-        departmentDiv.className = 'department-big';
-        departmentDiv.textContent = dept;
-        textContainer.appendChild(departmentDiv);
-      }
-
-      rowDiv.appendChild(textContainer);
-
-      const descText = (row.Description || '').trim();
-      if (descText) {
-        const desc = document.createElement('div');
-        desc.className = 'description-big';
-        desc.textContent = descText;
-        rowDiv.appendChild(desc);
-      }
-
-      label.appendChild(rowDiv);
-
-      const bottomContainer = document.createElement('div');
-      bottomContainer.className = 'bottom-container-big';
-
-      const now = new Date();
-      const formattedDate =
-        `${now.getFullYear().toString().slice(2)}` +
-        `${String(now.getMonth() + 1).padStart(2, '0')}` +
-        `${String(now.getDate()).padStart(2, '0')}` +
-        `${String(now.getHours()).padStart(2, '0')}` +
-        `${String(now.getMinutes()).padStart(2, '0')}`;
-
-      const locTextStr = (row.Storagebin || '').trim();
-      if (locTextStr) {
-        const loc = document.createElement('div');
-        loc.className = 'location-big';
-        loc.textContent = `Location: ${locTextStr}`;
-        bottomContainer.appendChild(loc);
-      }
-
-      const lot = document.createElement('div');
-      lot.className = 'lot-line-big';
-      lot.textContent = `Lot: ${formattedDate} Qty(${row.จำนวน || 1})`;
-      bottomContainer.appendChild(lot);
-
-      label.appendChild(bottomContainer);
-
-      const centerPackUnit = document.createElement('div');
-      centerPackUnit.className = 'center-pack-unit-big';
-      const packText = (row.Pack || '').trim();
-      const unitText = (row.Unit || '').trim();
-      centerPackUnit.textContent = `${packText} ${unitText}`.trim();
-      label.appendChild(centerPackUnit);
-
-      if (typeof QRCode !== 'undefined') {
-        QRCode.toCanvas(qrCanvas, row.Material || 'N/A', {
-          width: 55,
-          height: 55,
-          margin: 0,
-          errorCorrectionLevel: 'L'
-        }, err => { if (err) console.error('QR Error:', err); });
-      }
-
-      if (typeof JsBarcode !== 'undefined' && row.Material) {
-        JsBarcode(barcodeCanvas, row.Material, {
-          format: 'CODE128',
-          width: 1,
-          height: 25,
-          displayValue: false,
-          margin: 0
-        });
-      }
-
-      return label;
-    }
-
-    function buildPrintLabelsBig(data) {
-      const printArea = document.getElementById('printArea');
-      printArea.innerHTML = '';
-
-      const container = document.createElement('div');
-      container.className = 'container-big';
-      printArea.appendChild(container);
-
-      const expanded = [];
-      data.forEach(row => {
-        const qty = Math.max(1, row.จำนวน);
-        for (let i = 0; i < qty; i++) {
-          expanded.push({ ...row });
-        }
-      });
-
-      expanded.forEach(row => {
-        const sticker = document.createElement('div');
-        sticker.className = 'sticker-big';
-        const label = createPrintLabelBig(row);
-        sticker.appendChild(label);
-        container.appendChild(sticker);
-      });
-    }
-
-    function handlePrintSmall() {
-      const data = collectPrintData();
-      if (!data.length) {
-        alert('กรุณากรอก Material อย่างน้อย 1 แถวก่อนพิมพ์');
-        return;
-      }
-      spinner.style.display = 'flex';
-      setTimeout(() => {
-        buildPrintLabelsSmall(data);
-        spinner.style.display = 'none';
-        window.print();
-      }, 200);
-    }
-
-    function handlePrintBig() {
-      const data = collectPrintData();
-      if (!data.length) {
-        alert('กรุณากรอก Material อย่างน้อย 1 แถวก่อนพิมพ์');
-        return;
-      }
-      spinner.style.display = 'flex';
-      setTimeout(() => {
-        buildPrintLabelsBig(data);
-        spinner.style.display = 'none';
-        window.print();
-      }, 200);
-    }
-
-    document.getElementById('printSmallBtn').addEventListener('click', handlePrintSmall);
-    document.getElementById('printBigBtn').addEventListener('click', handlePrintBig);
-
-    // ====== ส่วน Serial Tab ======
-    const serialInvoiceInput = document.getElementById('serialInvoiceInput');
-    const serialMatInput     = document.getElementById('serialMatInput');
-    const serialDescInput    = document.getElementById('serialDescInput');
-    const serialBinInput     = document.getElementById('serialBinInput');
-    const serialPrefixInput  = document.getElementById('serialPrefixInput');
-    const serialSuffixInput  = document.getElementById('serialSuffixInput');
-    const serialTopStatus    = document.getElementById('serialTopStatus');
-    const serialTableBody    = document.querySelector('#serialTable tbody');
-    const serialStatusEl     = document.getElementById('serialStatus');
-    const serialSummaryInvoice = document.getElementById('serialSummaryInvoice');
-    const serialSummaryMaterial = document.getElementById('serialSummaryMaterial');
-    const serialSummaryCount = document.getElementById('serialSummaryCount');
-    const saveSerialBtn      = document.getElementById('saveSerialBtn');
-    const printSerialBtn     = document.getElementById('printSerialBtn');
-    let serialNextIndex      = 1;
-
-    function getNowString() {
-      const now = new Date();
-      const yyyy = now.getFullYear();
-      const mm = String(now.getMonth() + 1).padStart(2, '0');
-      const dd = String(now.getDate()).padStart(2, '0');
-      const hh = String(now.getHours()).padStart(2, '0');
-      const mi = String(now.getMinutes()).padStart(2, '0');
-      const ss = String(now.getSeconds()).padStart(2, '0');
-      return `${yyyy}-${mm}-${dd} ${hh}:${mi}:${ss}`;
-    }
-
-    // อัปเดต summary chips
-    function updateSerialSummary() {
-      if (serialSummaryInvoice) {
-        const v = serialInvoiceInput.value.trim() || '-';
-        serialSummaryInvoice.querySelector('.serial-chip-value').textContent = v;
-      }
-      if (serialSummaryMaterial) {
-        const v = serialMatInput.value.trim() || '-';
-        serialSummaryMaterial.querySelector('.serial-chip-value').textContent = v;
-      }
-      if (serialSummaryCount) {
-        const count = serialTableBody.querySelectorAll('tr').length;
-        serialSummaryCount.querySelector('.serial-chip-value').textContent = `${count} แถว`;
-      }
-      if (serialInvoiceInput) {
-  serialInvoiceInput.addEventListener('input', updateSerialSummary);
-}
-    }
-
-    // ดึง Description / Storage bin จาก Material สำหรับ Serial tab
-    // ดึง Description / Storage bin จาก Material สำหรับ Serial tab
-function fillSerialTopByMaterial() {
-  let mat = serialMatInput.value.trim();
-  if (!mat) {
-    serialDescInput.value = '';
-    serialBinInput.value  = '';
-    serialTopStatus.textContent = 'กรอก Material เพื่อดึง Description / Storage bin จากฐานข้อมูล';
-    updateSerialSummary();
-    return;
+    return data;
   }
 
-  const normalized = normalizeMaterialCode(mat);
-  serialMatInput.value = normalized;
+  // Small label
+  function createPrintLabelSmall(row) {
+    const label = document.createElement('div');
+    label.className = 'label-small';
 
-  const info = findMaterialInfo(normalized);
-  if (!info || !info.description) {
-    serialDescInput.value = '';
-    serialBinInput.value  = '';
-    serialTopStatus.innerHTML =
-      `<span class="not-found">ไม่พบ Material หรือไม่มี Description: ${normalized}</span>`;
-    updateSerialSummary();
-    return;
+    const rowDiv = document.createElement('div');
+    rowDiv.className = 'row-small';
+
+    const qrCanvas = document.createElement('canvas');
+    qrCanvas.className = 'qr-small';
+    rowDiv.appendChild(qrCanvas);
+
+    const textContainer = document.createElement('div');
+    textContainer.style.display = 'flex';
+    textContainer.style.flexDirection = 'column';
+
+    const materialDiv = document.createElement('div');
+    materialDiv.className = 'material-small';
+    materialDiv.textContent = row.Material;
+    textContainer.appendChild(materialDiv);
+
+    const techNameRaw = row.ชื่อช่าง || '';
+    const technicianName = techNameRaw.replace(/^นาย\s+/, '').trim();
+    if (technicianName) {
+      const technicianDiv = document.createElement('div');
+      technicianDiv.className = 'technician-small';
+      technicianDiv.textContent = technicianName;
+      textContainer.appendChild(technicianDiv);
+    }
+
+    const dept = (row.แผนก || '').trim();
+    if (dept) {
+      const departmentDiv = document.createElement('div');
+      departmentDiv.className = 'department-small';
+      departmentDiv.textContent = dept;
+      textContainer.appendChild(departmentDiv);
+    }
+
+    rowDiv.appendChild(textContainer);
+    label.appendChild(rowDiv);
+
+    const descText = (row.Description || '').trim();
+    if (descText) {
+      const desc = document.createElement('div');
+      desc.className = 'description-small';
+      desc.textContent = descText;
+      label.appendChild(desc);
+    }
+
+    const locLine = document.createElement('div');
+    locLine.style.display = 'flex';
+    locLine.style.alignItems = 'center';
+    locLine.style.fontSize = '12px';
+    locLine.style.fontWeight = 'bold';
+    locLine.style.lineHeight = '1.1';
+    locLine.style.marginLeft = '2mm';
+    locLine.style.marginTop = '1px';
+    locLine.style.marginBottom = '0';
+
+    const locTextStr = (row.Storagebin || '').trim();
+    if (locTextStr) {
+      const locText = document.createElement('span');
+      locText.textContent = `Loc: ${locTextStr}`;
+      locLine.appendChild(locText);
+    }
+
+    const barcodeCanvas = document.createElement('canvas');
+    barcodeCanvas.className = 'barcode-small';
+    locLine.appendChild(barcodeCanvas);
+    label.appendChild(locLine);
+
+    const now = new Date();
+    const formattedDate =
+      `${now.getFullYear().toString().slice(2)}` +
+      `${String(now.getMonth() + 1).padStart(2, '0')}` +
+      `${String(now.getDate()).padStart(2, '0')}` +
+      `${String(now.getHours()).padStart(2, '0')}` +
+      `${String(now.getMinutes()).padStart(2, '0')}`;
+
+    const lot = document.createElement('div');
+    lot.className = 'lot-line-small';
+
+    const parts = [];
+    parts.push(`Lot: ${formattedDate}`);
+    const qtyText  = row.จำนวน ? `(${row.จำนวน})` : '';
+    if (qtyText) parts.push(qtyText);
+    const packText = (row.Pack || '').trim();
+    if (packText) parts.push(packText);
+    const unitText = (row.Unit || '').trim();
+    if (unitText) parts.push(unitText);
+
+    lot.innerHTML = `<span>${parts.join(' ')}</span>`;
+    label.appendChild(lot);
+
+    if (typeof QRCode !== 'undefined') {
+      QRCode.toCanvas(qrCanvas, row.Material || 'N/A', {
+        width: 40,
+        height: 40,
+        margin: 0,
+        errorCorrectionLevel: 'L'
+      }, err => { if (err) console.error('QR Error:', err); });
+    }
+
+    if (typeof JsBarcode !== 'undefined' && row.Material) {
+      JsBarcode(barcodeCanvas, row.Material, {
+        format: 'CODE128',
+        width: 1,
+        height: 15,
+        displayValue: false,
+        margin: 0
+      });
+    }
+
+    return label;
   }
 
-  serialDescInput.value = info.description || '';
-  serialBinInput.value  = info.storageBin || '';
-  serialTopStatus.textContent = '';
-  updateSerialSummary();
-}
+  function buildPrintLabelsSmall(data) {
+    const printArea = document.getElementById('printArea');
+    printArea.innerHTML = '';
 
-// ✅ เพิ่มตรงนี้
-let serialMatTimer = null;
+    const container = document.createElement('div');
+    container.className = 'container-small';
+    printArea.appendChild(container);
 
-if (serialMatInput) {
-  serialMatInput.addEventListener('input', () => {
-    if (serialMatTimer) clearTimeout(serialMatTimer);
-    serialMatTimer = setTimeout(() => {
+    const expanded = [];
+    data.forEach(row => {
+      const qty = Math.max(1, row.จำนวน);
+      for (let i = 0; i < qty; i++) {
+        expanded.push({ ...row });
+      }
+    });
+
+    for (let i = 0; i < expanded.length; i += 2) {
+      const sticker = document.createElement('div');
+      sticker.className = 'sticker-small';
+
+      const label1 = createPrintLabelSmall(expanded[i]);
+      sticker.appendChild(label1);
+
+      if (i + 1 < expanded.length) {
+        const label2 = createPrintLabelSmall(expanded[i + 1]);
+        sticker.appendChild(label2);
+      } else {
+        const emptyLabel = document.createElement('div');
+        emptyLabel.className = 'label-small';
+        const emptyDiv = document.createElement('div');
+        emptyDiv.className = 'description-small';
+        emptyDiv.textContent = 'ไม่มีข้อมูล';
+        emptyLabel.appendChild(emptyDiv);
+        sticker.appendChild(emptyLabel);
+      }
+
+      container.appendChild(sticker);
+    }
+  }
+
+  // Big label (barcode tab)
+  function createPrintLabelBig(row) {
+    const label = document.createElement('div');
+    label.className = 'label-big';
+
+    const rowDiv = document.createElement('div');
+    rowDiv.className = 'row-big';
+
+    const leftCol = document.createElement('div');
+    leftCol.style.display = 'flex';
+    leftCol.style.flexDirection = 'column';
+    leftCol.style.alignItems = 'flex-start';
+
+    const qrCanvas = document.createElement('canvas');
+    qrCanvas.className = 'qr-big';
+    leftCol.appendChild(qrCanvas);
+
+    const barcodeCanvas = document.createElement('canvas');
+    barcodeCanvas.className = 'barcode-big';
+    leftCol.appendChild(barcodeCanvas);
+
+    rowDiv.appendChild(leftCol);
+
+    const textContainer = document.createElement('div');
+    textContainer.className = 'text-container-big';
+
+    const materialDiv = document.createElement('div');
+    materialDiv.className = 'material-big';
+    materialDiv.textContent = row.Material;
+    textContainer.appendChild(materialDiv);
+
+    const techNameRaw = row.ชื่อช่าง || '';
+    const technicianName = techNameRaw.replace(/^นาย\s+/, '').trim();
+    if (technicianName) {
+      const technicianDiv = document.createElement('div');
+      technicianDiv.className = 'technician-big';
+      technicianDiv.textContent = technicianName;
+      textContainer.appendChild(technicianDiv);
+    }
+
+    const dept = (row.แผนก || '').trim();
+    if (dept) {
+      const departmentDiv = document.createElement('div');
+      departmentDiv.className = 'department-big';
+      departmentDiv.textContent = dept;
+      textContainer.appendChild(departmentDiv);
+    }
+
+    rowDiv.appendChild(textContainer);
+
+    const descText = (row.Description || '').trim();
+    if (descText) {
+      const desc = document.createElement('div');
+      desc.className = 'description-big';
+      desc.textContent = descText;
+      rowDiv.appendChild(desc);
+    }
+
+    label.appendChild(rowDiv);
+
+    const bottomContainer = document.createElement('div');
+    bottomContainer.className = 'bottom-container-big';
+
+    const now = new Date();
+    const formattedDate =
+      `${now.getFullYear().toString().slice(2)}` +
+      `${String(now.getMonth() + 1).padStart(2, '0')}` +
+      `${String(now.getDate()).padStart(2, '0')}` +
+      `${String(now.getHours()).padStart(2, '0')}` +
+      `${String(now.getMinutes()).padStart(2, '0')}`;
+
+    const locTextStr = (row.Storagebin || '').trim();
+    if (locTextStr) {
+      const loc = document.createElement('div');
+      loc.className = 'location-big';
+      loc.textContent = `Location: ${locTextStr}`;
+      bottomContainer.appendChild(loc);
+    }
+
+    const lot = document.createElement('div');
+    lot.className = 'lot-line-big';
+    lot.textContent = `Lot: ${formattedDate} Qty(${row.จำนวน || 1})`;
+    bottomContainer.appendChild(lot);
+
+    label.appendChild(bottomContainer);
+
+    const centerPackUnit = document.createElement('div');
+    centerPackUnit.className = 'center-pack-unit-big';
+    const packText = (row.Pack || '').trim();
+    const unitText = (row.Unit || '').trim();
+    centerPackUnit.textContent = `${packText} ${unitText}`.trim();
+    label.appendChild(centerPackUnit);
+
+    if (typeof QRCode !== 'undefined') {
+      QRCode.toCanvas(qrCanvas, row.Material || 'N/A', {
+        width: 55,
+        height: 55,
+        margin: 0,
+        errorCorrectionLevel: 'L'
+      }, err => { if (err) console.error('QR Error:', err); });
+    }
+
+    if (typeof JsBarcode !== 'undefined' && row.Material) {
+      JsBarcode(barcodeCanvas, row.Material, {
+        format: 'CODE128',
+        width: 1,
+        height: 25,
+        displayValue: false,
+        margin: 0
+      });
+    }
+
+    return label;
+  }
+
+  function buildPrintLabelsBig(data) {
+    const printArea = document.getElementById('printArea');
+    printArea.innerHTML = '';
+
+    const container = document.createElement('div');
+    container.className = 'container-big';
+    printArea.appendChild(container);
+
+    const expanded = [];
+    data.forEach(row => {
+      const qty = Math.max(1, row.จำนวน);
+      for (let i = 0; i < qty; i++) {
+        expanded.push({ ...row });
+      }
+    });
+
+    expanded.forEach(row => {
+      const sticker = document.createElement('div');
+      sticker.className = 'sticker-big';
+      const label = createPrintLabelBig(row);
+      sticker.appendChild(label);
+      container.appendChild(sticker);
+    });
+  }
+
+  function handlePrintSmall() {
+    const data = collectPrintData();
+    if (!data.length) {
+      alert('กรุณากรอก Material อย่างน้อย 1 แถวก่อนพิมพ์');
+      return;
+    }
+    spinner.style.display = 'flex';
+    setTimeout(() => {
+      buildPrintLabelsSmall(data);
+      spinner.style.display = 'none';
+      window.print();
+    }, 200);
+  }
+
+  function handlePrintBig() {
+    const data = collectPrintData();
+    if (!data.length) {
+      alert('กรุณากรอก Material อย่างน้อย 1 แถวก่อนพิมพ์');
+      return;
+    }
+    spinner.style.display = 'flex';
+    setTimeout(() => {
+      buildPrintLabelsBig(data);
+      spinner.style.display = 'none';
+      window.print();
+    }, 200);
+  }
+
+  document.getElementById('printSmallBtn').addEventListener('click', handlePrintSmall);
+  document.getElementById('printBigBtn').addEventListener('click', handlePrintBig);
+
+  // ====== ส่วน Serial Tab ======
+  const serialInvoiceInput = document.getElementById('serialInvoiceInput');
+  const serialMatInput     = document.getElementById('serialMatInput');
+  const serialDescInput    = document.getElementById('serialDescInput');
+  const serialBinInput     = document.getElementById('serialBinInput');
+  const serialPrefixInput  = document.getElementById('serialPrefixInput');
+  const serialSuffixInput  = document.getElementById('serialSuffixInput');
+  const serialTopStatus    = document.getElementById('serialTopStatus');
+  const serialTableBody    = document.querySelector('#serialTable tbody');
+  const serialStatusEl     = document.getElementById('serialStatus');
+  const serialSummaryInvoice = document.getElementById('serialSummaryInvoice');
+  const serialSummaryMaterial = document.getElementById('serialSummaryMaterial');
+  const serialSummaryCount = document.getElementById('serialSummaryCount');
+  const saveSerialBtn      = document.getElementById('saveSerialBtn');
+  const printSerialBtn     = document.getElementById('printSerialBtn');
+  let serialNextIndex      = 1;
+
+  function getNowString() {
+    const now = new Date();
+    const yyyy = now.getFullYear();
+    const mm = String(now.getMonth() + 1).padStart(2, '0');
+    const dd = String(now.getDate()).padStart(2, '0');
+    const hh = String(now.getHours()).padStart(2, '0');
+    const mi = String(now.getMinutes()).padStart(2, '0');
+    const ss = String(now.getSeconds()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd} ${hh}:${mi}:${ss}`;
+  }
+
+  // อัปเดต summary chips
+  function updateSerialSummary() {
+    if (serialSummaryInvoice) {
+      const v = serialInvoiceInput.value.trim() || '-';
+      serialSummaryInvoice.querySelector('.serial-chip-value').textContent = v;
+    }
+    if (serialSummaryMaterial) {
+      const v = serialMatInput.value.trim() || '-';
+      serialSummaryMaterial.querySelector('.serial-chip-value').textContent = v;
+    }
+    if (serialSummaryCount) {
+      const count = serialTableBody.querySelectorAll('tr').length;
+      serialSummaryCount.querySelector('.serial-chip-value').textContent = `${count} แถว`;
+    }
+  }
+
+  // ให้ Invoice เปลี่ยนแล้วอัปเดต chip ทันที
+  if (serialInvoiceInput) {
+    serialInvoiceInput.addEventListener('input', updateSerialSummary);
+  }
+
+  // ดึง Description / Storage bin จาก Material สำหรับ Serial tab
+  function fillSerialTopByMaterial() {
+    let mat = serialMatInput.value.trim();
+    if (!mat) {
+      serialDescInput.value = '';
+      serialBinInput.value  = '';
+      serialTopStatus.textContent = 'กรอก Material เพื่อดึง Description / Storage bin จากฐานข้อมูล';
+      updateSerialSummary();
+      return;
+    }
+
+    const normalized = normalizeMaterialCode(mat);
+    serialMatInput.value = normalized;
+
+    const info = findMaterialInfo(normalized);
+    if (!info || !info.description) {
+      serialDescInput.value = '';
+      serialBinInput.value  = '';
+      serialTopStatus.innerHTML =
+        `<span class="not-found">ไม่พบ Material หรือไม่มี Description: ${normalized}</span>`;
+      updateSerialSummary();
+      return;
+    }
+
+    serialDescInput.value = info.description || '';
+    serialBinInput.value  = info.storageBin || '';
+    serialTopStatus.textContent = '';
+    updateSerialSummary();
+  }
+
+  // ให้ Material ดึงอัตโนมัติแบบหน่วงนิดหน่อย
+  let serialMatTimer = null;
+
+  if (serialMatInput) {
+    serialMatInput.addEventListener('input', () => {
+      if (serialMatTimer) clearTimeout(serialMatTimer);
+      serialMatTimer = setTimeout(() => {
+        fillSerialTopByMaterial();
+      }, 400);
+    });
+
+    serialMatInput.addEventListener('blur', () => {
       fillSerialTopByMaterial();
-    }, 400);
+    });
+  }
+
+  // สร้างแถว Serial ใหม่
+  function addSerialRow() {
+    const tr = document.createElement('tr');
+
+    // ปุ่มลบ
+    const tdDelete = document.createElement('td');
+    const delBtn = document.createElement('button');
+    delBtn.type = 'button';
+    delBtn.textContent = 'ลบ';
+    delBtn.className = 'delete-btn';
+    delBtn.addEventListener('click', () => {
+      tr.remove();
+      reindexSerialRows();
+    });
+    tdDelete.appendChild(delBtn);
+    tr.appendChild(tdDelete);
+
+    // ลำดับ
+    const tdIndex = document.createElement('td');
+    tdIndex.textContent = serialNextIndex;
+    tr.appendChild(tdIndex);
+
+    // Serial
+    const tdSerial = document.createElement('td');
+    const inputSerial = document.createElement('input');
+    inputSerial.type = 'text';
+    inputSerial.placeholder = 'กรอก Serial แล้วกด Enter';
+    tdSerial.appendChild(inputSerial);
+    tr.appendChild(tdSerial);
+
+    // Serial ตัวหน้า
+    const tdPrefix = document.createElement('td');
+    const inputPrefix = document.createElement('input');
+    inputPrefix.type = 'text';
+    inputPrefix.readOnly = true;
+    inputPrefix.value = serialPrefixInput.value || '';
+    tdPrefix.appendChild(inputPrefix);
+    tr.appendChild(tdPrefix);
+
+    // Serial ตัวหลัง
+    const tdSuffix = document.createElement('td');
+    const inputSuffix = document.createElement('input');
+    inputSuffix.type = 'text';
+    inputSuffix.readOnly = true;
+    inputSuffix.value = serialSuffixInput.value || '';
+    tdSuffix.appendChild(inputSuffix);
+    tr.appendChild(tdSuffix);
+
+    // SerialCP
+    const tdSerialCP = document.createElement('td');
+    const inputSerialCP = document.createElement('input');
+    inputSerialCP.type = 'text';
+    inputSerialCP.readOnly = true;
+    tdSerialCP.appendChild(inputSerialCP);
+    tr.appendChild(tdSerialCP);
+
+    // Invoice
+    const tdInvoice = document.createElement('td');
+    const inputInvoice = document.createElement('input');
+    inputInvoice.type = 'text';
+    inputInvoice.readOnly = true;
+    inputInvoice.value = serialInvoiceInput.value || '';
+    tdInvoice.appendChild(inputInvoice);
+    tr.appendChild(tdInvoice);
+
+    // Material
+    const tdMat = document.createElement('td');
+    const inputMat = document.createElement('input');
+    inputMat.type = 'text';
+    inputMat.readOnly = true;
+    inputMat.value = serialMatInput.value || '';
+    tdMat.appendChild(inputMat);
+    tr.appendChild(tdMat);
+
+    // Description
+    const tdDesc = document.createElement('td');
+    const inputDesc = document.createElement('input');
+    inputDesc.type = 'text';
+    inputDesc.readOnly = true;
+    inputDesc.value = serialDescInput.value || '';
+    tdDesc.appendChild(inputDesc);
+    tr.appendChild(tdDesc);
+
+    // Storage bin
+    const tdBin = document.createElement('td');
+    const inputBin = document.createElement('input');
+    inputBin.type = 'text';
+    inputBin.readOnly = true;
+    inputBin.value = serialBinInput.value || '';
+    tdBin.appendChild(inputBin);
+    tr.appendChild(tdBin);
+
+    // Date
+    const tdDate = document.createElement('td');
+    const inputDate = document.createElement('input');
+    inputDate.type = 'text';
+    inputDate.readOnly = true;
+    inputDate.value = getNowString();
+    tdDate.appendChild(inputDate);
+    tr.appendChild(tdDate);
+
+    // Event: กด Enter ที่ Serial
+    inputSerial.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        const serialVal = inputSerial.value.trim();
+        if (!serialVal) {
+          serialStatusEl.innerHTML =
+            '<span class="not-found">ไม่อนุญาติให้ขึ้นบรรทัดใหม่ถ้า Serial ยังเป็นค่าว่าง</span>';
+          inputSerial.focus();
+          return;
+        }
+
+        // ดึงค่าจากด้านบนมาใส่แถวนี้
+        inputPrefix.value  = serialPrefixInput.value || '';
+        inputSuffix.value  = serialSuffixInput.value || '';
+        inputInvoice.value = serialInvoiceInput.value || '';
+        inputMat.value     = serialMatInput.value || '';
+        inputDesc.value    = serialDescInput.value || '';
+        inputBin.value     = serialBinInput.value || '';
+        inputDate.value    = getNowString();
+
+        // SerialCP = prefix + serial + suffix
+        inputSerialCP.value =
+          (inputPrefix.value || '') + serialVal + (inputSuffix.value || '');
+
+        serialStatusEl.textContent = 'บันทึก Serial สำเร็จ และสร้างแถวใหม่แล้ว';
+        serialNextIndex++;
+        addSerialRow();
+        updateSerialSummary();
+      }
+    });
+
+    serialTableBody.appendChild(tr);
+    inputSerial.focus();
+    updateSerialSummary();
+  }
+
+  function reindexSerialRows() {
+    const rows = serialTableBody.querySelectorAll('tr');
+    let idx = 1;
+    rows.forEach(tr => {
+      const indexTd = tr.children[1];
+      indexTd.textContent = idx++;
+    });
+    serialNextIndex = idx;
+
+    if (!rows.length) {
+      serialNextIndex = 1;
+      serialStatusEl.textContent = 'ไม่มีข้อมูลในตาราง สร้างแถวใหม่ให้พร้อมกรอกแล้ว';
+      addSerialRow();
+    }
+    updateSerialSummary();
+  }
+
+  // ✅ เก็บข้อมูล Serial จากตาราง เพื่อใช้สร้างฉลาก 80x100
+ // ✅ เก็บข้อมูล Serial จากตาราง เพื่อใช้สร้างฉลาก 80x100
+// ✅ เก็บข้อมูล Serial จากตาราง เพื่อใช้สร้างฉลาก 80x100 mm
+function collectSerialPrintData() {
+  const rows = Array.from(serialTableBody.querySelectorAll('tr'));
+  const data = [];
+
+  rows.forEach(tr => {
+    const inputs = tr.querySelectorAll('input');
+    // ใน 1 แถวมี input 9 ช่อง: Serial, Prefix, Suffix, SerialCP, Invoice, Material, Desc, Bin, Date
+    if (inputs.length < 9) return;
+
+    const [
+      inputSerial,   // Serial (ตัวกลาง)
+      inputPrefix,   // Serial ตัวหน้า
+      inputSuffix,   // Serial ตัวหลัง
+      inputSerialCP, // SerialCP
+      inputInvoice,
+      inputMat,
+      inputDesc,
+      inputBin,
+      inputDate
+    ] = inputs;
+
+    const material  = inputMat.value.trim();
+    const serialCP  = inputSerialCP.value.trim(); // ใช้ SerialCP ตามที่ต้องการ
+    const desc      = inputDesc.value || '';
+    const bin       = inputBin.value || '';
+    const prefix    = inputPrefix.value || '';
+    const suffix    = inputSuffix.value || '';
+
+    // ต้องมี Material และ SerialCP ถึงจะเอาไปพิมพ์
+    if (!material || !serialCP) return;
+
+    data.push({
+      // mapping ตามที่สั่ง
+      Material:   material,     // Material
+      Serial:     serialCP,     // SerialCP → ใช้เป็น Serial ในฉลาก
+      Description: desc,        // Description
+      Storagebin: bin,          // Storage bin
+      // เพิ่มเก็บ FirstRear / Medium เผื่อใช้บนฉลาก
+      FirstRear:  suffix,       // Serial ตัวหลัง
+      Medium:     prefix        // Serial ตัวหน้า
+    });
   });
 
-  serialMatInput.addEventListener('blur', () => {
-    fillSerialTopByMaterial();
+  // เรียงตาม Material ก่อน แล้วตาม Serial (ตามโค้ดต้นฉบับ)
+  data.sort((a, b) => {
+    const m = a.Material.localeCompare(b.Material);
+    if (m !== 0) return m;
+    return a.Serial.localeCompare(b.Serial);
+  });
+
+  return data;
+}
+
+  // ✅ สร้างฉลาก Serial 80x100 แบบเดียวกับไฟล์ตัวอย่าง
+ // ✅ สร้างฉลากขนาด 80x100 mm ตาม template เดิม
+function createLabel(row) {
+  const label = document.createElement('div');
+  label.className = 'label';
+
+  const rowDiv = document.createElement('div');
+  rowDiv.className = 'row';
+
+  // คอลัมน์ซ้าย: QR + Barcode (ซ้อนกัน)
+  const leftCol = document.createElement('div');
+  leftCol.className = 'left-col-serial';
+
+  const qrCanvas = document.createElement('canvas');
+  qrCanvas.className = 'qr';
+  leftCol.appendChild(qrCanvas);
+
+  const barcodeCanvas = document.createElement('canvas');
+  barcodeCanvas.className = 'barcode-in-text';
+  barcodeCanvas.dataset.material = row.Material;
+  leftCol.appendChild(barcodeCanvas);
+
+  rowDiv.appendChild(leftCol);
+
+  // คอลัมน์ขวา: Material, Description, Serial Text ฯลฯ
+  const textContainer = document.createElement('div');
+textContainer.className = 'text-container';
+
+const materialDiv = document.createElement('div');
+materialDiv.className = 'material';
+materialDiv.textContent = row.Material;
+textContainer.appendChild(materialDiv);
+
+// แถวบน: QR + Material
+rowDiv.appendChild(textContainer);
+label.appendChild(rowDiv);
+
+// Description (บล็อกถัดลงมาจากแถวบน)
+const desc = document.createElement('div');
+desc.className = 'description';
+desc.textContent = row.Description || '';
+label.appendChild(desc);
+
+// Serial (S/N) ถัดจาก Description
+const serialContainer = document.createElement('div');
+serialContainer.className = 'serial-container';
+
+const serialInfo = document.createElement('div');
+serialInfo.className = 'serial-info';
+
+const serialLabel = document.createElement('div');
+serialLabel.className = 'serial-label';
+serialLabel.textContent = 'S/N :';
+serialInfo.appendChild(serialLabel);
+
+const serialText = document.createElement('div');
+serialText.className = 'serial-text';
+serialText.textContent = row.Serial || '';
+serialInfo.appendChild(serialText);
+
+serialContainer.appendChild(serialInfo);
+label.appendChild(serialContainer);
+
+
+  // ด้านล่าง Location + Lot
+  const bottomContainer = document.createElement('div');
+  bottomContainer.className = 'bottom-container';
+
+  const now = new Date();
+  const formattedDate =
+    `${now.getFullYear().toString().slice(2)}` +
+    `${String(now.getMonth() + 1).padStart(2, '0')}` +
+    `${String(now.getDate()).padStart(2, '0')}` +
+    `${String(now.getHours()).padStart(2, '0')}` +
+    `${String(now.getMinutes()).padStart(2, '0')}`;
+
+  const loc = document.createElement('div');
+  loc.className = 'location';
+  loc.textContent = `Location: ${row.Storagebin || ''}`;
+  bottomContainer.appendChild(loc);
+
+  const lot = document.createElement('div');
+  lot.className = 'lot-line';
+  lot.innerHTML = `<span>Lot: ${formattedDate}</span>`;
+  bottomContainer.appendChild(lot);
+
+  label.appendChild(bottomContainer);
+
+  // QR กลาง (S/N)
+  const serialQrCanvas = document.createElement('canvas');
+  serialQrCanvas.className = 'center-serial-qr';
+  label.appendChild(serialQrCanvas);
+
+  // ✅ Generate QR (Material + Serial)
+   if (typeof QRCode !== 'undefined') {
+    QRCode.toCanvas(qrCanvas, row.Material || 'N/A', {
+      width: 40,
+      height: 40,
+      margin: 0,
+      errorCorrectionLevel: 'L'
+    }, err => {
+      if (err) console.error('QR Error for Material:', err);
+    });
+
+    QRCode.toCanvas(serialQrCanvas, row.Serial || 'N/A', {
+      width: 40,
+      height: 40,
+      margin: 0,
+      errorCorrectionLevel: 'L'
+    }, err => {
+      if (err) console.error('QR Error for Serial:', err);
+    });
+  }
+    // ✅ Generate Barcode (CODE128 ให้เล็กพอดีกับ QR)
+  setTimeout(() => {
+    if (typeof JsBarcode !== 'undefined') {
+      JsBarcode(barcodeCanvas, row.Material || '00000000', {
+        format: 'CODE128',
+        width: 1,
+        height: 15,
+        displayValue: false,
+        margin: 0
+      });
+    } else {
+      const ctx = barcodeCanvas.getContext('2d');
+      ctx.fillStyle = 'black';
+      ctx.font = '12px Arial';
+      ctx.fillText('JsBarcode not loaded', 10, 25);
+    }
+  }, 500);
+
+
+  return label;
+}
+
+ // ✅ สร้าง DOM ฉลากทั้งหมด แล้วใส่ใน #printArea
+function buildSerialLabelsForPrint(data) {
+  const printArea = document.getElementById('printArea');
+  printArea.innerHTML = '';
+
+  // สร้างโครงเหมือนไฟล์ label เดิม: <div id="app"><div class="container">...</div></div>
+  const appDiv = document.createElement('div');
+  appDiv.id = 'app';
+  printArea.appendChild(appDiv);
+
+  if (!data.length) {
+    appDiv.innerHTML = '<p style="text-align:center;">ไม่พบข้อมูลให้ Print</p>';
+    return;
+  }
+
+  const container = document.createElement('div');
+  container.className = 'container';
+    appDiv.appendChild(container);
+
+  data.forEach(row => {
+    const sticker = document.createElement('div');
+    sticker.className = 'sticker';
+
+    const label = createLabel(row);   // 👈 ใช้ฟังก์ชันด้านบน
+    sticker.appendChild(label);
+
+    container.appendChild(sticker);
+  });
+}
+
+  // ปุ่มบันทึก Serial (ตัวอย่าง)
+  if (saveSerialBtn) {
+    saveSerialBtn.addEventListener('click', () => {
+      const rowCount = serialTableBody.querySelectorAll('tr').length;
+      if (!rowCount) {
+        alert('ยังไม่มี Serial ในตารางให้บันทึก');
+        return;
+      }
+      alert('ตัวอย่างปุ่ม "บันทึก": ยังไม่เชื่อมต่อฐานข้อมูล\nคุณสามารถนำข้อมูลในตารางไปต่อยอดบันทึกลง Google Sheet หรือระบบอื่นได้ครับ');
+    });
+  }
+
+  // ปุ่ม Print Serial => ใช้ layout 80x100 จากด้านบน
+ if (printSerialBtn) {
+  printSerialBtn.addEventListener('click', () => {
+    const data = collectSerialPrintData();
+    if (!data.length) {
+      alert('ยังไม่มี Serial ในตารางสำหรับพิมพ์');
+      return;
+    }
+
+    spinner.style.display = 'flex';
+
+    setTimeout(() => {
+      // 1) สร้าง label ทั้งหมดลง #printArea
+      buildSerialLabelsForPrint(data);
+
+      // 2) รอ DOM พร้อมก่อน render Barcode
+      setTimeout(() => {
+        const barcodeList = document.querySelectorAll('#printArea canvas.barcode-in-text');
+
+        barcodeList.forEach(canvas => {
+          const mat = canvas.getAttribute("data-material") || canvas.dataset.material;
+          const value = mat || "00000000";
+
+          try {
+            JsBarcode(canvas, value, {
+              format: "CODE128",
+              width: 2,
+              height: 30,
+              displayValue: false,
+              margin: 10,
+              background: "white",
+              lineColor: "black"
+            });
+          } catch (err) {
+            console.error("Barcode error", err);
+          }
+        });
+
+        spinner.style.display = 'none';
+
+        // 3) Print หลัง Barcode render เสร็จ
+        window.print();
+
+      }, 300); // ให้เวลา DOM + QR render
+
+    }, 200);
   });
 }
 
 
-    // สร้างแถว Serial ใหม่
-    function addSerialRow() {
-      const tr = document.createElement('tr');
+  // เริ่มต้น
+  loadMaterialData();
+  loadEmployeeData();
+  addNewRow();        // barcode tab
+  addSerialRow();     // serial tab แถวแรก
+  updateSerialSummary();
+</script>
 
-      // ปุ่มลบ
-      const tdDelete = document.createElement('td');
-      const delBtn = document.createElement('button');
-      delBtn.type = 'button';
-      delBtn.textContent = 'ลบ';
-      delBtn.className = 'delete-btn';
-      delBtn.addEventListener('click', () => {
-        tr.remove();
-        reindexSerialRows();
-      });
-      tdDelete.appendChild(delBtn);
-      tr.appendChild(tdDelete);
-
-      // ลำดับ
-      const tdIndex = document.createElement('td');
-      tdIndex.textContent = serialNextIndex;
-      tr.appendChild(tdIndex);
-
-      // Serial
-      const tdSerial = document.createElement('td');
-      const inputSerial = document.createElement('input');
-      inputSerial.type = 'text';
-      inputSerial.placeholder = 'กรอก Serial แล้วกด Enter';
-      tdSerial.appendChild(inputSerial);
-      tr.appendChild(tdSerial);
-
-      // Serial ตัวหน้า
-      const tdPrefix = document.createElement('td');
-      const inputPrefix = document.createElement('input');
-      inputPrefix.type = 'text';
-      inputPrefix.readOnly = true;
-      inputPrefix.value = serialPrefixInput.value || '';
-      tdPrefix.appendChild(inputPrefix);
-      tr.appendChild(tdPrefix);
-
-      // Serial ตัวหลัง
-      const tdSuffix = document.createElement('td');
-      const inputSuffix = document.createElement('input');
-      inputSuffix.type = 'text';
-      inputSuffix.readOnly = true;
-      inputSuffix.value = serialSuffixInput.value || '';
-      tdSuffix.appendChild(inputSuffix);
-      tr.appendChild(tdSuffix);
-
-      // SerialCP
-      const tdSerialCP = document.createElement('td');
-      const inputSerialCP = document.createElement('input');
-      inputSerialCP.type = 'text';
-      inputSerialCP.readOnly = true;
-      tdSerialCP.appendChild(inputSerialCP);
-      tr.appendChild(tdSerialCP);
-
-      // Invoice
-      const tdInvoice = document.createElement('td');
-      const inputInvoice = document.createElement('input');
-      inputInvoice.type = 'text';
-      inputInvoice.readOnly = true;
-      inputInvoice.value = serialInvoiceInput.value || '';
-      tdInvoice.appendChild(inputInvoice);
-      tr.appendChild(tdInvoice);
-
-      // Material
-      const tdMat = document.createElement('td');
-      const inputMat = document.createElement('input');
-      inputMat.type = 'text';
-      inputMat.readOnly = true;
-      inputMat.value = serialMatInput.value || '';
-      tdMat.appendChild(inputMat);
-      tr.appendChild(tdMat);
-
-      // Description
-      const tdDesc = document.createElement('td');
-      const inputDesc = document.createElement('input');
-      inputDesc.type = 'text';
-      inputDesc.readOnly = true;
-      inputDesc.value = serialDescInput.value || '';
-      tdDesc.appendChild(inputDesc);
-      tr.appendChild(tdDesc);
-
-      // Storage bin
-      const tdBin = document.createElement('td');
-      const inputBin = document.createElement('input');
-      inputBin.type = 'text';
-      inputBin.readOnly = true;
-      inputBin.value = serialBinInput.value || '';
-      tdBin.appendChild(inputBin);
-      tr.appendChild(tdBin);
-
-      // Date
-      const tdDate = document.createElement('td');
-      const inputDate = document.createElement('input');
-      inputDate.type = 'text';
-      inputDate.readOnly = true;
-      inputDate.value = getNowString();
-      tdDate.appendChild(inputDate);
-      tr.appendChild(tdDate);
-
-      // Event: กด Enter ที่ Serial
-      inputSerial.addEventListener('keydown', e => {
-        if (e.key === 'Enter') {
-          e.preventDefault();
-          const serialVal = inputSerial.value.trim();
-          if (!serialVal) {
-            serialStatusEl.innerHTML =
-              '<span class="not-found">ไม่อนุญาติให้ขึ้นบรรทัดใหม่ถ้า Serial ยังเป็นค่าว่าง</span>';
-            inputSerial.focus();
-            return;
-          }
-
-          // ดึงค่าจากด้านบนมาใส่แถวนี้
-          inputPrefix.value  = serialPrefixInput.value || '';
-          inputSuffix.value  = serialSuffixInput.value || '';
-          inputInvoice.value = serialInvoiceInput.value || '';
-          inputMat.value     = serialMatInput.value || '';
-          inputDesc.value    = serialDescInput.value || '';
-          inputBin.value     = serialBinInput.value || '';
-          inputDate.value    = getNowString();
-
-          inputSerialCP.value =
-            (inputPrefix.value || '') + serialVal + (inputSuffix.value || '');
-
-          serialStatusEl.textContent = 'บันทึก Serial สำเร็จ และสร้างแถวใหม่แล้ว';
-          serialNextIndex++;
-          addSerialRow();
-          updateSerialSummary();
-        }
-      });
-
-      serialTableBody.appendChild(tr);
-      inputSerial.focus();
-      updateSerialSummary();
-    }
-
-    function reindexSerialRows() {
-      const rows = serialTableBody.querySelectorAll('tr');
-      let idx = 1;
-      rows.forEach(tr => {
-        const indexTd = tr.children[1];
-        indexTd.textContent = idx++;
-      });
-      serialNextIndex = idx;
-
-      if (!rows.length) {
-        serialNextIndex = 1;
-        serialStatusEl.textContent = 'ไม่มีข้อมูลในตาราง สร้างแถวใหม่ให้พร้อมกรอกแล้ว';
-        addSerialRow();
-      }
-      updateSerialSummary();
-    }
-
-    // ปุ่มบันทึก Serial (ตัวอย่าง)
-    if (saveSerialBtn) {
-      saveSerialBtn.addEventListener('click', () => {
-        const rowCount = serialTableBody.querySelectorAll('tr').length;
-        if (!rowCount) {
-          alert('ยังไม่มี Serial ในตารางให้บันทึก');
-          return;
-        }
-        alert('ตัวอย่างปุ่ม "บันทึก": ยังไม่เชื่อมต่อฐานข้อมูล\nคุณสามารถนำข้อมูลในตารางไปต่อยอดบันทึกลง Google Sheet หรือระบบอื่นได้ครับ');
-      });
-    }
-
-    // ปุ่ม Print Serial (พิมพ์หน้า Serial ปัจจุบัน)
-    if (printSerialBtn) {
-      printSerialBtn.addEventListener('click', () => {
-        const rowCount = serialTableBody.querySelectorAll('tr').length;
-        if (!rowCount) {
-          alert('ยังไม่มี Serial ในตารางสำหรับพิมพ์');
-          return;
-        }
-        window.print();
-      });
-    }
-
-    // เริ่มต้น
-    loadMaterialData();
-    loadEmployeeData();
-    addNewRow();        // barcode tab
-    addSerialRow();     // serial tab แถวแรก
-    updateSerialSummary();
-  </script>
 </body>
 </html>
