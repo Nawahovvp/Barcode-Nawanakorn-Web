@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <title>Web App Material 0301</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 20px;
+      background: #f5f5f5;
+    }
+    h1 {
+      margin-bottom: 10px;
+    }
+    .card {
+      background: #ffffff;
+      border-radius: 10px;
+      padding: 16px 20px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+      margin-bottom: 16px;
+    }
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+    .toolbar button {
+      padding: 6px 12px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      background: #fff;
+      cursor: pointer;
+    }
+    .toolbar button.active {
+      border-color: #007bff;
+      box-shadow: 0 0 0 2px rgba(0,123,255,0.2);
+    }
+    .toolbar input {
+      padding: 6px 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      min-width: 260px;
+    }
+    .status {
+      font-size: 0.85rem;
+      margin-top: 6px;
+      color: #555;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      background: #fff;
+    }
+    thead {
+      background: #007bff;
+      color: #fff;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 6px 8px;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+    td input {
+      width: 100%;
+      box-sizing: border-box;
+      border: none;
+      padding: 4px 6px;
+      font-size: 0.9rem;
+    }
+    td input[readonly] {
+      background: #f0f0f0;
+    }
+    tr:nth-child(even) td {
+      background: #fafafa;
+    }
+    .not-found {
+      color: #c00;
+      font-size: 0.8rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Web App – Material 0301</h1>
+
+  <div class="card">
+    <h3>สแกนบาร์โค้ด</h3>
+    <div class="toolbar">
+      <button type="button" class="mode-btn active" data-mode="small">BarcodeSmall</button>
+      <button type="button" class="mode-btn" data-mode="big">BarcodeBig</button>
+      <button type="button" class="mode-btn" data-mode="serial">BarcodeSerial</button>
+
+      <input id="barcodeInput" type="text" placeholder="สแกนบาร์โค้ดที่นี่ แล้วกด Enter" />
+    </div>
+    <div class="status" id="dataStatus">กำลังโหลดฐานข้อมูล 0301...</div>
+  </div>
+
+  <div class="card">
+    <h3>กรอกข้อมูล</h3>
+    <table id="entryTable">
+      <thead>
+        <tr>
+          <th style="width:60px;">ลำดับ</th>
+          <th style="width:140px;">Material</th>
+          <th>Description</th>
+          <th style="width:140px;">Storage bin</th>
+          <th style="width:100px;">จำนวน</th>
+          <th style="width:120px;">Pack</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- แถวจะถูกสร้างด้วย JavaScript -->
+      </tbody>
+    </table>
+    <div class="status" id="rowStatus"></div>
+  </div>
+
+  <script>
+    // URL ฐานข้อมูล 0301
+    const DATA_URL_0301 = 'https://opensheet.elk.sh/1x-B1xekpMm4p7fkKucvLjaewtp66uGIp8ZIxJJZAxMk/Sheet1';
+
+    let materialDB = [];      // เก็บข้อมูลทั้งหมดจาก Google Sheet
+    let currentMode = 'small';// โหมดบาร์โค้ด
+    let nextIndex = 1;        // ลำดับแถวถัดไป
+
+    const dataStatusEl = document.getElementById('dataStatus');
+    const rowStatusEl = document.getElementById('rowStatus');
+    const barcodeInput = document.getElementById('barcodeInput');
+    const tableBody = document.querySelector('#entryTable tbody');
+
+    // โหลดฐานข้อมูลจาก opensheet
+    async function loadData() {
+      try {
+        const res = await fetch(DATA_URL_0301);
+        const data = await res.json();
+        materialDB = data;
+        dataStatusEl.textContent = `โหลดฐานข้อมูลสำเร็จ (จำนวน ${materialDB.length} รายการ)`;
+      } catch (err) {
+        console.error(err);
+        dataStatusEl.textContent = 'โหลดฐานข้อมูลไม่สำเร็จ กรุณารีหน้าใหม่';
+      }
+    }
+
+    // หาข้อมูล Material ในฐานข้อมูล
+    function findMaterialInfo(materialCode) {
+      if (!materialCode) return null;
+      const m = materialDB.find(row => {
+        // เผื่อหัวคอลัมน์สะกดไม่ตรงกัน จับแบบหลวม ๆ
+        const mat = row.Material || row.MATERIAL || row.material || row['Material Code'];
+        return mat && String(mat).trim() === String(materialCode).trim();
+      });
+      if (!m) return null;
+
+      // เดา key ของ Description / Storage bin
+      const description =
+        m.Description || m.DESCRIPTION || m.Descripton || m.descripton || m['Description'] || '';
+      const storageBin =
+        m['Storage bin'] || m.StorageBin || m.STORAGE_BIN || m['Storage Bin'] || '';
+      return { description, storageBin };
+    }
+
+    // สร้างแถวใหม่
+    function addNewRow() {
+      const tr = document.createElement('tr');
+
+      // ลำดับ (readonly)
+      const tdIndex = document.createElement('td');
+      tdIndex.textContent = nextIndex;
+      tr.appendChild(tdIndex);
+
+      // Material
+      const tdMat = document.createElement('td');
+      const inputMat = document.createElement('input');
+      inputMat.type = 'text';
+      inputMat.placeholder = 'กรอก Material';
+      tdMat.appendChild(inputMat);
+      tr.appendChild(tdMat);
+
+      // Description (readonly)
+      const tdDesc = document.createElement('td');
+      const inputDesc = document.createElement('input');
+      inputDesc.type = 'text';
+      inputDesc.readOnly = true;
+      tdDesc.appendChild(inputDesc);
+      tr.appendChild(tdDesc);
+
+      // Storage bin (readonly)
+      const tdBin = document.createElement('td');
+      const inputBin = document.createElement('input');
+      inputBin.type = 'text';
+      inputBin.readOnly = true;
+      tdBin.appendChild(inputBin);
+      tr.appendChild(tdBin);
+
+      // จำนวน
+      const tdQty = document.createElement('td');
+      const inputQty = document.createElement('input');
+      inputQty.type = 'number';
+      inputQty.min = '0';
+      inputQty.placeholder = '0';
+      tdQty.appendChild(inputQty);
+      tr.appendChild(tdQty);
+
+      // Pack
+      const tdPack = document.createElement('td');
+      const inputPack = document.createElement('input');
+      inputPack.type = 'text';
+      tdPack.appendChild(inputPack);
+      tr.appendChild(tdPack);
+
+      // ผูก event: Enter ที่ช่อง Material = ค้นหาในฐาน
+      inputMat.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          fillRowByMaterial(tr);
+          inputQty.focus();
+        }
+      });
+
+      // Enter ที่ช่อง Pack = ถือว่าจบแถว -> สร้างแถวใหม่
+      inputPack.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          // ทำให้แน่ใจว่าแถวนี้มี Material แล้ว
+          const matValue = inputMat.value.trim();
+          if (!matValue) {
+            rowStatusEl.textContent = 'กรุณากรอก Material ก่อน';
+            return;
+          }
+          // ถ้ายังไม่ได้ดึงข้อมูลก็ลองดึงอีกครั้ง
+          if (!inputDesc.value && !inputBin.value) {
+            fillRowByMaterial(tr);
+          }
+          nextIndex++;
+          addNewRow();
+        }
+      });
+
+      tableBody.appendChild(tr);
+      inputMat.focus();
+    }
+
+    // ดึงข้อมูล Description / Storage bin ตาม Material ที่กรอก
+    function fillRowByMaterial(tr) {
+      const inputs = tr.querySelectorAll('input');
+      const [inputMat, inputDesc, inputBin, inputQty, inputPack] = inputs;
+      const matValue = inputMat.value.trim();
+
+      if (!matValue) {
+        rowStatusEl.textContent = 'กรุณากรอก Material';
+        return;
+      }
+
+      const info = findMaterialInfo(matValue);
+      if (!info) {
+        inputDesc.value = '';
+        inputBin.value = '';
+        rowStatusEl.innerHTML =
+          `<span class="not-found">ไม่พบ Material: ${matValue} ในฐานข้อมูล</span>`;
+      } else {
+        inputDesc.value = info.description || '';
+        inputBin.value = info.storageBin || '';
+        rowStatusEl.textContent = `ดึงข้อมูล Material ${matValue} สำเร็จ`;
+      }
+    }
+
+    // จัดการปุ่มโหมดบาร์โค้ด
+    document.querySelectorAll('.mode-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentMode = btn.dataset.mode;
+        rowStatusEl.textContent = `โหมดปัจจุบัน: ${btn.textContent}`;
+        barcodeInput.focus();
+      });
+    });
+
+    // Enter ในช่องสแกนบาร์โค้ด -> ใส่ค่าไปใน Material แถวสุดท้าย
+    barcodeInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        const code = barcodeInput.value.trim();
+        if (!code) return;
+
+        // หาแถวสุดท้าย (แถวสำหรับกรอกล่าสุด)
+        const rows = tableBody.querySelectorAll('tr');
+        if (rows.length === 0) {
+          addNewRow();
+        }
+        const lastRow = tableBody.querySelector('tr:last-child');
+        const inputs = lastRow.querySelectorAll('input');
+        const [inputMat, inputDesc, inputBin, inputQty, inputPack] = inputs;
+
+        inputMat.value = code;
+        fillRowByMaterial(lastRow);
+        inputQty.focus();
+        barcodeInput.value = '';
+      }
+    });
+
+    // --- เริ่มต้น ---
+    loadData();
+    addNewRow();
+  </script>
+</body>
+</html>
