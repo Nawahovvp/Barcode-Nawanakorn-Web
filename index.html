@@ -411,11 +411,19 @@
       padding-bottom: 0;
     }
     .qr-big {
-      width: 20mm;
-      height: 20mm;
-      margin-right: 2mm;
-      margin-left: 3mm;
-    }
+  width: 14mm;     /* เดิม 20mm → ย่อให้เล็กลง */
+  height: 14mm;    /* เดิม 20mm → ย่อให้เล็กลง */
+  margin-right: 2mm;
+  margin-left: 3mm;
+}
+
+/* เพิ่มใหม่ */
+.barcode-big {
+  width: 20mm !important;   /* เล็กกว่า QR และไม่กินพื้นที่กลาง */
+  height: 6mm !important;
+  margin-top: 1mm;
+  margin-left: 3mm;
+}
     .text-container-big {
       display: flex;
       flex-direction: column;
@@ -1122,98 +1130,127 @@ if (empCodeInput) {
     }
 
     // Big label
-    function createPrintLabelBig(row) {
-      const label = document.createElement('div');
-      label.className = 'label-big';
+    // Big label
+function createPrintLabelBig(row) {
+  const label = document.createElement('div');
+  label.className = 'label-big';
 
-      const rowDiv = document.createElement('div');
-      rowDiv.className = 'row-big';
+  const rowDiv = document.createElement('div');
+  rowDiv.className = 'row-big';
 
-      const qrCanvas = document.createElement('canvas');
-      qrCanvas.className = 'qr-big';
-      rowDiv.appendChild(qrCanvas);
+  // ------- ซ้าย: QR + Barcode (ซ้อนกันในคอลัมน์เดียว) -------
+  const leftCol = document.createElement('div');
+  leftCol.style.display = 'flex';
+  leftCol.style.flexDirection = 'column';
+  leftCol.style.alignItems = 'flex-start';
 
-      const textContainer = document.createElement('div');
-      textContainer.className = 'text-container-big';
+  const qrCanvas = document.createElement('canvas');
+  qrCanvas.className = 'qr-big';
+  leftCol.appendChild(qrCanvas);
 
-      const materialDiv = document.createElement('div');
-      materialDiv.className = 'material-big';
-      materialDiv.textContent = row.Material;
-      textContainer.appendChild(materialDiv);
+  const barcodeCanvas = document.createElement('canvas');
+  barcodeCanvas.className = 'barcode-big';
+  leftCol.appendChild(barcodeCanvas);
 
-      const techNameRaw = row.ชื่อช่าง || '';
-      const technicianName = techNameRaw.replace(/^นาย\s+/, '').trim();
-      if (technicianName) {
-        const technicianDiv = document.createElement('div');
-        technicianDiv.className = 'technician-big';
-        technicianDiv.textContent = technicianName;
-        textContainer.appendChild(technicianDiv);
-      }
+  rowDiv.appendChild(leftCol);
+  // ------------------------------------------------------------
 
-      const dept = (row.แผนก || '').trim();
-      if (dept) {
-        const departmentDiv = document.createElement('div');
-        departmentDiv.className = 'department-big';
-        departmentDiv.textContent = dept;
-        textContainer.appendChild(departmentDiv);
-      }
+  // ขวา: ข้อความ Material / ช่าง / แผนก + Description
+  const textContainer = document.createElement('div');
+  textContainer.className = 'text-container-big';
 
-      rowDiv.appendChild(textContainer);
+  const materialDiv = document.createElement('div');
+  materialDiv.className = 'material-big';
+  materialDiv.textContent = row.Material;
+  textContainer.appendChild(materialDiv);
 
-      const descText = (row.Description || '').trim();
-      if (descText) {
-        const desc = document.createElement('div');
-        desc.className = 'description-big';
-        desc.textContent = descText;
-        rowDiv.appendChild(desc);
-      }
+  const techNameRaw = row.ชื่อช่าง || '';
+  const technicianName = techNameRaw.replace(/^นาย\s+/, '').trim();
+  if (technicianName) {
+    const technicianDiv = document.createElement('div');
+    technicianDiv.className = 'technician-big';
+    technicianDiv.textContent = technicianName;
+    textContainer.appendChild(technicianDiv);
+  }
 
-      label.appendChild(rowDiv);
+  const dept = (row.แผนก || '').trim();
+  if (dept) {
+    const departmentDiv = document.createElement('div');
+    departmentDiv.className = 'department-big';
+    departmentDiv.textContent = dept;
+    textContainer.appendChild(departmentDiv);
+  }
 
-      const bottomContainer = document.createElement('div');
-      bottomContainer.className = 'bottom-container-big';
+  rowDiv.appendChild(textContainer);
 
-      const now = new Date();
-      const formattedDate =
-        `${now.getFullYear().toString().slice(2)}` +
-        `${String(now.getMonth() + 1).padStart(2, '0')}` +
-        `${String(now.getDate()).padStart(2, '0')}` +
-        `${String(now.getHours()).padStart(2, '0')}` +
-        `${String(now.getMinutes()).padStart(2, '0')}`;
+  const descText = (row.Description || '').trim();
+  if (descText) {
+    const desc = document.createElement('div');
+    desc.className = 'description-big';
+    desc.textContent = descText;
+    rowDiv.appendChild(desc);
+  }
 
-      const locTextStr = (row.Storagebin || '').trim();
-      if (locTextStr) {
-        const loc = document.createElement('div');
-        loc.className = 'location-big';
-        loc.textContent = `Location: ${locTextStr}`;
-        bottomContainer.appendChild(loc);
-      }
+  label.appendChild(rowDiv);
 
-      const lot = document.createElement('div');
-      lot.className = 'lot-line-big';
-      lot.textContent = `Lot: ${formattedDate} Qty(${row.จำนวน || 1})`;
-      bottomContainer.appendChild(lot);
+  // ส่วนล่าง: Location + Lot + Qty
+  const bottomContainer = document.createElement('div');
+  bottomContainer.className = 'bottom-container-big';
 
-      label.appendChild(bottomContainer);
+  const now = new Date();
+  const formattedDate =
+    `${now.getFullYear().toString().slice(2)}` +
+    `${String(now.getMonth() + 1).padStart(2, '0')}` +
+    `${String(now.getDate()).padStart(2, '0')}` +
+    `${String(now.getHours()).padStart(2, '0')}` +
+    `${String(now.getMinutes()).padStart(2, '0')}`;
 
-      const centerPackUnit = document.createElement('div');
-      centerPackUnit.className = 'center-pack-unit-big';
-      const packText = (row.Pack || '').trim();
-      const unitText = (row.Unit || '').trim();
-      centerPackUnit.textContent = `${packText} ${unitText}`.trim();
-      label.appendChild(centerPackUnit);
+  const locTextStr = (row.Storagebin || '').trim();
+  if (locTextStr) {
+    const loc = document.createElement('div');
+    loc.className = 'location-big';
+    loc.textContent = `Location: ${locTextStr}`;
+    bottomContainer.appendChild(loc);
+  }
 
-      if (typeof QRCode !== 'undefined') {
-        QRCode.toCanvas(qrCanvas, row.Material || 'N/A', {
-          width: 75,
-          height: 75,
-          margin: 0,
-          errorCorrectionLevel: 'L'
-        }, err => { if (err) console.error('QR Error:', err); });
-      }
+  const lot = document.createElement('div');
+  lot.className = 'lot-line-big';
+  lot.textContent = `Lot: ${formattedDate} Qty(${row.จำนวน || 1})`;
+  bottomContainer.appendChild(lot);
 
-      return label;
-    }
+  label.appendChild(bottomContainer);
+
+  // กลาง: Pack / Unit ตัวใหญ่ ๆ
+  const centerPackUnit = document.createElement('div');
+  centerPackUnit.className = 'center-pack-unit-big';
+  const packText = (row.Pack || '').trim();
+  const unitText = (row.Unit || '').trim();
+  centerPackUnit.textContent = `${packText} ${unitText}`.trim();
+  label.appendChild(centerPackUnit);
+
+  // ------ วาด QR ให้เล็กลง ------
+  if (typeof QRCode !== 'undefined') {
+    QRCode.toCanvas(qrCanvas, row.Material || 'N/A', {
+      width: 55,       // เดิม 75 → ลดขนาด
+      height: 55,
+      margin: 0,
+      errorCorrectionLevel: 'L'
+    }, err => { if (err) console.error('QR Error:', err); });
+  }
+
+  // ------ วาด Barcode Code128 ใต้ QR ------
+  if (typeof JsBarcode !== 'undefined' && row.Material) {
+    JsBarcode(barcodeCanvas, row.Material, {
+      format: 'CODE128',
+      width: 1,        // เส้นบางหน่อย
+      height: 25,      // ไม่สูงเกินไป
+      displayValue: false,
+      margin: 0
+    });
+  }
+
+  return label;
+}
 
     function buildPrintLabelsBig(data) {
       const printArea = document.getElementById('printArea');
