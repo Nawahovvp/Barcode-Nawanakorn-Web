@@ -4,66 +4,232 @@
   <meta charset="UTF-8" />
   <title>Web App – Material 0301</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;700&display=swap');
+
+    :root {
+      --primary: #2563eb;
+      --primary-soft: #e0edff;
+      --bg: #f3f4f8;
+      --card-bg: #ffffff;
+      --border-soft: #e2e8f0;
+      --text-main: #111827;
+      --text-muted: #6b7280;
+      --tab-bg: #ffffff;
+      --tab-active: #2563eb;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
     body {
-      font-family: sans-serif;
-      margin: 20px;
-      background: #f5f5f5;
+      font-family: 'Noto Sans Thai', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      margin: 0;
+      padding: 24px;
+      background: radial-gradient(circle at top, #e0ebff 0, #f3f4f8 45%, #f9fafb 100%);
+      color: var(--text-main);
     }
-    h1 {
-      margin-bottom: 10px;
+
+    .app-shell {
+      max-width: 1100px;
+      margin: 0 auto;
     }
-    .card {
-      background: #ffffff;
-      border-radius: 10px;
-      padding: 16px 20px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+
+    header.app-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       margin-bottom: 16px;
     }
-    .status {
-      font-size: 0.85rem;
-      margin-top: 6px;
-      color: #555;
+
+    header.app-header .title-block {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
     }
+
+    header.app-header h1 {
+      margin: 0;
+      font-size: 1.4rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    header.app-header .subtitle {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: rgba(37, 99, 235, 0.08);
+      color: var(--primary);
+      font-size: 0.75rem;
+      font-weight: 600;
+      gap: 6px;
+    }
+
+    .badge-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.25);
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 4px;
+      border-radius: 999px;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      margin-bottom: 16px;
+      width: fit-content;
+    }
+
+    .tab-btn {
+      border: none;
+      background: transparent;
+      border-radius: 999px;
+      padding: 6px 16px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.18s ease;
+    }
+
+    .tab-btn span.icon {
+      font-size: 1rem;
+    }
+
+    .tab-btn.active {
+      background: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.35);
+    }
+
+    .tab-panel {
+      display: none;
+    }
+
+    .tab-panel.active {
+      display: block;
+    }
+
+    /* Cards & table (Barcode tab) */
+    .card {
+      background: var(--card-bg);
+      border-radius: 18px;
+      padding: 16px 20px;
+      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.04);
+      border: 1px solid var(--border-soft);
+      margin-bottom: 16px;
+    }
+
+    .card-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+
+    .card-title {
+      font-size: 1rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-title-pill {
+      font-size: 0.75rem;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--primary-soft);
+      color: var(--primary);
+    }
+
+    .status {
+      font-size: 0.8rem;
+      margin-top: 6px;
+      color: var(--text-muted);
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 10px;
       background: #fff;
+      border-radius: 14px;
+      overflow: hidden;
     }
+
     thead {
-      background: #007bff;
+      background: linear-gradient(to right, #2563eb, #1d4ed8);
       color: #fff;
     }
+
     th, td {
-      border: 1px solid #ddd;
+      border: 1px solid #e5e7eb;
       padding: 6px 8px;
       text-align: left;
       font-size: 0.9rem;
     }
+
+    th {
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
     td input {
       width: 100%;
       box-sizing: border-box;
       border: none;
       padding: 4px 6px;
       font-size: 0.9rem;
+      font-family: inherit;
     }
+
     td input[readonly] {
-      background: #f0f0f0;
+      background: #f3f4f6;
+      color: #4b5563;
     }
+
     tr:nth-child(even) td {
-      background: #fafafa;
+      background: #f9fafb;
     }
+
     .not-found {
-      color: #c00;
+      color: #dc2626;
       font-size: 0.8rem;
     }
+
     #empCodeInput {
       padding: 6px 10px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      min-width: 200px;
+      border-radius: 999px;
+      border: 1px solid #d1d5db;
+      min-width: 220px;
       margin-left: 4px;
+      font-size: 0.9rem;
     }
+
+    #empCodeInput:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.25);
+    }
+
     .employee-row {
       display: flex;
       flex-wrap: wrap;
@@ -71,107 +237,480 @@
       align-items: center;
       margin-top: 6px;
       margin-bottom: 4px;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
     }
-    .print-btn {
-  padding: 6px 12px;
-  border-radius: 6px;
-  border: 1px solid #007bff;
-  background: #fff;
-  cursor: pointer;
-  margin-left: 6px;
-  font-size: 0.9rem;
-  color: #007bff;
-}
 
-.print-btn:hover {
-  background: #e6f0ff;
-}
+    .print-btn {
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--primary);
+      background: #ffffff;
+      cursor: pointer;
+      margin-left: 6px;
+      font-size: 0.9rem;
+      color: var(--primary);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 10px rgba(37, 99, 235, 0.15);
+      transition: all 0.18s ease;
+    }
+
+    .print-btn:hover {
+      background: var(--primary);
+      color: #ffffff;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 16px rgba(37, 99, 235, 0.25);
+    }
+
+    .print-btn .emoji {
+      font-size: 1rem;
+    }
+
+    /* ========= สไตล์ฉลาก Small 102x30 mm ========= */
+    #printArea {
+      display: none;
+    }
+    .container-small {
+      display: block;
+      width: 106mm;
+    }
+    .sticker-small {
+      width: 106mm;
+      height: 30mm;
+      display: flex;
+      flex-direction: row;
+      background: white;
+      box-sizing: border-box;
+      margin-bottom: 0;
+    }
+    .label-small {
+      width: 53mm;
+      height: 30mm;
+      box-sizing: border-box;
+      padding: 1mm;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border-right: 0.5px solid #ccc;
+    }
+    .label-small:last-child {
+      border-right: none;
+    }
+    .row-small {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      margin-bottom: 1mm;
+    }
+    .qr-small {
+      width: 10mm;
+      height: 10mm;
+      margin-right: 5mm;
+      margin-left: 3mm;
+    }
+    .material-small {
+      font-size: 24px;
+      font-weight: bold;
+      text-align: left;
+      margin: 0;
+      line-height: 1;
+    }
+    .technician-small {
+      font-size: 10px;
+      text-align: left;
+      margin: 0;
+      margin-right: 2mm;
+      line-height: 1;
+    }
+    .department-small {
+      font-size: 10px;
+      text-align: left;
+      margin: 0;
+      margin-right: 2mm;
+      line-height: 1;
+    }
+    .description-small {
+      font-size: 10px;
+      font-weight: bold;
+      text-align: left;
+      line-height: 1.2;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      word-wrap: break-word;
+      margin: 0;
+      margin-left: 2mm;
+    }
+    .location-small {
+      font-size: 12px;
+      font-weight: bold;
+      text-align: left;
+      margin-top: 1px;
+      margin-bottom: 0;
+      line-height: 1.1;
+      margin-left: 2mm;
+    }
+    .lot-line-small {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: bold;
+      margin-top: 0;
+      margin-bottom: 0;
+      line-height: 1.1;
+      margin-left: 2mm;
+      margin-right: 1mm;
+    }
+    .barcode-small {
+      margin-left: 2mm;
+      width: 15mm !important;
+      height: 6mm !important;
+    }
+
+    /* ========= สไตล์ฉลาก Big 80x100 mm ========= */
+    .container-big {
+      display: block;
+      width: 80mm;
+    }
+    .sticker-big {
+      width: 80mm;
+      height: 100mm;
+      display: flex;
+      flex-direction: column;
+      background: white;
+      box-sizing: border-box;
+      margin-bottom: 0;
+      position: relative;
+    }
+    .label-big {
+      width: 80mm;
+      height: 100mm;
+      box-sizing: border-box;
+      padding: 2mm;
+      padding-bottom: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 0;
+      position: relative;
+    }
+    .row-big {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      margin-bottom: 2mm;
+    }
+    .bottom-container-big {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+    .qr-big {
+      width: 20mm;
+      height: 20mm;
+      margin-right: 2mm;
+      margin-left: 3mm;
+    }
+    .text-container-big {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-width: 50mm;
+    }
+    .material-big {
+      font-size: 40px;
+      font-weight: bold;
+      text-align: left;
+      margin: 0;
+      line-height: 1.1;
+    }
+    .technician-big {
+      font-size: 16px;
+      text-align: left;
+      margin: 0;
+      line-height: 1.3;
+    }
+    .department-big {
+      font-size: 16px;
+      text-align: left;
+      margin: 0;
+      line-height: 1.3;
+    }
+    .description-big {
+      font-size: 20px;
+      font-weight: bold;
+      text-align: left;
+      line-height: 1.3;
+      width: calc(100% - 4mm);
+      margin: 2mm 0 0 3mm;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      word-wrap: break-word;
+    }
+    .location-big {
+      font-size: 25px;
+      font-weight: bold;
+      text-align: left;
+      margin-top: 0;
+      margin-bottom: 0;
+      line-height: 1.3;
+      margin-left: 3mm;
+    }
+    .lot-line-big {
+      font-size: 20px;
+      font-weight: bold;
+      margin-top: 0;
+      margin-bottom: 0;
+      line-height: 1.3;
+      margin-left: 3mm;
+      margin-right: 2mm;
+    }
+    .center-pack-unit-big {
+      position: absolute;
+      top: 55%;
+      left: 50%;
+      transform: translate(-50%, -30%);
+      font-size: 60px;
+      font-weight: bold;
+      text-align: center;
+      width: 80%;
+      margin: 0;
+      padding: 0;
+      line-height: 1;
+    }
+
+    /* Spinner */
+    .spinner-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+    }
+    .spinner {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #4CAF50;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+    }
+    #spinner { display: none; }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @media print {
+      header.app-header,
+      .tabs,
+      .print-btn,
+      .spinner-container,
+      #appRoot {
+        display: none !important;
+      }
+
+      #printArea {
+        display: block !important;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Noto Sans Thai', sans-serif;
+        background: #ffffff;
+      }
+
+      .sticker-small,
+      .sticker-big {
+        page-break-inside: avoid;
+        margin: 0;
+      }
+    }
   </style>
 </head>
 <body>
-  <h1>Web App – Material 0301</h1>
+  <div class="app-shell">
+    <header class="app-header">
+      <div class="title-block">
+        <h1>Web App – Material 0301</h1>
+        <div class="subtitle">ระบบพิมพ์บาร์โค้ดฉลากสินค้า แบบ Small / Big</div>
+      </div>
+      <div class="badge">
+        <span class="badge-dot"></span>
+        <span>โหมดทำงาน: Barcode</span>
+      </div>
+    </header>
 
-  <!-- ฐานข้อมูล Material -->
-  <div class="card">
-  <div style="display:flex; justify-content:space-between; align-items:center;">
-    <h3>กรอกข้อมูล</h3>
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="barcode">
+        <span class="icon">🏷️</span>
+        <span>Barcode</span>
+      </button>
+      <button class="tab-btn" data-tab="serial">
+        <span class="icon">#️⃣</span>
+        <span>Serial Number</span>
+      </button>
+    </div>
 
-    <!-- ปุ่ม Print -->
-    <div>
-      <button id="printSmallBtn" class="print-btn">Print Small</button>
-      <button id="printBigBtn" class="print-btn">Print Big</button>
+    <!-- Tab: Barcode -->
+    <div id="tab-barcode" class="tab-panel active">
+      <div id="appRoot">
+        <!-- Card: หัวตาราง + ปุ่ม Print + สถานะโหลดฐานข้อมูล -->
+        <div class="card">
+          <div class="card-header-row">
+            <div class="card-title">
+              <span>ตะกร้า Barcode</span>
+              <span class="card-title-pill">Small & Big Label</span>
+            </div>
+            <div>
+              <button id="printSmallBtn" class="print-btn">
+                <span class="emoji">🖨️</span> Print Small
+              </button>
+              <button id="printBigBtn" class="print-btn">
+                <span class="emoji">🖨️</span> Print Big
+              </button>
+            </div>
+          </div>
+          <div class="status" id="dataStatus"></div>
+        </div>
+
+        <!-- ข้อมูลพนักงาน -->
+        <div class="card">
+          <div class="card-title">
+            ข้อมูลผู้ปฏิบัติงาน
+          </div>
+          <div class="employee-row">
+            <label>
+              รหัสพนักงาน:
+              <input id="empCodeInput" type="text" placeholder="กรอกรหัสพนักงาน แล้วกด Enter" />
+            </label>
+          </div>
+          <div class="status" id="empStatus">กำลังโหลดข้อมูลพนักงาน...</div>
+        </div>
+
+        <!-- ตารางกรอกข้อมูล -->
+        <div class="card">
+          <div class="card-title">
+            รายการ Material
+          </div>
+          <table id="entryTable">
+            <thead>
+              <tr>
+                <th style="width:60px;">ลำดับ</th>
+                <th style="width:140px;">Material</th>
+                <th>Description</th>
+                <th style="width:140px;">Storage bin</th>
+                <th style="width:120px;">คงเหลือ</th>
+                <th style="width:100px;">จำนวน</th>
+                <th style="width:120px;">Pack</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+          <div class="status" id="rowStatus"></div>
+        </div>
+      </div>
+
+      <!-- Spinner -->
+      <div class="spinner-container" id="spinner">
+        <div class="spinner"></div>
+      </div>
+
+      <!-- พื้นที่สำหรับพิมพ์ฉลาก -->
+      <div id="printArea"></div>
+    </div>
+
+    <!-- Tab: Serial Number (ว่าง ๆ ไว้ก่อน) -->
+    <div id="tab-serial" class="tab-panel">
+      <div class="card">
+        <div class="card-title">
+          Serial Number
+          <span class="card-title-pill">Coming soon</span>
+        </div>
+        <div class="status" style="margin-top:10px;">
+          แท็บนี้ยังว่างอยู่ สามารถนำไปต่อยอดสำหรับจัดการ Serial Number หรือประวัติการสแกนได้ในอนาคต
+        </div>
+      </div>
     </div>
   </div>
-  <!-- ข้อมูลพนักงาน -->
-  <div class="card">
-    <h3>ข้อมูลผู้ปฏิบัติงาน</h3>
-    <div class="employee-row">
-      <label>
-        รหัสพนักงาน:
-        <input id="empCodeInput" type="text" placeholder="กรอกรหัสพนักงาน แล้วกด Enter" />
-      </label>
-    </div>
-    
-    <!-- แสดงชื่อ + ทีม แค่ใน empStatus -->
-    <div class="status" id="empStatus">กำลังโหลดข้อมูลพนักงาน...</div>
-  </div>
 
-  <!-- ตารางกรอกข้อมูล -->
-  <div class="card">
-    <h3>กรอกข้อมูล</h3>
-    <table id="entryTable">
-      <thead>
-        <tr>
-    <th style="width:60px;">ลำดับ</th>
-    <th style="width:140px;">Material</th>
-    <th>Description</th>
-    <th style="width:140px;">Storage bin</th>
-    <th style="width:120px;">คงเหลือ</th>
-    <th style="width:100px;">จำนวน</th>
-    <th style="width:120px;">Pack</th>
-  </tr>
-      </thead>
-      <tbody>
-        <!-- แถวจะถูกสร้างด้วย JavaScript -->
-      </tbody>
-    </table>
-    <div class="status" id="rowStatus"></div>
-  </div>
+  <!-- QRCode & Barcode libs -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
 
   <script>
-    // URL ฐานข้อมูล
+    // ==== ระบบสลับแท็บ ====
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    const tabPanels  = {
+      barcode: document.getElementById('tab-barcode'),
+      serial:  document.getElementById('tab-serial')
+    };
+
+    tabButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const target = btn.getAttribute('data-tab');
+
+        tabButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        Object.keys(tabPanels).forEach(key => {
+          tabPanels[key].classList.toggle('active', key === target);
+        });
+      });
+    });
+
+    // ==== โค้ดเดิมทั้งหมด (ฟังก์ชันเหมือนเดิม) ====
+
     const DATA_URL_0301 = 'https://opensheet.elk.sh/1x-B1xekpMm4p7fkKucvLjaewtp66uGIp8ZIxJJZAxMk/Sheet1';
-    const EMP_URL      = 'https://opensheet.elk.sh/1eqVoLsZxGguEbRCC5rdI4iMVtQ7CK4T3uXRdx8zE3uw/Employee';
+    const EMP_URL       = 'https://opensheet.elk.sh/1eqVoLsZxGguEbRCC5rdI4iMVtQ7CK4T3uXRdx8zE3uw/Employee';
 
     let materialDB = [];
     let employeeDB = [];
     let nextIndex = 1;
 
-    // element ต่าง ๆ
     const dataStatusEl = document.getElementById('dataStatus');
     const rowStatusEl  = document.getElementById('rowStatus');
     const tableBody    = document.querySelector('#entryTable tbody');
 
     const empCodeInput = document.getElementById('empCodeInput');
     const empStatus    = document.getElementById('empStatus');
+    const spinner      = document.getElementById('spinner');
 
     let employeeCode = '';
+    let employeeName = '';
+    let employeeTeam = '';
 
-    // โหลดฐานข้อมูล Material
     async function loadMaterialData() {
       try {
         const res = await fetch(DATA_URL_0301);
         const data = await res.json();
         materialDB = data;
-        dataStatusEl.textContent = `โหลดฐานข้อมูล 0301 สำเร็จ (จำนวน ${materialDB.length} รายการ)`;
+        if (dataStatusEl) {
+          dataStatusEl.textContent = `โหลดฐานข้อมูล 0301 สำเร็จ (จำนวน ${materialDB.length} รายการ)`;
+        }
       } catch (err) {
         console.error(err);
-        dataStatusEl.textContent = 'โหลดฐานข้อมูล 0301 ไม่สำเร็จ กรุณารีหน้าใหม่';
+        if (dataStatusEl) {
+          dataStatusEl.textContent = 'โหลดฐานข้อมูล 0301 ไม่สำเร็จ กรุณารีหน้าใหม่';
+        }
       }
     }
 
-    // โหลดฐานข้อมูล Employee
     async function loadEmployeeData() {
       try {
         const res = await fetch(EMP_URL);
@@ -184,68 +723,50 @@
       }
     }
 
-    // แปลงรหัส Material ตามจำนวนตัวอักษร
     function normalizeMaterialCode(raw) {
       if (!raw) return '';
       const trimmed = String(raw).trim();
       const len = trimmed.length;
 
-      if (len === 3) {
-        return '30000' + trimmed;
-      } else if (len === 4) {
-        return '3000' + trimmed;
-      } else if (len === 5) {
-        return '300' + trimmed;
-      }
+      if (len === 3)  return '30000' + trimmed;
+      if (len === 4)  return '3000'  + trimmed;
+      if (len === 5)  return '300'   + trimmed;
       return trimmed;
     }
 
-    // หา Material ในฐานข้อมูล
     function findMaterialInfo(materialCode) {
-  if (!materialCode) return null;
+      if (!materialCode) return null;
 
-  const m = materialDB.find(row => {
-    const mat = row.Material || row.MATERIAL || row.material || row['Material Code'];
-    return mat && String(mat).trim() === String(materialCode).trim();
-  });
+      const m = materialDB.find(row => {
+        const mat = row.Material || row.MATERIAL || row.material || row['Material Code'];
+        return mat && String(mat).trim() === String(materialCode).trim();
+      });
 
-  if (!m) return null;
+      if (!m) return null;
 
-  const description =
-    m['Material description'] ||
-    m['material description'] ||
-    m['MATERIAL DESCRIPTION'] ||
-    '';
+      const description =
+        m['Material description'] ||
+        m['material description'] ||
+        m['MATERIAL DESCRIPTION'] ||
+        '';
 
-  const storageBin =
-    m['Storage bin'] ||
-    m['STORAGE BIN'] ||
-    m.StorageBin ||
-    m['Storage Bin'] ||
-    '';
+      const storageBin =
+        m['Storage bin'] ||
+        m['STORAGE BIN'] ||
+        m.StorageBin ||
+        m['Storage Bin'] ||
+        '';
 
-  const unrestricted =
-    m['Unrestricted'] ||
-    m['unrestricted'] ||
-    m['UNRESTRICTED'] ||
-    m['Unrestrict'] ||
-    '';
+      const unrestricted =
+        m['Unrestricted'] ||
+        m['unrestricted'] ||
+        m['UNRESTRICTED'] ||
+        m['Unrestrict'] ||
+        '';
 
-  return { description, storageBin, unrestricted };
-}
+      return { description, storageBin, unrestricted };
+    }
 
-// ปุ่ม Print Small
-document.getElementById('printSmallBtn').addEventListener('click', () => {
-  alert('Print Small ทำงาน (รอเชื่อมระบบพิมพ์)');
-  // TODO: ใส่ฟังก์ชันปริ้นจริงที่นี่
-});
-
-// ปุ่ม Print Big
-document.getElementById('printBigBtn').addEventListener('click', () => {
-  alert('Print Big ทำงาน (รอเชื่อมระบบพิมพ์)');
-  // TODO: ใส่ฟังก์ชันปริ้นจริงที่นี่
-});
-    // หา Employee ตามรหัสพนักงาน (IDRec)
     function findEmployeeById(id) {
       if (!id) return null;
       const trimmed = String(id).trim();
@@ -256,56 +777,47 @@ document.getElementById('printBigBtn').addEventListener('click', () => {
       });
     }
 
-    // ดึงข้อมูล Description / Storage bin ตาม Material ที่กรอก + ตรวจสอบ
     function fillRowByMaterial(tr) {
-  const inputs = tr.querySelectorAll('input');
+      const inputs = tr.querySelectorAll('input');
+      const [inputMat, inputDesc, inputBin, inputRemain, inputQty, inputPack] = inputs;
 
-  // ต้องเพิ่ม inputRemain เข้าไปตามลำดับจริงของแถว
-  const [inputMat, inputDesc, inputBin, inputRemain, inputQty, inputPack] = inputs;
+      let matValue = inputMat.value.trim();
+      if (!matValue) {
+        rowStatusEl.textContent = 'กรุณากรอก Material';
+        return false;
+      }
 
-  let matValue = inputMat.value.trim();
-  if (!matValue) {
-    rowStatusEl.textContent = 'กรุณากรอก Material';
-    return false;
-  }
+      const normalized = normalizeMaterialCode(matValue);
+      inputMat.value = normalized;
 
-  // แปลงตามกฎ 3/4/5 ตัว
-  const normalized = normalizeMaterialCode(matValue);
-  inputMat.value = normalized;
+      const info = findMaterialInfo(normalized);
 
-  const info = findMaterialInfo(normalized);
+      if (!info || !info.description) {
+        inputDesc.value   = '';
+        inputBin.value    = '';
+        inputRemain.value = '';
+        rowStatusEl.innerHTML =
+          `<span class="not-found">ไม่พบ Material หรือไม่มี Description: ${normalized} กรุณากรอกใหม่</span>`;
+        inputMat.value = '';
+        inputMat.focus();
+        return false;
+      }
 
-  // ถ้าไม่เจอ
-  if (!info || !info.description) {
-    inputDesc.value = '';
-    inputBin.value = '';
-    inputRemain.value = '';
-    rowStatusEl.innerHTML =
-      `<span class="not-found">ไม่พบ Material หรือไม่มี Description: ${normalized} กรุณากรอกใหม่</span>`;
-    inputMat.value = '';
-    inputMat.focus();
-    return false;
-  }
+      inputDesc.value   = info.description || '';
+      inputBin.value    = info.storageBin || '';
+      inputRemain.value = info.unrestricted || '';
 
-  // ถ้าพบ → เติมข้อมูล
-  inputDesc.value   = info.description || '';
-  inputBin.value    = info.storageBin || '';
-  inputRemain.value = info.unrestricted || '';   // ⭐ เพิ่มบรรทัดนี้
+      rowStatusEl.textContent = `ดึงข้อมูล Material ${normalized} สำเร็จ`;
+      return true;
+    }
 
-  rowStatusEl.textContent = `ดึงข้อมูล Material ${normalized} สำเร็จ`;
-  return true;
-}
-
-    // สร้างแถวใหม่
     function addNewRow() {
       const tr = document.createElement('tr');
 
-      // ลำดับ
       const tdIndex = document.createElement('td');
       tdIndex.textContent = nextIndex;
       tr.appendChild(tdIndex);
 
-      // Material
       const tdMat = document.createElement('td');
       const inputMat = document.createElement('input');
       inputMat.type = 'text';
@@ -313,7 +825,6 @@ document.getElementById('printBigBtn').addEventListener('click', () => {
       tdMat.appendChild(inputMat);
       tr.appendChild(tdMat);
 
-      // Description (readonly)
       const tdDesc = document.createElement('td');
       const inputDesc = document.createElement('input');
       inputDesc.type = 'text';
@@ -321,22 +832,20 @@ document.getElementById('printBigBtn').addEventListener('click', () => {
       tdDesc.appendChild(inputDesc);
       tr.appendChild(tdDesc);
 
-      // Storage bin (readonly)
       const tdBin = document.createElement('td');
       const inputBin = document.createElement('input');
       inputBin.type = 'text';
       inputBin.readOnly = true;
       tdBin.appendChild(inputBin);
       tr.appendChild(tdBin);
-     // คงเหลือ (Unrestricted)
-const tdRemain = document.createElement('td');
-const inputRemain = document.createElement('input');
-inputRemain.type = 'text';
-inputRemain.readOnly = true;
-tdRemain.appendChild(inputRemain);
-tr.appendChild(tdRemain);
 
-      // จำนวน (default = 1)
+      const tdRemain = document.createElement('td');
+      const inputRemain = document.createElement('input');
+      inputRemain.type = 'text';
+      inputRemain.readOnly = true;
+      tdRemain.appendChild(inputRemain);
+      tr.appendChild(tdRemain);
+
       const tdQty = document.createElement('td');
       const inputQty = document.createElement('input');
       inputQty.type = 'number';
@@ -346,7 +855,6 @@ tr.appendChild(tdRemain);
       tdQty.appendChild(inputQty);
       tr.appendChild(tdQty);
 
-      // Pack (default = 1)
       const tdPack = document.createElement('td');
       const inputPack = document.createElement('input');
       inputPack.type = 'number';
@@ -356,24 +864,20 @@ tr.appendChild(tdRemain);
       tdPack.appendChild(inputPack);
       tr.appendChild(tdPack);
 
-      // Enter ที่ Material = fillRowByMaterial → ถ้าผ่านให้โฟกัสไปที่ช่อง จำนวน
       inputMat.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') {
-    e.preventDefault();
-    const ok = fillRowByMaterial(tr);
-    if (ok) {
-      // ย้ายไปช่อง จำนวน แล้ว select เหมือนกด Ctrl+A
-      inputQty.focus();
-      inputQty.select();
-    }
-  }
-});
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          const ok = fillRowByMaterial(tr);
+          if (ok) {
+            inputQty.focus();
+            inputQty.select();
+          }
+        }
+      });
 
-      // Enter ที่ จำนวน = เพิ่มแถวใหม่ + โฟกัส Material แถวใหม่
       inputQty.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
           e.preventDefault();
-          // เช็คว่ามี Material & Description แล้วหรือยัง
           if (!inputMat.value.trim() || !inputDesc.value.trim()) {
             rowStatusEl.textContent = 'กรุณากรอก Material ให้ถูกต้องก่อน';
             inputMat.focus();
@@ -388,32 +892,389 @@ tr.appendChild(tdRemain);
       inputMat.focus();
     }
 
-    // Event: กรอกรหัสพนักงานแล้วกด Enter -> ดึง Name + Team และแสดงเป็นข้อความเดียว
-    if (empCodeInput) {
-      empCodeInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-          e.preventDefault();
-          const code = empCodeInput.value.trim();
-          employeeCode = code;
+    // รหัสพนักงาน → พิมพ์แล้วแสดงชื่อ/ทีมอัตโนมัติ + focus ที่ Material แถวแรกเมื่อพบ
+if (empCodeInput) {
+  empCodeInput.addEventListener('input', () => {
+    const code = empCodeInput.value.trim();
+    employeeCode = code;
 
-          if (!code) {
-            empStatus.textContent = 'กรุณากรอกรหัสพนักงาน';
-            return;
-          }
+    // ถ้าว่าง
+    if (!code) {
+      empStatus.textContent = 'กรุณากรอกรหัสพนักงาน';
+      employeeName = '';
+      employeeTeam = '';
+      return;
+    }
 
-          const emp = findEmployeeById(code);
-          if (!emp) {
-            empStatus.innerHTML =
-              `<span class="not-found">ไม่พบรหัสพนักงาน: ${code}</span>`;
-          } else {
-            const name = emp.Name || emp.NAME || emp['Employee Name'] || '';
-            const team = emp.Team || emp.TEAM || emp['Team Name'] || '';
-            empStatus.textContent =
-              `รหัสพนักงาน ${code} : ${name} (${team})`;
-          }
+    // กันไม่ให้รีบค้นเกินไป (ให้พิมพ์อย่างน้อย 7 ตัวก่อน)
+    if (code.length < 7) {
+      empStatus.textContent = 'กำลังพิมพ์รหัสพนักงาน...';
+      employeeName = '';
+      employeeTeam = '';
+      return;
+    }
+
+    const emp = findEmployeeById(code);
+    if (!emp) {
+      empStatus.innerHTML =
+        `<span class="not-found">ไม่พบรหัสพนักงาน: ${code}</span>`;
+      employeeName = '';
+      employeeTeam = '';
+      return;
+    }
+
+    const name = emp.Name || emp.NAME || emp['Employee Name'] || '';
+    const team = emp.Team || emp.TEAM || emp['Team Name'] || '';
+    employeeName = name;
+    employeeTeam = team;
+    empStatus.textContent =
+      `รหัสพนักงาน ${code} : ${name} (${team})`;
+
+    // เมื่อหาพนักงานเจอแล้ว → ให้ cursor ไปที่ Material แถวแรก
+    const firstMat = document.querySelector('#entryTable tbody tr:first-child input');
+    if (firstMat) {
+      firstMat.focus();
+      firstMat.select();
+    }
+  });
+}
+
+    function collectPrintData() {
+      const rows = Array.from(tableBody.querySelectorAll('tr'));
+      const data = [];
+
+      rows.forEach(tr => {
+        const inputs = tr.querySelectorAll('input');
+        if (inputs.length < 6) return;
+
+        const [inputMat, inputDesc, inputBin, inputRemain, inputQty, inputPack] = inputs;
+        const material = inputMat.value.trim();
+        if (!material) return;
+
+        const qty = parseInt(inputQty.value, 10) || 1;
+
+        data.push({
+          Material:   material,
+          จำนวน:      qty,
+          Pack:       inputPack.value || '',
+          IDช่าง:     employeeCode || '',
+          Serial:     '-',
+          Description:inputDesc.value || '',
+          Storagebin: inputBin.value || '',
+          ชื่อช่าง:   employeeName || '',
+          Unit:       'pc',
+          แผนก:       employeeTeam || ''
+        });
+      });
+
+      return data;
+    }
+
+    // Small label
+    function createPrintLabelSmall(row) {
+      const label = document.createElement('div');
+      label.className = 'label-small';
+
+      const rowDiv = document.createElement('div');
+      rowDiv.className = 'row-small';
+
+      const qrCanvas = document.createElement('canvas');
+      qrCanvas.className = 'qr-small';
+      rowDiv.appendChild(qrCanvas);
+
+      const textContainer = document.createElement('div');
+      textContainer.style.display = 'flex';
+      textContainer.style.flexDirection = 'column';
+
+      const materialDiv = document.createElement('div');
+      materialDiv.className = 'material-small';
+      materialDiv.textContent = row.Material;
+      textContainer.appendChild(materialDiv);
+
+      const techNameRaw = row.ชื่อช่าง || '';
+      const technicianName = techNameRaw.replace(/^นาย\s+/, '').trim();
+      if (technicianName) {
+        const technicianDiv = document.createElement('div');
+        technicianDiv.className = 'technician-small';
+        technicianDiv.textContent = technicianName;
+        textContainer.appendChild(technicianDiv);
+      }
+
+      const dept = (row.แผนก || '').trim();
+      if (dept) {
+        const departmentDiv = document.createElement('div');
+        departmentDiv.className = 'department-small';
+        departmentDiv.textContent = dept;
+        textContainer.appendChild(departmentDiv);
+      }
+
+      rowDiv.appendChild(textContainer);
+      label.appendChild(rowDiv);
+
+      const descText = (row.Description || '').trim();
+      if (descText) {
+        const desc = document.createElement('div');
+        desc.className = 'description-small';
+        desc.textContent = descText;
+        label.appendChild(desc);
+      }
+
+      const locLine = document.createElement('div');
+      locLine.style.display = 'flex';
+      locLine.style.alignItems = 'center';
+      locLine.style.fontSize = '12px';
+      locLine.style.fontWeight = 'bold';
+      locLine.style.lineHeight = '1.1';
+      locLine.style.marginLeft = '2mm';
+      locLine.style.marginTop = '1px';
+      locLine.style.marginBottom = '0';
+
+      const locTextStr = (row.Storagebin || '').trim();
+      if (locTextStr) {
+        const locText = document.createElement('span');
+        locText.textContent = `Loc: ${locTextStr}`;
+        locLine.appendChild(locText);
+      }
+
+      const barcodeCanvas = document.createElement('canvas');
+      barcodeCanvas.className = 'barcode-small';
+      locLine.appendChild(barcodeCanvas);
+      label.appendChild(locLine);
+
+      const now = new Date();
+      const formattedDate =
+        `${now.getFullYear().toString().slice(2)}` +
+        `${String(now.getMonth() + 1).padStart(2, '0')}` +
+        `${String(now.getDate()).padStart(2, '0')}` +
+        `${String(now.getHours()).padStart(2, '0')}` +
+        `${String(now.getMinutes()).padStart(2, '0')}`;
+
+      const lot = document.createElement('div');
+      lot.className = 'lot-line-small';
+
+      const parts = [];
+      parts.push(`Lot: ${formattedDate}`);
+      const qtyText  = row.จำนวน ? `(${row.จำนวน})` : '';
+      if (qtyText) parts.push(qtyText);
+      const packText = (row.Pack || '').trim();
+      if (packText) parts.push(packText);
+      const unitText = (row.Unit || '').trim();
+      if (unitText) parts.push(unitText);
+
+      lot.innerHTML = `<span>${parts.join(' ')}</span>`;
+      label.appendChild(lot);
+
+      if (typeof QRCode !== 'undefined') {
+        QRCode.toCanvas(qrCanvas, row.Material || 'N/A', {
+          width: 40,
+          height: 40,
+          margin: 0,
+          errorCorrectionLevel: 'L'
+        }, err => { if (err) console.error('QR Error:', err); });
+      }
+
+      if (typeof JsBarcode !== 'undefined' && row.Material) {
+        JsBarcode(barcodeCanvas, row.Material, {
+          format: 'CODE128',
+          width: 1,
+          height: 15,
+          displayValue: false,
+          margin: 0
+        });
+      }
+
+      return label;
+    }
+
+    function buildPrintLabelsSmall(data) {
+      const printArea = document.getElementById('printArea');
+      printArea.innerHTML = '';
+
+      const container = document.createElement('div');
+      container.className = 'container-small';
+      printArea.appendChild(container);
+
+      const expanded = [];
+      data.forEach(row => {
+        const qty = Math.max(1, row.จำนวน);
+        for (let i = 0; i < qty; i++) {
+          expanded.push({ ...row });
         }
       });
+
+      for (let i = 0; i < expanded.length; i += 2) {
+        const sticker = document.createElement('div');
+        sticker.className = 'sticker-small';
+
+        const label1 = createPrintLabelSmall(expanded[i]);
+        sticker.appendChild(label1);
+
+        if (i + 1 < expanded.length) {
+          const label2 = createPrintLabelSmall(expanded[i + 1]);
+          sticker.appendChild(label2);
+        } else {
+          const emptyLabel = document.createElement('div');
+          emptyLabel.className = 'label-small';
+          const emptyDiv = document.createElement('div');
+          emptyDiv.className = 'description-small';
+          emptyDiv.textContent = 'ไม่มีข้อมูล';
+          emptyLabel.appendChild(emptyDiv);
+          sticker.appendChild(emptyLabel);
+        }
+
+        container.appendChild(sticker);
+      }
     }
+
+    // Big label
+    function createPrintLabelBig(row) {
+      const label = document.createElement('div');
+      label.className = 'label-big';
+
+      const rowDiv = document.createElement('div');
+      rowDiv.className = 'row-big';
+
+      const qrCanvas = document.createElement('canvas');
+      qrCanvas.className = 'qr-big';
+      rowDiv.appendChild(qrCanvas);
+
+      const textContainer = document.createElement('div');
+      textContainer.className = 'text-container-big';
+
+      const materialDiv = document.createElement('div');
+      materialDiv.className = 'material-big';
+      materialDiv.textContent = row.Material;
+      textContainer.appendChild(materialDiv);
+
+      const techNameRaw = row.ชื่อช่าง || '';
+      const technicianName = techNameRaw.replace(/^นาย\s+/, '').trim();
+      if (technicianName) {
+        const technicianDiv = document.createElement('div');
+        technicianDiv.className = 'technician-big';
+        technicianDiv.textContent = technicianName;
+        textContainer.appendChild(technicianDiv);
+      }
+
+      const dept = (row.แผนก || '').trim();
+      if (dept) {
+        const departmentDiv = document.createElement('div');
+        departmentDiv.className = 'department-big';
+        departmentDiv.textContent = dept;
+        textContainer.appendChild(departmentDiv);
+      }
+
+      rowDiv.appendChild(textContainer);
+
+      const descText = (row.Description || '').trim();
+      if (descText) {
+        const desc = document.createElement('div');
+        desc.className = 'description-big';
+        desc.textContent = descText;
+        rowDiv.appendChild(desc);
+      }
+
+      label.appendChild(rowDiv);
+
+      const bottomContainer = document.createElement('div');
+      bottomContainer.className = 'bottom-container-big';
+
+      const now = new Date();
+      const formattedDate =
+        `${now.getFullYear().toString().slice(2)}` +
+        `${String(now.getMonth() + 1).padStart(2, '0')}` +
+        `${String(now.getDate()).padStart(2, '0')}` +
+        `${String(now.getHours()).padStart(2, '0')}` +
+        `${String(now.getMinutes()).padStart(2, '0')}`;
+
+      const locTextStr = (row.Storagebin || '').trim();
+      if (locTextStr) {
+        const loc = document.createElement('div');
+        loc.className = 'location-big';
+        loc.textContent = `Location: ${locTextStr}`;
+        bottomContainer.appendChild(loc);
+      }
+
+      const lot = document.createElement('div');
+      lot.className = 'lot-line-big';
+      lot.textContent = `Lot: ${formattedDate} Qty(${row.จำนวน || 1})`;
+      bottomContainer.appendChild(lot);
+
+      label.appendChild(bottomContainer);
+
+      const centerPackUnit = document.createElement('div');
+      centerPackUnit.className = 'center-pack-unit-big';
+      const packText = (row.Pack || '').trim();
+      const unitText = (row.Unit || '').trim();
+      centerPackUnit.textContent = `${packText} ${unitText}`.trim();
+      label.appendChild(centerPackUnit);
+
+      if (typeof QRCode !== 'undefined') {
+        QRCode.toCanvas(qrCanvas, row.Material || 'N/A', {
+          width: 75,
+          height: 75,
+          margin: 0,
+          errorCorrectionLevel: 'L'
+        }, err => { if (err) console.error('QR Error:', err); });
+      }
+
+      return label;
+    }
+
+    function buildPrintLabelsBig(data) {
+      const printArea = document.getElementById('printArea');
+      printArea.innerHTML = '';
+
+      const container = document.createElement('div');
+      container.className = 'container-big';
+      printArea.appendChild(container);
+
+      const expanded = [];
+      data.forEach(row => {
+        const qty = Math.max(1, row.จำนวน);
+        for (let i = 0; i < qty; i++) {
+          expanded.push({ ...row });
+        }
+      });
+
+      expanded.forEach(row => {
+        const sticker = document.createElement('div');
+        sticker.className = 'sticker-big';
+        const label = createPrintLabelBig(row);
+        sticker.appendChild(label);
+        container.appendChild(sticker);
+      });
+    }
+
+    function handlePrintSmall() {
+      const data = collectPrintData();
+      if (!data.length) {
+        alert('กรุณากรอก Material อย่างน้อย 1 แถวก่อนพิมพ์');
+        return;
+      }
+      spinner.style.display = 'flex';
+      setTimeout(() => {
+        buildPrintLabelsSmall(data);
+        spinner.style.display = 'none';
+        window.print();
+      }, 200);
+    }
+
+    function handlePrintBig() {
+      const data = collectPrintData();
+      if (!data.length) {
+        alert('กรุณากรอก Material อย่างน้อย 1 แถวก่อนพิมพ์');
+        return;
+      }
+      spinner.style.display = 'flex';
+      setTimeout(() => {
+        buildPrintLabelsBig(data);
+        spinner.style.display = 'none';
+        window.print();
+      }, 200);
+    }
+
+    document.getElementById('printSmallBtn').addEventListener('click', handlePrintSmall);
+    document.getElementById('printBigBtn').addEventListener('click', handlePrintBig);
 
     // เริ่มต้น
     loadMaterialData();
