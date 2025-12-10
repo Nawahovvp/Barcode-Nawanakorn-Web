@@ -267,6 +267,100 @@
       font-size: 1rem;
     }
 
+    /* ปุ่มลบแถว Serial */
+    .delete-btn {
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid #ef4444;
+      background: #fee2e2;
+      color: #b91c1c;
+      font-size: 0.75rem;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .delete-btn:hover {
+      background: #fecaca;
+    }
+
+    /* ========= Serial tab extra UI (Canva-ish) ========= */
+    .serial-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-serial-primary {
+      padding: 8px 16px;
+      border-radius: 999px;
+      border: none;
+      background: linear-gradient(to right, #2563eb, #4f46e5);
+      color: #ffffff;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+    }
+
+    .btn-serial-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 24px rgba(37, 99, 235, 0.45);
+      opacity: 0.95;
+    }
+
+    .btn-serial-outline {
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid #2563eb;
+      background: #eff6ff;
+      color: #1d4ed8;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.15s ease, transform 0.15s ease;
+    }
+
+    .btn-serial-outline:hover {
+      background: #dbeafe;
+      transform: translateY(-1px);
+    }
+
+    .serial-summary-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+      margin-bottom: 6px;
+    }
+
+    .serial-chip {
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(37, 99, 235, 0.06);
+      border: 1px dashed rgba(37, 99, 235, 0.3);
+      font-size: 0.8rem;
+      color: #1e3a8a;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .serial-chip-label {
+      opacity: 0.7;
+    }
+
+    .serial-chip-value {
+      font-weight: 600;
+    }
+
     /* ========= สไตล์ฉลาก Small 102x30 mm ========= */
     #printArea {
       display: none;
@@ -411,19 +505,17 @@
       padding-bottom: 0;
     }
     .qr-big {
-  width: 14mm;     /* เดิม 20mm → ย่อให้เล็กลง */
-  height: 14mm;    /* เดิม 20mm → ย่อให้เล็กลง */
-  margin-right: 2mm;
-  margin-left: 3mm;
-}
-
-/* เพิ่มใหม่ */
-.barcode-big {
-  width: 20mm !important;   /* เล็กกว่า QR และไม่กินพื้นที่กลาง */
-  height: 6mm !important;
-  margin-top: 1mm;
-  margin-left: 3mm;
-}
+      width: 14mm;
+      height: 14mm;
+      margin-right: 2mm;
+      margin-left: 3mm;
+    }
+    .barcode-big {
+      width: 20mm !important;
+      height: 6mm !important;
+      margin-top: 1mm;
+      margin-left: 3mm;
+    }
     .text-container-big {
       display: flex;
       flex-direction: column;
@@ -548,6 +640,74 @@
         margin: 0;
       }
     }
+
+    .delete-row-btn {
+      border: 1px solid #fecaca;
+      background: #fee2e2;
+      color: #b91c1c;
+      border-radius: 999px;
+      padding: 2px 8px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .delete-row-btn:hover {
+      background: #ef4444;
+      color: #ffffff;
+      border-color: #fca5a5;
+    }
+    /* ===== Serial Form UI (จัดการ Serial Number) ===== */
+.serial-form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.serial-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 160px;
+  flex: 1;
+}
+
+.serial-field.serial-wide {
+  flex: 1.5;
+}
+
+.serial-field.serial-narrow {
+  max-width: 200px;
+}
+
+.serial-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.serial-input {
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid #d1d5db;
+  font-size: 0.85rem;
+  background: #f9fafb;
+  transition: all 0.15s ease;
+}
+
+.serial-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  background: #ffffff;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+}
+
+.serial-input[readonly] {
+  background: #f3f4f6;
+  color: #4b5563;
+  font-weight: 500;
+}
+
   </style>
 </head>
 <body>
@@ -619,6 +779,7 @@
           <table id="entryTable">
             <thead>
               <tr>
+                <th style="width:50px;">ลบ</th>
                 <th style="width:60px;">ลำดับ</th>
                 <th style="width:140px;">Material</th>
                 <th>Description</th>
@@ -643,15 +804,120 @@
       <div id="printArea"></div>
     </div>
 
-    <!-- Tab: Serial Number (ว่าง ๆ ไว้ก่อน) -->
+    <!-- Tab: Serial Number -->
     <div id="tab-serial" class="tab-panel">
+      <!-- ฟอร์มข้อมูลด้านบน -->
+      <!-- ฟอร์มข้อมูลด้านบน -->
+<div class="card">
+  <div class="card-header-row">
+    <div class="card-title">
+      จัดการ Serial Number
+      <span class="card-title-pill">Invoice + Material + Serial</span>
+    </div>
+    <div class="serial-actions">
+      <button id="saveSerialBtn" class="btn-serial-primary">
+        💾 บันทึก
+      </button>
+      <button id="printSerialBtn" class="btn-serial-outline">
+        🖨️ Print Serial
+      </button>
+    </div>
+  </div>
+
+  <!-- Summary Chips (คงไว้เหมือนเดิมได้) -->
+  <div class="serial-summary-row">
+    <div class="serial-chip" id="serialSummaryInvoice">
+      <span class="serial-chip-label">Invoice</span>
+      <span class="serial-chip-value">-</span>
+    </div>
+    <div class="serial-chip" id="serialSummaryMaterial">
+      <span class="serial-chip-label">Material</span>
+      <span class="serial-chip-value">-</span>
+    </div>
+    <div class="serial-chip" id="serialSummaryCount">
+      <span class="serial-chip-label">Serial</span>
+      <span class="serial-chip-value">0 แถว</span>
+    </div>
+  </div>
+
+  <!-- แถวที่ 1: Invoice + Material + Description + Storage bin -->
+  <div class="serial-form-row">
+    <div class="serial-field serial-narrow">
+      <span class="serial-label">Invoice</span>
+      <input id="serialInvoiceInput" type="text"
+             class="serial-input"
+             placeholder="กรอก Invoice" />
+    </div>
+
+    <div class="serial-field serial-narrow">
+      <span class="serial-label">Material</span>
+      <input id="serialMatInput" type="text"
+             class="serial-input"
+             placeholder="กรอก/สแกน Material" />
+    </div>
+
+    <div class="serial-field serial-wide">
+      <span class="serial-label">Description</span>
+      <input id="serialDescInput" type="text"
+             class="serial-input"
+             readonly />
+    </div>
+
+    <div class="serial-field serial-narrow">
+      <span class="serial-label">Storage bin</span>
+      <input id="serialBinInput" type="text"
+             class="serial-input"
+             readonly />
+    </div>
+  </div>
+
+  <!-- แถวที่ 2: Serial ตัวหน้า + Serial ตัวหลัง -->
+  <div class="serial-form-row">
+    <div class="serial-field serial-narrow">
+      <span class="serial-label">Serial ตัวหน้า</span>
+      <input id="serialPrefixInput" type="text"
+             class="serial-input"
+             placeholder="เช่น 0001" />
+    </div>
+
+    <div class="serial-field serial-narrow">
+      <span class="serial-label">Serial ตัวหลัง</span>
+      <input id="serialSuffixInput" type="text"
+             class="serial-input"
+             placeholder="เช่น A" />
+    </div>
+  </div>
+
+  <div class="status" id="serialTopStatus">
+    กรอก Invoice และ Material เพื่อดึง Description / Storage bin จากฐานข้อมูล
+  </div>
+</div>
+
+      <!-- ตาราง Serial -->
       <div class="card">
         <div class="card-title">
-          Serial Number
-          <span class="card-title-pill">Coming soon</span>
+          ตาราง Serial Number
         </div>
-        <div class="status" style="margin-top:10px;">
-          แท็บนี้ยังว่างอยู่ สามารถนำไปต่อยอดสำหรับจัดการ Serial Number หรือประวัติการสแกนได้ในอนาคต
+        <table id="serialTable">
+          <thead>
+            <tr>
+              <th style="width:60px;">ลบ</th>
+              <th style="width:60px;">ลำดับ</th>
+              <th style="width:140px;">Serial</th>
+              <th style="width:140px;">Serial ตัวหน้า</th>
+              <th style="width:140px;">Serial ตัวหลัง</th>
+              <th style="width:160px;">SerialCP</th>
+              <th style="width:120px;">Invoice</th>
+              <th style="width:120px;">Material</th>
+              <th>Description</th>
+              <th style="width:140px;">Storage bin</th>
+              <th style="width:160px;">Date</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <div class="status" id="serialStatus">
+          แถวแรกถูกสร้างให้แล้ว กรอก Serial แล้วกด Enter เพื่อสร้างแถวถัดไป
         </div>
       </div>
     </div>
@@ -681,8 +947,6 @@
         });
       });
     });
-
-    // ==== โค้ดเดิมทั้งหมด (ฟังก์ชันเหมือนเดิม) ====
 
     const DATA_URL_0301 = 'https://opensheet.elk.sh/1x-B1xekpMm4p7fkKucvLjaewtp66uGIp8ZIxJJZAxMk/Sheet1';
     const EMP_URL       = 'https://opensheet.elk.sh/1eqVoLsZxGguEbRCC5rdI4iMVtQ7CK4T3uXRdx8zE3uw/Employee';
@@ -822,10 +1086,32 @@
     function addNewRow() {
       const tr = document.createElement('tr');
 
+      // ปุ่มลบ
+      const tdDelete = document.createElement('td');
+      const delBtn = document.createElement('button');
+      delBtn.type = 'button';
+      delBtn.className = 'delete-row-btn';
+      delBtn.textContent = 'ลบ';
+      delBtn.addEventListener('click', () => {
+        tr.remove();
+        updateRowIndices();
+
+        const rows = tableBody.querySelectorAll('tr');
+        if (rows.length === 0) {
+          nextIndex = 1;
+          addNewRow();
+        }
+      });
+      tdDelete.appendChild(delBtn);
+      tr.appendChild(tdDelete);
+
+      // ลำดับ
       const tdIndex = document.createElement('td');
+      tdIndex.className = 'index-cell';
       tdIndex.textContent = nextIndex;
       tr.appendChild(tdIndex);
 
+      // Material
       const tdMat = document.createElement('td');
       const inputMat = document.createElement('input');
       inputMat.type = 'text';
@@ -833,6 +1119,7 @@
       tdMat.appendChild(inputMat);
       tr.appendChild(tdMat);
 
+      // Description
       const tdDesc = document.createElement('td');
       const inputDesc = document.createElement('input');
       inputDesc.type = 'text';
@@ -840,6 +1127,7 @@
       tdDesc.appendChild(inputDesc);
       tr.appendChild(tdDesc);
 
+      // Storage bin
       const tdBin = document.createElement('td');
       const inputBin = document.createElement('input');
       inputBin.type = 'text';
@@ -847,6 +1135,7 @@
       tdBin.appendChild(inputBin);
       tr.appendChild(tdBin);
 
+      // คงเหลือ
       const tdRemain = document.createElement('td');
       const inputRemain = document.createElement('input');
       inputRemain.type = 'text';
@@ -854,6 +1143,7 @@
       tdRemain.appendChild(inputRemain);
       tr.appendChild(tdRemain);
 
+      // จำนวน
       const tdQty = document.createElement('td');
       const inputQty = document.createElement('input');
       inputQty.type = 'number';
@@ -863,6 +1153,7 @@
       tdQty.appendChild(inputQty);
       tr.appendChild(tdQty);
 
+      // Pack
       const tdPack = document.createElement('td');
       const inputPack = document.createElement('input');
       inputPack.type = 'number';
@@ -893,6 +1184,7 @@
           }
           nextIndex++;
           addNewRow();
+          updateRowIndices();
         }
       });
 
@@ -900,47 +1192,53 @@
       inputMat.focus();
     }
 
-    // รหัสพนักงาน → พิมพ์แล้วแสดงชื่อ/ทีมอัตโนมัติ + focus ที่ Material แถวแรกเมื่อพบ
-// รหัสพนักงาน → พิมพ์แล้วแสดงชื่อ/ทีมอัตโนมัติ + focus ที่ Material แถวแรกเมื่อพบ
-if (empCodeInput) {
-  empCodeInput.addEventListener('input', () => {
-    const code = empCodeInput.value.trim();
-    employeeCode = code;
+    if (empCodeInput) {
+      empCodeInput.addEventListener('input', () => {
+        const code = empCodeInput.value.trim();
+        employeeCode = code;
 
-    // ถ้าว่าง
-    if (!code) {
-      empStatus.textContent = 'กรุณากรอกรหัสพนักงาน';
-      employeeName = '';
-      employeeTeam = '';
-      return;
+        if (!code) {
+          empStatus.textContent = 'กรุณากรอกรหัสพนักงาน';
+          employeeName = '';
+          employeeTeam = '';
+          return;
+        }
+
+        const emp = findEmployeeById(code);
+        if (!emp) {
+          empStatus.innerHTML =
+            `<span class="not-found">ไม่พบรหัสพนักงาน: ${code}</span>`;
+          employeeName = '';
+          employeeTeam = '';
+          return;
+        }
+
+        const name = emp.Name || emp.NAME || emp['Employee Name'] || '';
+        const team = emp.Team || emp.TEAM || emp['Team Name'] || '';
+        employeeName = name;
+        employeeTeam = team;
+        empStatus.textContent =
+          `รหัสพนักงาน ${code} : ${name} (${team})`;
+
+        const firstMat = document.querySelector('#entryTable tbody tr:first-child input');
+        if (firstMat) {
+          firstMat.focus();
+          firstMat.select();
+        }
+      });
     }
 
-    // 🔹 เรียกหาเลย ไม่เช็ค length = 7 แล้ว
-    const emp = findEmployeeById(code);
-    if (!emp) {
-      empStatus.innerHTML =
-        `<span class="not-found">ไม่พบรหัสพนักงาน: ${code}</span>`;
-      employeeName = '';
-      employeeTeam = '';
-      return;
+    function updateRowIndices() {
+      const rows = tableBody.querySelectorAll('tr');
+      let idx = 1;
+      rows.forEach(tr => {
+        const indexCell = tr.querySelector('td.index-cell');
+        if (indexCell) {
+          indexCell.textContent = idx++;
+        }
+      });
+      nextIndex = idx;
     }
-
-    const name = emp.Name || emp.NAME || emp['Employee Name'] || '';
-    const team = emp.Team || emp.TEAM || emp['Team Name'] || '';
-    employeeName = name;
-    employeeTeam = team;
-    empStatus.textContent =
-      `รหัสพนักงาน ${code} : ${name} (${team})`;
-
-    // เมื่อหาพนักงานเจอแล้ว → ให้ cursor ไปที่ Material แถวแรก
-    const firstMat = document.querySelector('#entryTable tbody tr:first-child input');
-    if (firstMat) {
-      firstMat.focus();
-      firstMat.select();
-    }
-  });
-}
-
 
     function collectPrintData() {
       const rows = Array.from(tableBody.querySelectorAll('tr'));
@@ -1130,127 +1428,119 @@ if (empCodeInput) {
     }
 
     // Big label
-    // Big label
-function createPrintLabelBig(row) {
-  const label = document.createElement('div');
-  label.className = 'label-big';
+    function createPrintLabelBig(row) {
+      const label = document.createElement('div');
+      label.className = 'label-big';
 
-  const rowDiv = document.createElement('div');
-  rowDiv.className = 'row-big';
+      const rowDiv = document.createElement('div');
+      rowDiv.className = 'row-big';
 
-  // ------- ซ้าย: QR + Barcode (ซ้อนกันในคอลัมน์เดียว) -------
-  const leftCol = document.createElement('div');
-  leftCol.style.display = 'flex';
-  leftCol.style.flexDirection = 'column';
-  leftCol.style.alignItems = 'flex-start';
+      const leftCol = document.createElement('div');
+      leftCol.style.display = 'flex';
+      leftCol.style.flexDirection = 'column';
+      leftCol.style.alignItems = 'flex-start';
 
-  const qrCanvas = document.createElement('canvas');
-  qrCanvas.className = 'qr-big';
-  leftCol.appendChild(qrCanvas);
+      const qrCanvas = document.createElement('canvas');
+      qrCanvas.className = 'qr-big';
+      leftCol.appendChild(qrCanvas);
 
-  const barcodeCanvas = document.createElement('canvas');
-  barcodeCanvas.className = 'barcode-big';
-  leftCol.appendChild(barcodeCanvas);
+      const barcodeCanvas = document.createElement('canvas');
+      barcodeCanvas.className = 'barcode-big';
+      leftCol.appendChild(barcodeCanvas);
 
-  rowDiv.appendChild(leftCol);
-  // ------------------------------------------------------------
+      rowDiv.appendChild(leftCol);
 
-  // ขวา: ข้อความ Material / ช่าง / แผนก + Description
-  const textContainer = document.createElement('div');
-  textContainer.className = 'text-container-big';
+      const textContainer = document.createElement('div');
+      textContainer.className = 'text-container-big';
 
-  const materialDiv = document.createElement('div');
-  materialDiv.className = 'material-big';
-  materialDiv.textContent = row.Material;
-  textContainer.appendChild(materialDiv);
+      const materialDiv = document.createElement('div');
+      materialDiv.className = 'material-big';
+      materialDiv.textContent = row.Material;
+      textContainer.appendChild(materialDiv);
 
-  const techNameRaw = row.ชื่อช่าง || '';
-  const technicianName = techNameRaw.replace(/^นาย\s+/, '').trim();
-  if (technicianName) {
-    const technicianDiv = document.createElement('div');
-    technicianDiv.className = 'technician-big';
-    technicianDiv.textContent = technicianName;
-    textContainer.appendChild(technicianDiv);
-  }
+      const techNameRaw = row.ชื่อช่าง || '';
+      const technicianName = techNameRaw.replace(/^นาย\s+/, '').trim();
+      if (technicianName) {
+        const technicianDiv = document.createElement('div');
+        technicianDiv.className = 'technician-big';
+        technicianDiv.textContent = technicianName;
+        textContainer.appendChild(technicianDiv);
+      }
 
-  const dept = (row.แผนก || '').trim();
-  if (dept) {
-    const departmentDiv = document.createElement('div');
-    departmentDiv.className = 'department-big';
-    departmentDiv.textContent = dept;
-    textContainer.appendChild(departmentDiv);
-  }
+      const dept = (row.แผนก || '').trim();
+      if (dept) {
+        const departmentDiv = document.createElement('div');
+        departmentDiv.className = 'department-big';
+        departmentDiv.textContent = dept;
+        textContainer.appendChild(departmentDiv);
+      }
 
-  rowDiv.appendChild(textContainer);
+      rowDiv.appendChild(textContainer);
 
-  const descText = (row.Description || '').trim();
-  if (descText) {
-    const desc = document.createElement('div');
-    desc.className = 'description-big';
-    desc.textContent = descText;
-    rowDiv.appendChild(desc);
-  }
+      const descText = (row.Description || '').trim();
+      if (descText) {
+        const desc = document.createElement('div');
+        desc.className = 'description-big';
+        desc.textContent = descText;
+        rowDiv.appendChild(desc);
+      }
 
-  label.appendChild(rowDiv);
+      label.appendChild(rowDiv);
 
-  // ส่วนล่าง: Location + Lot + Qty
-  const bottomContainer = document.createElement('div');
-  bottomContainer.className = 'bottom-container-big';
+      const bottomContainer = document.createElement('div');
+      bottomContainer.className = 'bottom-container-big';
 
-  const now = new Date();
-  const formattedDate =
-    `${now.getFullYear().toString().slice(2)}` +
-    `${String(now.getMonth() + 1).padStart(2, '0')}` +
-    `${String(now.getDate()).padStart(2, '0')}` +
-    `${String(now.getHours()).padStart(2, '0')}` +
-    `${String(now.getMinutes()).padStart(2, '0')}`;
+      const now = new Date();
+      const formattedDate =
+        `${now.getFullYear().toString().slice(2)}` +
+        `${String(now.getMonth() + 1).padStart(2, '0')}` +
+        `${String(now.getDate()).padStart(2, '0')}` +
+        `${String(now.getHours()).padStart(2, '0')}` +
+        `${String(now.getMinutes()).padStart(2, '0')}`;
 
-  const locTextStr = (row.Storagebin || '').trim();
-  if (locTextStr) {
-    const loc = document.createElement('div');
-    loc.className = 'location-big';
-    loc.textContent = `Location: ${locTextStr}`;
-    bottomContainer.appendChild(loc);
-  }
+      const locTextStr = (row.Storagebin || '').trim();
+      if (locTextStr) {
+        const loc = document.createElement('div');
+        loc.className = 'location-big';
+        loc.textContent = `Location: ${locTextStr}`;
+        bottomContainer.appendChild(loc);
+      }
 
-  const lot = document.createElement('div');
-  lot.className = 'lot-line-big';
-  lot.textContent = `Lot: ${formattedDate} Qty(${row.จำนวน || 1})`;
-  bottomContainer.appendChild(lot);
+      const lot = document.createElement('div');
+      lot.className = 'lot-line-big';
+      lot.textContent = `Lot: ${formattedDate} Qty(${row.จำนวน || 1})`;
+      bottomContainer.appendChild(lot);
 
-  label.appendChild(bottomContainer);
+      label.appendChild(bottomContainer);
 
-  // กลาง: Pack / Unit ตัวใหญ่ ๆ
-  const centerPackUnit = document.createElement('div');
-  centerPackUnit.className = 'center-pack-unit-big';
-  const packText = (row.Pack || '').trim();
-  const unitText = (row.Unit || '').trim();
-  centerPackUnit.textContent = `${packText} ${unitText}`.trim();
-  label.appendChild(centerPackUnit);
+      const centerPackUnit = document.createElement('div');
+      centerPackUnit.className = 'center-pack-unit-big';
+      const packText = (row.Pack || '').trim();
+      const unitText = (row.Unit || '').trim();
+      centerPackUnit.textContent = `${packText} ${unitText}`.trim();
+      label.appendChild(centerPackUnit);
 
-  // ------ วาด QR ให้เล็กลง ------
-  if (typeof QRCode !== 'undefined') {
-    QRCode.toCanvas(qrCanvas, row.Material || 'N/A', {
-      width: 55,       // เดิม 75 → ลดขนาด
-      height: 55,
-      margin: 0,
-      errorCorrectionLevel: 'L'
-    }, err => { if (err) console.error('QR Error:', err); });
-  }
+      if (typeof QRCode !== 'undefined') {
+        QRCode.toCanvas(qrCanvas, row.Material || 'N/A', {
+          width: 55,
+          height: 55,
+          margin: 0,
+          errorCorrectionLevel: 'L'
+        }, err => { if (err) console.error('QR Error:', err); });
+      }
 
-  // ------ วาด Barcode Code128 ใต้ QR ------
-  if (typeof JsBarcode !== 'undefined' && row.Material) {
-    JsBarcode(barcodeCanvas, row.Material, {
-      format: 'CODE128',
-      width: 1,        // เส้นบางหน่อย
-      height: 25,      // ไม่สูงเกินไป
-      displayValue: false,
-      margin: 0
-    });
-  }
+      if (typeof JsBarcode !== 'undefined' && row.Material) {
+        JsBarcode(barcodeCanvas, row.Material, {
+          format: 'CODE128',
+          width: 1,
+          height: 25,
+          displayValue: false,
+          margin: 0
+        });
+      }
 
-  return label;
-}
+      return label;
+    }
 
     function buildPrintLabelsBig(data) {
       const printArea = document.getElementById('printArea');
@@ -1308,10 +1598,285 @@ function createPrintLabelBig(row) {
     document.getElementById('printSmallBtn').addEventListener('click', handlePrintSmall);
     document.getElementById('printBigBtn').addEventListener('click', handlePrintBig);
 
+    // ====== ส่วน Serial Tab ======
+    const serialInvoiceInput = document.getElementById('serialInvoiceInput');
+    const serialMatInput     = document.getElementById('serialMatInput');
+    const serialDescInput    = document.getElementById('serialDescInput');
+    const serialBinInput     = document.getElementById('serialBinInput');
+    const serialPrefixInput  = document.getElementById('serialPrefixInput');
+    const serialSuffixInput  = document.getElementById('serialSuffixInput');
+    const serialTopStatus    = document.getElementById('serialTopStatus');
+    const serialTableBody    = document.querySelector('#serialTable tbody');
+    const serialStatusEl     = document.getElementById('serialStatus');
+    const serialSummaryInvoice = document.getElementById('serialSummaryInvoice');
+    const serialSummaryMaterial = document.getElementById('serialSummaryMaterial');
+    const serialSummaryCount = document.getElementById('serialSummaryCount');
+    const saveSerialBtn      = document.getElementById('saveSerialBtn');
+    const printSerialBtn     = document.getElementById('printSerialBtn');
+    let serialNextIndex      = 1;
+
+    function getNowString() {
+      const now = new Date();
+      const yyyy = now.getFullYear();
+      const mm = String(now.getMonth() + 1).padStart(2, '0');
+      const dd = String(now.getDate()).padStart(2, '0');
+      const hh = String(now.getHours()).padStart(2, '0');
+      const mi = String(now.getMinutes()).padStart(2, '0');
+      const ss = String(now.getSeconds()).padStart(2, '0');
+      return `${yyyy}-${mm}-${dd} ${hh}:${mi}:${ss}`;
+    }
+
+    // อัปเดต summary chips
+    function updateSerialSummary() {
+      if (serialSummaryInvoice) {
+        const v = serialInvoiceInput.value.trim() || '-';
+        serialSummaryInvoice.querySelector('.serial-chip-value').textContent = v;
+      }
+      if (serialSummaryMaterial) {
+        const v = serialMatInput.value.trim() || '-';
+        serialSummaryMaterial.querySelector('.serial-chip-value').textContent = v;
+      }
+      if (serialSummaryCount) {
+        const count = serialTableBody.querySelectorAll('tr').length;
+        serialSummaryCount.querySelector('.serial-chip-value').textContent = `${count} แถว`;
+      }
+      if (serialInvoiceInput) {
+  serialInvoiceInput.addEventListener('input', updateSerialSummary);
+}
+    }
+
+    // ดึง Description / Storage bin จาก Material สำหรับ Serial tab
+    // ดึง Description / Storage bin จาก Material สำหรับ Serial tab
+function fillSerialTopByMaterial() {
+  let mat = serialMatInput.value.trim();
+  if (!mat) {
+    serialDescInput.value = '';
+    serialBinInput.value  = '';
+    serialTopStatus.textContent = 'กรอก Material เพื่อดึง Description / Storage bin จากฐานข้อมูล';
+    updateSerialSummary();
+    return;
+  }
+
+  const normalized = normalizeMaterialCode(mat);
+  serialMatInput.value = normalized;
+
+  const info = findMaterialInfo(normalized);
+  if (!info || !info.description) {
+    serialDescInput.value = '';
+    serialBinInput.value  = '';
+    serialTopStatus.innerHTML =
+      `<span class="not-found">ไม่พบ Material หรือไม่มี Description: ${normalized}</span>`;
+    updateSerialSummary();
+    return;
+  }
+
+  serialDescInput.value = info.description || '';
+  serialBinInput.value  = info.storageBin || '';
+  serialTopStatus.textContent = '';
+  updateSerialSummary();
+}
+
+// ✅ เพิ่มตรงนี้
+let serialMatTimer = null;
+
+if (serialMatInput) {
+  serialMatInput.addEventListener('input', () => {
+    if (serialMatTimer) clearTimeout(serialMatTimer);
+    serialMatTimer = setTimeout(() => {
+      fillSerialTopByMaterial();
+    }, 400);
+  });
+
+  serialMatInput.addEventListener('blur', () => {
+    fillSerialTopByMaterial();
+  });
+}
+
+
+    // สร้างแถว Serial ใหม่
+    function addSerialRow() {
+      const tr = document.createElement('tr');
+
+      // ปุ่มลบ
+      const tdDelete = document.createElement('td');
+      const delBtn = document.createElement('button');
+      delBtn.type = 'button';
+      delBtn.textContent = 'ลบ';
+      delBtn.className = 'delete-btn';
+      delBtn.addEventListener('click', () => {
+        tr.remove();
+        reindexSerialRows();
+      });
+      tdDelete.appendChild(delBtn);
+      tr.appendChild(tdDelete);
+
+      // ลำดับ
+      const tdIndex = document.createElement('td');
+      tdIndex.textContent = serialNextIndex;
+      tr.appendChild(tdIndex);
+
+      // Serial
+      const tdSerial = document.createElement('td');
+      const inputSerial = document.createElement('input');
+      inputSerial.type = 'text';
+      inputSerial.placeholder = 'กรอก Serial แล้วกด Enter';
+      tdSerial.appendChild(inputSerial);
+      tr.appendChild(tdSerial);
+
+      // Serial ตัวหน้า
+      const tdPrefix = document.createElement('td');
+      const inputPrefix = document.createElement('input');
+      inputPrefix.type = 'text';
+      inputPrefix.readOnly = true;
+      inputPrefix.value = serialPrefixInput.value || '';
+      tdPrefix.appendChild(inputPrefix);
+      tr.appendChild(tdPrefix);
+
+      // Serial ตัวหลัง
+      const tdSuffix = document.createElement('td');
+      const inputSuffix = document.createElement('input');
+      inputSuffix.type = 'text';
+      inputSuffix.readOnly = true;
+      inputSuffix.value = serialSuffixInput.value || '';
+      tdSuffix.appendChild(inputSuffix);
+      tr.appendChild(tdSuffix);
+
+      // SerialCP
+      const tdSerialCP = document.createElement('td');
+      const inputSerialCP = document.createElement('input');
+      inputSerialCP.type = 'text';
+      inputSerialCP.readOnly = true;
+      tdSerialCP.appendChild(inputSerialCP);
+      tr.appendChild(tdSerialCP);
+
+      // Invoice
+      const tdInvoice = document.createElement('td');
+      const inputInvoice = document.createElement('input');
+      inputInvoice.type = 'text';
+      inputInvoice.readOnly = true;
+      inputInvoice.value = serialInvoiceInput.value || '';
+      tdInvoice.appendChild(inputInvoice);
+      tr.appendChild(tdInvoice);
+
+      // Material
+      const tdMat = document.createElement('td');
+      const inputMat = document.createElement('input');
+      inputMat.type = 'text';
+      inputMat.readOnly = true;
+      inputMat.value = serialMatInput.value || '';
+      tdMat.appendChild(inputMat);
+      tr.appendChild(tdMat);
+
+      // Description
+      const tdDesc = document.createElement('td');
+      const inputDesc = document.createElement('input');
+      inputDesc.type = 'text';
+      inputDesc.readOnly = true;
+      inputDesc.value = serialDescInput.value || '';
+      tdDesc.appendChild(inputDesc);
+      tr.appendChild(tdDesc);
+
+      // Storage bin
+      const tdBin = document.createElement('td');
+      const inputBin = document.createElement('input');
+      inputBin.type = 'text';
+      inputBin.readOnly = true;
+      inputBin.value = serialBinInput.value || '';
+      tdBin.appendChild(inputBin);
+      tr.appendChild(tdBin);
+
+      // Date
+      const tdDate = document.createElement('td');
+      const inputDate = document.createElement('input');
+      inputDate.type = 'text';
+      inputDate.readOnly = true;
+      inputDate.value = getNowString();
+      tdDate.appendChild(inputDate);
+      tr.appendChild(tdDate);
+
+      // Event: กด Enter ที่ Serial
+      inputSerial.addEventListener('keydown', e => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          const serialVal = inputSerial.value.trim();
+          if (!serialVal) {
+            serialStatusEl.innerHTML =
+              '<span class="not-found">ไม่อนุญาติให้ขึ้นบรรทัดใหม่ถ้า Serial ยังเป็นค่าว่าง</span>';
+            inputSerial.focus();
+            return;
+          }
+
+          // ดึงค่าจากด้านบนมาใส่แถวนี้
+          inputPrefix.value  = serialPrefixInput.value || '';
+          inputSuffix.value  = serialSuffixInput.value || '';
+          inputInvoice.value = serialInvoiceInput.value || '';
+          inputMat.value     = serialMatInput.value || '';
+          inputDesc.value    = serialDescInput.value || '';
+          inputBin.value     = serialBinInput.value || '';
+          inputDate.value    = getNowString();
+
+          inputSerialCP.value =
+            (inputPrefix.value || '') + serialVal + (inputSuffix.value || '');
+
+          serialStatusEl.textContent = 'บันทึก Serial สำเร็จ และสร้างแถวใหม่แล้ว';
+          serialNextIndex++;
+          addSerialRow();
+          updateSerialSummary();
+        }
+      });
+
+      serialTableBody.appendChild(tr);
+      inputSerial.focus();
+      updateSerialSummary();
+    }
+
+    function reindexSerialRows() {
+      const rows = serialTableBody.querySelectorAll('tr');
+      let idx = 1;
+      rows.forEach(tr => {
+        const indexTd = tr.children[1];
+        indexTd.textContent = idx++;
+      });
+      serialNextIndex = idx;
+
+      if (!rows.length) {
+        serialNextIndex = 1;
+        serialStatusEl.textContent = 'ไม่มีข้อมูลในตาราง สร้างแถวใหม่ให้พร้อมกรอกแล้ว';
+        addSerialRow();
+      }
+      updateSerialSummary();
+    }
+
+    // ปุ่มบันทึก Serial (ตัวอย่าง)
+    if (saveSerialBtn) {
+      saveSerialBtn.addEventListener('click', () => {
+        const rowCount = serialTableBody.querySelectorAll('tr').length;
+        if (!rowCount) {
+          alert('ยังไม่มี Serial ในตารางให้บันทึก');
+          return;
+        }
+        alert('ตัวอย่างปุ่ม "บันทึก": ยังไม่เชื่อมต่อฐานข้อมูล\nคุณสามารถนำข้อมูลในตารางไปต่อยอดบันทึกลง Google Sheet หรือระบบอื่นได้ครับ');
+      });
+    }
+
+    // ปุ่ม Print Serial (พิมพ์หน้า Serial ปัจจุบัน)
+    if (printSerialBtn) {
+      printSerialBtn.addEventListener('click', () => {
+        const rowCount = serialTableBody.querySelectorAll('tr').length;
+        if (!rowCount) {
+          alert('ยังไม่มี Serial ในตารางสำหรับพิมพ์');
+          return;
+        }
+        window.print();
+      });
+    }
+
     // เริ่มต้น
     loadMaterialData();
     loadEmployeeData();
-    addNewRow();
+    addNewRow();        // barcode tab
+    addSerialRow();     // serial tab แถวแรก
+    updateSerialSummary();
   </script>
 </body>
 </html>
