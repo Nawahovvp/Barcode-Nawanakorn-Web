@@ -546,7 +546,7 @@
   <div class="app-shell">
     <header class="app-header">
       <div class="title-block">
-        <h1>Smart Warehouse Barcode</h1>
+        <h1>Web App – Material 0301</h1>
         <div class="subtitle">ระบบพิมพ์บาร์โค้ดฉลากสินค้า แบบ Small / Big</div>
       </div>
       <div class="badge">
@@ -592,7 +592,7 @@
         <!-- ข้อมูลพนักงาน -->
         <div class="card">
           <div class="card-title">
-            ผู้คืน/คลังสินค้า
+            ข้อมูลผู้ปฏิบัติงาน
           </div>
           <div class="employee-row">
             <label>
@@ -893,6 +893,7 @@
     }
 
     // รหัสพนักงาน → พิมพ์แล้วแสดงชื่อ/ทีมอัตโนมัติ + focus ที่ Material แถวแรกเมื่อพบ
+// รหัสพนักงาน → พิมพ์แล้วแสดงชื่อ/ทีมอัตโนมัติ + focus ที่ Material แถวแรกเมื่อพบ
 if (empCodeInput) {
   empCodeInput.addEventListener('input', () => {
     const code = empCodeInput.value.trim();
@@ -906,14 +907,7 @@ if (empCodeInput) {
       return;
     }
 
-    // กันไม่ให้รีบค้นเกินไป (ให้พิมพ์อย่างน้อย 7 ตัวก่อน)
-    if (code.length < 7) {
-      empStatus.textContent = 'กำลังพิมพ์รหัสพนักงาน...';
-      employeeName = '';
-      employeeTeam = '';
-      return;
-    }
-
+    // 🔹 เรียกหาเลย ไม่เช็ค length = 7 แล้ว
     const emp = findEmployeeById(code);
     if (!emp) {
       empStatus.innerHTML =
@@ -938,6 +932,7 @@ if (empCodeInput) {
     }
   });
 }
+
 
     function collectPrintData() {
       const rows = Array.from(tableBody.querySelectorAll('tr'));
