@@ -1955,6 +1955,7 @@
   }
 
   // สร้างแถว Serial ใหม่
+   // สร้างแถว Serial ใหม่
   function addSerialRow() {
     const tr = document.createElement('tr');
 
@@ -2055,37 +2056,55 @@
     tdDate.appendChild(inputDate);
     tr.appendChild(tdDate);
 
-    // Event: กด Enter ที่ Serial
+    // ---------- ส่วนสำคัญ: ทำ Enter + คลิกออก (blur) ให้ทำงานเหมือนกัน ----------
+    let committed = false;   // กันไม่ให้ทำซ้ำสองรอบ (ตอน Enter แล้ว blur ตามมา)
+
+    function commitSerialRow() {
+      if (committed) return;      // ถ้าเคยทำแล้ว ไม่ต้องทำอีก
+      const serialVal = inputSerial.value.trim();
+
+      if (!serialVal) {
+        serialStatusEl.innerHTML =
+          '<span class="not-found">ไม่อนุญาติให้ขึ้นบรรทัดใหม่ถ้า Serial ยังเป็นค่าว่าง</span>';
+        return;
+      }
+
+      committed = true;
+
+      // ดึงค่าจากด้านบนมาใส่แถวนี้
+      inputPrefix.value  = serialPrefixInput.value || '';
+      inputSuffix.value  = serialSuffixInput.value || '';
+      inputInvoice.value = serialInvoiceInput.value || '';
+      inputMat.value     = serialMatInput.value || '';
+      inputDesc.value    = serialDescInput.value || '';
+      inputBin.value     = serialBinInput.value || '';
+      inputDate.value    = getNowString();
+
+      // SerialCP = prefix + serial + suffix
+      inputSerialCP.value =
+        (inputPrefix.value || '') + serialVal + (inputSuffix.value || '');
+
+      serialStatusEl.textContent = 'บันทึก Serial สำเร็จ และสร้างแถวใหม่แล้ว';
+      serialNextIndex++;
+      addSerialRow();
+      updateSerialSummary();
+    }
+
+    // กด Enter → ทำงาน
     inputSerial.addEventListener('keydown', e => {
       if (e.key === 'Enter') {
         e.preventDefault();
-        const serialVal = inputSerial.value.trim();
-        if (!serialVal) {
-          serialStatusEl.innerHTML =
-            '<span class="not-found">ไม่อนุญาติให้ขึ้นบรรทัดใหม่ถ้า Serial ยังเป็นค่าว่าง</span>';
-          inputSerial.focus();
-          return;
-        }
-
-        // ดึงค่าจากด้านบนมาใส่แถวนี้
-        inputPrefix.value  = serialPrefixInput.value || '';
-        inputSuffix.value  = serialSuffixInput.value || '';
-        inputInvoice.value = serialInvoiceInput.value || '';
-        inputMat.value     = serialMatInput.value || '';
-        inputDesc.value    = serialDescInput.value || '';
-        inputBin.value     = serialBinInput.value || '';
-        inputDate.value    = getNowString();
-
-        // SerialCP = prefix + serial + suffix
-        inputSerialCP.value =
-          (inputPrefix.value || '') + serialVal + (inputSuffix.value || '');
-
-        serialStatusEl.textContent = 'บันทึก Serial สำเร็จ และสร้างแถวใหม่แล้ว';
-        serialNextIndex++;
-        addSerialRow();
-        updateSerialSummary();
+        commitSerialRow();
       }
     });
+
+    // คลิกเมาส์ออกจากช่อง → ถ้ามีค่าให้ทำเหมือน Enter
+    inputSerial.addEventListener('blur', () => {
+      if (!inputSerial.value.trim()) return; // ถ้าว่าง ไม่ทำอะไร
+      commitSerialRow();
+    });
+
+    // ------------------------------------------------------
 
     serialTableBody.appendChild(tr);
     inputSerial.focus();
