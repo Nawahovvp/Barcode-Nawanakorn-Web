@@ -1211,8 +1211,14 @@
   const DATA_URL_0301 = 'https://opensheet.elk.sh/1x-B1xekpMm4p7fkKucvLjaewtp66uGIp8ZIxJJZAxMk/Sheet1';
   const EMP_URL       = 'https://opensheet.elk.sh/1eqVoLsZxGguEbRCC5rdI4iMVtQ7CK4T3uXRdx8zE3uw/Employee';
 
+  // ✅ NEW: ฐาน Parts → Material mapping
+  const PARTS_URL     = 'https://opensheet.elk.sh/1Bs0_VQuEp5hdKX33oIXBebz3avrD4wRoQtK_BUZQfzc/Mainsap_Parts';
+
   let materialDB = [];
   let employeeDB = [];
+  let partsDB    = [];     // ✅ NEW
+  let partsMap   = new Map(); // ✅ NEW: key=Parts, value=Material
+
   let nextIndex = 1;
 
   const dataStatusEl = document.getElementById('dataStatus');
@@ -1255,6 +1261,41 @@
     }
   }
 
+  // ✅ NEW: โหลดฐาน Parts และทำ map เพื่อค้นหาไว
+  async function loadPartsData() {
+    try {
+      const res = await fetch(PARTS_URL);
+      const data = await res.json();
+      partsDB = data || [];
+
+      // สร้าง Map: Parts -> Material
+      partsMap = new Map();
+      partsDB.forEach(row => {
+        const parts =
+          row.Parts || row.PARTS || row.parts || row.Part || row.PART || row.part || row['Parts Code'] || '';
+        const material =
+          row.Material || row.MATERIAL || row.material || row['Material Code'] || '';
+
+        const p = String(parts || '').trim();
+        const m = String(material || '').trim();
+        if (p && m) partsMap.set(p, m);
+      });
+
+      // (ไม่บังคับ) โชว์สถานะรวม
+      if (dataStatusEl) {
+        dataStatusEl.textContent =
+          `โหลดฐานข้อมูล 0301 สำเร็จ (จำนวน ${materialDB.length} รายการ) | โหลด Parts mapping สำเร็จ (จำนวน ${partsMap.size} รายการ)`;
+      }
+    } catch (err) {
+      console.error(err);
+      // ถ้าโหลดไม่ได้ก็ยังให้ระบบทำงานต่อได้ (แค่ไม่ map parts)
+      if (dataStatusEl) {
+        dataStatusEl.textContent =
+          `โหลดฐานข้อมูล 0301 สำเร็จ (จำนวน ${materialDB.length} รายการ) | โหลด Parts mapping ไม่สำเร็จ`;
+      }
+    }
+  }
+
   function normalizeMaterialCode(raw) {
     if (!raw) return '';
     const trimmed = String(raw).trim();
@@ -1264,6 +1305,27 @@
     if (len === 4)  return '3000'  + trimmed;
     if (len === 5)  return '300'   + trimmed;
     return trimmed;
+  }
+
+  // ✅ NEW: normalize key สำหรับ Parts (กัน whitespace/ชนิดข้อมูล)
+  function normalizePartsKey(raw) {
+    if (!raw) return '';
+    return String(raw).trim();
+  }
+
+  // ✅ NEW: ถ้ากรอกเป็น Parts ให้ map เป็น Material
+  function mapPartsToMaterialIfFound(inputValue) {
+    const key = normalizePartsKey(inputValue);
+    if (!key) return null;
+
+    // ตรงเป๊ะก่อน
+    if (partsMap.has(key)) return partsMap.get(key);
+
+    // ลองตัดช่องว่างซ้ำ ๆ หรือรูปแบบแปลก (เผื่อกรณีสแกน)
+    const compact = key.replace(/\s+/g, '');
+    if (compact !== key && partsMap.has(compact)) return partsMap.get(compact);
+
+    return null;
   }
 
   function findMaterialInfo(materialCode) {
@@ -1309,19 +1371,30 @@
     });
   }
 
+  // ✅ แก้ตรงนี้: กรอก Material แล้วไปเช็ค Parts ก่อน
   function fillRowByMaterial(tr) {
     const inputs = tr.querySelectorAll('input');
     const [inputMat, inputDesc, inputBin, inputRemain, inputQty, inputPack] = inputs;
 
-    let matValue = inputMat.value.trim();
-    if (!matValue) {
+    let raw = inputMat.value.trim();
+    if (!raw) {
       rowStatusEl.textContent = 'กรุณากรอก Material';
       return false;
     }
 
-    const normalized = normalizeMaterialCode(matValue);
+    // 1) ลอง map จาก Parts -> Material ก่อน
+    const mappedMaterial = mapPartsToMaterialIfFound(raw);
+
+    // ถ้าเจอ parts ให้เอา material มาแทน
+    if (mappedMaterial) {
+      raw = mappedMaterial;
+    }
+
+    // 2) normalize เป็น material 0301 format (300xxxx)
+    const normalized = normalizeMaterialCode(raw);
     inputMat.value = normalized;
 
+    // 3) ไปหา info จากฐาน 0301
     const info = findMaterialInfo(normalized);
 
     if (!info || !info.description) {
@@ -1339,7 +1412,7 @@
     inputBin.value    = info.storageBin || '';
     inputRemain.value = info.unrestricted || '';
 
-    rowStatusEl.textContent = ''; // ไม่ต้องโชว์ข้อความดึงสำเร็จแล้ว
+    rowStatusEl.textContent = '';
     return true;
   }
 
@@ -1375,7 +1448,7 @@
     const tdMat = document.createElement('td');
     const inputMat = document.createElement('input');
     inputMat.type = 'text';
-    inputMat.placeholder = 'กรอก Material หรือสแกนบาร์โค้ด';
+    inputMat.placeholder = 'กรอก Material หรือ Parts หรือสแกนบาร์โค้ด';
     tdMat.appendChild(inputMat);
     tr.appendChild(tdMat);
 
@@ -1854,7 +1927,6 @@
       window.print();
     }, 200);
   }
-  
 
   document.getElementById('printSmallBtn').addEventListener('click', handlePrintSmall);
   document.getElementById('printBigBtn').addEventListener('click', handlePrintBig);
@@ -1887,7 +1959,6 @@
     return `${yyyy}-${mm}-${dd} ${hh}:${mi}:${ss}`;
   }
 
-  // อัปเดต summary chips
   function updateSerialSummary() {
     if (serialSummaryInvoice) {
       const v = serialInvoiceInput.value.trim() || '-';
@@ -1903,12 +1974,10 @@
     }
   }
 
-  // ให้ Invoice เปลี่ยนแล้วอัปเดต chip ทันที
   if (serialInvoiceInput) {
     serialInvoiceInput.addEventListener('input', updateSerialSummary);
   }
 
-  // ดึง Description / Storage bin จาก Material สำหรับ Serial tab
   function fillSerialTopByMaterial() {
     let mat = serialMatInput.value.trim();
     if (!mat) {
@@ -1938,7 +2007,6 @@
     updateSerialSummary();
   }
 
-  // ให้ Material ดึงอัตโนมัติแบบหน่วงนิดหน่อย
   let serialMatTimer = null;
 
   if (serialMatInput) {
@@ -1954,12 +2022,9 @@
     });
   }
 
-  // สร้างแถว Serial ใหม่
-   // สร้างแถว Serial ใหม่
   function addSerialRow() {
     const tr = document.createElement('tr');
 
-    // ปุ่มลบ
     const tdDelete = document.createElement('td');
     const delBtn = document.createElement('button');
     delBtn.type = 'button';
@@ -1972,12 +2037,10 @@
     tdDelete.appendChild(delBtn);
     tr.appendChild(tdDelete);
 
-    // ลำดับ
     const tdIndex = document.createElement('td');
     tdIndex.textContent = serialNextIndex;
     tr.appendChild(tdIndex);
 
-    // Serial
     const tdSerial = document.createElement('td');
     const inputSerial = document.createElement('input');
     inputSerial.type = 'text';
@@ -1985,7 +2048,6 @@
     tdSerial.appendChild(inputSerial);
     tr.appendChild(tdSerial);
 
-    // Serial ตัวหน้า
     const tdPrefix = document.createElement('td');
     const inputPrefix = document.createElement('input');
     inputPrefix.type = 'text';
@@ -1994,7 +2056,6 @@
     tdPrefix.appendChild(inputPrefix);
     tr.appendChild(tdPrefix);
 
-    // Serial ตัวหลัง
     const tdSuffix = document.createElement('td');
     const inputSuffix = document.createElement('input');
     inputSuffix.type = 'text';
@@ -2003,7 +2064,6 @@
     tdSuffix.appendChild(inputSuffix);
     tr.appendChild(tdSuffix);
 
-    // SerialCP
     const tdSerialCP = document.createElement('td');
     const inputSerialCP = document.createElement('input');
     inputSerialCP.type = 'text';
@@ -2011,7 +2071,6 @@
     tdSerialCP.appendChild(inputSerialCP);
     tr.appendChild(tdSerialCP);
 
-    // Invoice
     const tdInvoice = document.createElement('td');
     const inputInvoice = document.createElement('input');
     inputInvoice.type = 'text';
@@ -2020,7 +2079,6 @@
     tdInvoice.appendChild(inputInvoice);
     tr.appendChild(tdInvoice);
 
-    // Material
     const tdMat = document.createElement('td');
     const inputMat = document.createElement('input');
     inputMat.type = 'text';
@@ -2029,7 +2087,6 @@
     tdMat.appendChild(inputMat);
     tr.appendChild(tdMat);
 
-    // Description
     const tdDesc = document.createElement('td');
     const inputDesc = document.createElement('input');
     inputDesc.type = 'text';
@@ -2038,7 +2095,6 @@
     tdDesc.appendChild(inputDesc);
     tr.appendChild(tdDesc);
 
-    // Storage bin
     const tdBin = document.createElement('td');
     const inputBin = document.createElement('input');
     inputBin.type = 'text';
@@ -2047,7 +2103,6 @@
     tdBin.appendChild(inputBin);
     tr.appendChild(tdBin);
 
-    // Date
     const tdDate = document.createElement('td');
     const inputDate = document.createElement('input');
     inputDate.type = 'text';
@@ -2056,11 +2111,10 @@
     tdDate.appendChild(inputDate);
     tr.appendChild(tdDate);
 
-    // ---------- ส่วนสำคัญ: ทำ Enter + คลิกออก (blur) ให้ทำงานเหมือนกัน ----------
-    let committed = false;   // กันไม่ให้ทำซ้ำสองรอบ (ตอน Enter แล้ว blur ตามมา)
+    let committed = false;
 
     function commitSerialRow() {
-      if (committed) return;      // ถ้าเคยทำแล้ว ไม่ต้องทำอีก
+      if (committed) return;
       const serialVal = inputSerial.value.trim();
 
       if (!serialVal) {
@@ -2071,7 +2125,6 @@
 
       committed = true;
 
-      // ดึงค่าจากด้านบนมาใส่แถวนี้
       inputPrefix.value  = serialPrefixInput.value || '';
       inputSuffix.value  = serialSuffixInput.value || '';
       inputInvoice.value = serialInvoiceInput.value || '';
@@ -2080,7 +2133,6 @@
       inputBin.value     = serialBinInput.value || '';
       inputDate.value    = getNowString();
 
-      // SerialCP = prefix + serial + suffix
       inputSerialCP.value =
         (inputPrefix.value || '') + serialVal + (inputSuffix.value || '');
 
@@ -2090,7 +2142,6 @@
       updateSerialSummary();
     }
 
-    // กด Enter → ทำงาน
     inputSerial.addEventListener('keydown', e => {
       if (e.key === 'Enter') {
         e.preventDefault();
@@ -2098,13 +2149,10 @@
       }
     });
 
-    // คลิกเมาส์ออกจากช่อง → ถ้ามีค่าให้ทำเหมือน Enter
     inputSerial.addEventListener('blur', () => {
-      if (!inputSerial.value.trim()) return; // ถ้าว่าง ไม่ทำอะไร
+      if (!inputSerial.value.trim()) return;
       commitSerialRow();
     });
-
-    // ------------------------------------------------------
 
     serialTableBody.appendChild(tr);
     inputSerial.focus();
@@ -2128,213 +2176,193 @@
     updateSerialSummary();
   }
 
- 
-// ✅ เก็บข้อมูล Serial จากตาราง เพื่อใช้สร้างฉลาก 80x100 mm แบบ Big
-function collectSerialPrintData() {
-  const rows = Array.from(serialTableBody.querySelectorAll('tr'));
-  const data = [];
+  function collectSerialPrintData() {
+    const rows = Array.from(serialTableBody.querySelectorAll('tr'));
+    const data = [];
 
-  rows.forEach(tr => {
-    const inputs = tr.querySelectorAll('input');
-    // 9 ช่อง: Serial, Prefix, Suffix, SerialCP, Invoice, Material, Desc, Bin, Date
-    if (inputs.length < 9) return;
+    rows.forEach(tr => {
+      const inputs = tr.querySelectorAll('input');
+      if (inputs.length < 9) return;
 
-    const [
-      inputSerial,    // Serial (ตัวกลาง)
-      inputPrefix,    // Serial ตัวหน้า
-      inputSuffix,    // Serial ตัวหลัง
-      inputSerialCP,  // SerialCP (prefix + serial + suffix)
-      inputInvoice,
-      inputMat,
-      inputDesc,
-      inputBin,
-      inputDate
-    ] = inputs;
+      const [
+        inputSerial,
+        inputPrefix,
+        inputSuffix,
+        inputSerialCP,
+        inputInvoice,
+        inputMat,
+        inputDesc,
+        inputBin,
+        inputDate
+      ] = inputs;
 
-    const material = inputMat.value.trim();
-    const serialCP = inputSerialCP.value.trim();
-    const desc = inputDesc.value || '';
-    const bin = inputBin.value || '';
+      const material = inputMat.value.trim();
+      const serialCP = inputSerialCP.value.trim();
+      const desc = inputDesc.value || '';
+      const bin = inputBin.value || '';
 
-    if (!material || !serialCP) return; // ต้องมีทั้ง Material และ SerialCP
+      if (!material || !serialCP) return;
 
-    data.push({
-      Material: material,
-      Serial: serialCP,       // ใช้ SerialCP เป็น Serial แสดงบนฉลาก
-      Description: desc,
-      Storagebin: bin
+      data.push({
+        Material: material,
+        Serial: serialCP,
+        Description: desc,
+        Storagebin: bin
+      });
     });
-  });
 
-  // เรียงตาม Material แล้วตาม Serial
-  data.sort((a, b) => {
-    const m = a.Material.localeCompare(b.Material);
-    if (m !== 0) return m;
-    return a.Serial.localeCompare(b.Serial);
-  });
+    data.sort((a, b) => {
+      const m = a.Material.localeCompare(b.Material);
+      if (m !== 0) return m;
+      return a.Serial.localeCompare(b.Serial);
+    });
 
-  return data;
-}
+    return data;
+  }
 
-// Layout: ด้านบน QR + Barcode Material, ด้านล่างเต็มหน้ากระดาษเป็น Description + S/N + QR Serial
-function createLabel(row) {
-  const label = document.createElement('div');
-  label.className = 'label-big';   // ใช้สไตล์ Big เดิม (80x100 mm)
+  function createLabel(row) {
+    const label = document.createElement('div');
+    label.className = 'label-big';
 
-  // ===== แถวบน: QR + Barcode (Material) + Material text =====
-  const rowDiv = document.createElement('div');
-  rowDiv.className = 'row-big';
+    const rowDiv = document.createElement('div');
+    rowDiv.className = 'row-big';
 
-  // คอลัมน์ซ้าย: QR + Barcode Material
-  const leftCol = document.createElement('div');
-  leftCol.style.display = 'flex';
-  leftCol.style.flexDirection = 'column';
-  leftCol.style.alignItems = 'flex-start';
+    const leftCol = document.createElement('div');
+    leftCol.style.display = 'flex';
+    leftCol.style.flexDirection = 'column';
+    leftCol.style.alignItems = 'flex-start';
 
-  const qrCanvasMat = document.createElement('canvas');
-  qrCanvasMat.className = 'qr-big';
-  leftCol.appendChild(qrCanvasMat);
+    const qrCanvasMat = document.createElement('canvas');
+    qrCanvasMat.className = 'qr-big';
+    leftCol.appendChild(qrCanvasMat);
 
-  const barcodeMatCanvas = document.createElement('canvas');
-  barcodeMatCanvas.className = 'barcode-big';
-  leftCol.appendChild(barcodeMatCanvas);
+    const barcodeMatCanvas = document.createElement('canvas');
+    barcodeMatCanvas.className = 'barcode-big';
+    leftCol.appendChild(barcodeMatCanvas);
 
-  rowDiv.appendChild(leftCol);
+    rowDiv.appendChild(leftCol);
 
-  // คอลัมน์ขวา: แสดง Material ตัวใหญ่
-  const textRight = document.createElement('div');
-  textRight.className = 'text-container-big';
+    const textRight = document.createElement('div');
+    textRight.className = 'text-container-big';
 
-  const materialDiv = document.createElement('div');
-  materialDiv.className = 'material-big';
-  materialDiv.textContent = row.Material;
-  textRight.appendChild(materialDiv);
+    const materialDiv = document.createElement('div');
+    materialDiv.className = 'material-big';
+    materialDiv.textContent = row.Material;
+    textRight.appendChild(materialDiv);
 
-  rowDiv.appendChild(textRight);
-  label.appendChild(rowDiv);
+    rowDiv.appendChild(textRight);
+    label.appendChild(rowDiv);
 
-  // ===== บล็อกด้านล่างเต็มหน้ากระดาษ: Description + S/N + QR Serial =====
-  const infoBlock = document.createElement('div');
-  infoBlock.className = 'info-block-big';
+    const infoBlock = document.createElement('div');
+    infoBlock.className = 'info-block-big';
 
-  // Description ใต้ Barcode128 กว้างเต็มกระดาษ ชิดซ้าย
- // Description ใต้ Barcode128 กว้างเต็มกระดาษ ชิดซ้าย
-const descText = (row.Description || '').trim();
-if (descText) {
-  const descDiv = document.createElement('div');
-  descDiv.className = 'description-big';
-  descDiv.textContent = descText;
-  descDiv.style.marginTop = '1mm'; // ลดช่องว่างให้แคบลง
-  infoBlock.appendChild(descDiv);
-}
+    const descText = (row.Description || '').trim();
+    if (descText) {
+      const descDiv = document.createElement('div');
+      descDiv.className = 'description-big';
+      descDiv.textContent = descText;
+      descDiv.style.marginTop = '1mm';
+      infoBlock.appendChild(descDiv);
+    }
 
+    if (row.Serial) {
+      const serialDiv = document.createElement('div');
+      serialDiv.className = 'serial-big';
+      serialDiv.textContent = `S/N: ${row.Serial}`;
+      infoBlock.appendChild(serialDiv);
 
-  // S/N: xxxx
-  if (row.Serial) {
-    const serialDiv = document.createElement('div');
-    serialDiv.className = 'serial-big';
-    serialDiv.textContent = `S/N: ${row.Serial}`;
-    infoBlock.appendChild(serialDiv);
+      const qrSerialCanvas = document.createElement('canvas');
+      qrSerialCanvas.className = 'qr-serial-big';
+      infoBlock.appendChild(qrSerialCanvas);
 
-    // QR Code Serial ใต้ S/N ชิดซ้าย
-    const qrSerialCanvas = document.createElement('canvas');
-    qrSerialCanvas.className = 'qr-serial-big';
-    infoBlock.appendChild(qrSerialCanvas);
+      if (typeof QRCode !== 'undefined') {
+        QRCode.toCanvas(qrSerialCanvas, row.Serial || 'N/A', {
+          width: 40,
+          height: 40,
+          margin: 0,
+          errorCorrectionLevel: 'L'
+        }, err => {
+          if (err) console.error('QR Error for Serial:', err);
+        });
+      }
+    }
+
+    label.appendChild(infoBlock);
+
+    const bottomContainer = document.createElement('div');
+    bottomContainer.className = 'bottom-container-big';
+
+    const now = new Date();
+    const formattedDate =
+      `${now.getFullYear().toString().slice(2)}` +
+      `${String(now.getMonth() + 1).padStart(2, '0')}` +
+      `${String(now.getDate()).padStart(2, '0')}` +
+      `${String(now.getHours()).padStart(2, '0')}` +
+      `${String(now.getMinutes()).padStart(2, '0')}`;
+
+    const locTextStr = (row.Storagebin || '').trim();
+    if (locTextStr) {
+      const loc = document.createElement('div');
+      loc.className = 'location-big';
+      loc.textContent = `Location: ${locTextStr}`;
+      bottomContainer.appendChild(loc);
+    }
+
+    const lot = document.createElement('div');
+    lot.className = 'lot-line-big';
+    lot.textContent = `Lot: ${formattedDate}`;
+    bottomContainer.appendChild(lot);
+
+    label.appendChild(bottomContainer);
 
     if (typeof QRCode !== 'undefined') {
-      QRCode.toCanvas(qrSerialCanvas, row.Serial || 'N/A', {
-        width: 40,
-        height: 40,
+      QRCode.toCanvas(qrCanvasMat, row.Material || 'N/A', {
+        width: 55,
+        height: 55,
         margin: 0,
         errorCorrectionLevel: 'L'
       }, err => {
-        if (err) console.error('QR Error for Serial:', err);
+        if (err) console.error('QR Error for Material:', err);
       });
     }
+
+    if (typeof JsBarcode !== 'undefined') {
+      JsBarcode(barcodeMatCanvas, row.Material || '00000000', {
+        format: 'CODE128',
+        width: 1,
+        height: 25,
+        displayValue: false,
+        margin: 0
+      });
+    }
+
+    return label;
   }
 
-  label.appendChild(infoBlock);
+  function buildSerialLabelsForPrint(data) {
+    const printArea = document.getElementById('printArea');
+    printArea.innerHTML = '';
 
-  // ===== ด้านล่างสุด: Location + Lot (เหมือน Print Big เดิม) =====
-  const bottomContainer = document.createElement('div');
-  bottomContainer.className = 'bottom-container-big';
+    const container = document.createElement('div');
+    container.className = 'container-big';
+    printArea.appendChild(container);
 
-  const now = new Date();
-  const formattedDate =
-    `${now.getFullYear().toString().slice(2)}` +
-    `${String(now.getMonth() + 1).padStart(2, '0')}` +
-    `${String(now.getDate()).padStart(2, '0')}` +
-    `${String(now.getHours()).padStart(2, '0')}` +
-    `${String(now.getMinutes()).padStart(2, '0')}`;
+    if (!data.length) {
+      container.innerHTML = '<p style="text-align:center;">ไม่พบข้อมูลให้ Print</p>';
+      return;
+    }
 
-  const locTextStr = (row.Storagebin || '').trim();
-  if (locTextStr) {
-    const loc = document.createElement('div');
-    loc.className = 'location-big';
-    loc.textContent = `Location: ${locTextStr}`;
-    bottomContainer.appendChild(loc);
-  }
+    data.forEach(row => {
+      const sticker = document.createElement('div');
+      sticker.className = 'sticker-big';
 
-  const lot = document.createElement('div');
-  lot.className = 'lot-line-big';
-  lot.textContent = `Lot: ${formattedDate}`;
-  bottomContainer.appendChild(lot);
+      const label = createLabel(row);
+      sticker.appendChild(label);
 
-  label.appendChild(bottomContainer);
-
-  // ===== Generate QR + Barcode Material (ด้านบน) =====
-  if (typeof QRCode !== 'undefined') {
-    QRCode.toCanvas(qrCanvasMat, row.Material || 'N/A', {
-      width: 55,
-      height: 55,
-      margin: 0,
-      errorCorrectionLevel: 'L'
-    }, err => {
-      if (err) console.error('QR Error for Material:', err);
+      container.appendChild(sticker);
     });
   }
 
-  if (typeof JsBarcode !== 'undefined') {
-    JsBarcode(barcodeMatCanvas, row.Material || '00000000', {
-      format: 'CODE128',
-      width: 1,
-      height: 25,
-      displayValue: false,
-      margin: 0
-    });
-  }
-
-  return label;
-}
-
- // ✅ สร้าง DOM ฉลากทั้งหมด แล้วใส่ใน #printArea
-// ✅ ใช้โครง container-big / sticker-big แบบเดียวกับ Print Big
-function buildSerialLabelsForPrint(data) {
-  const printArea = document.getElementById('printArea');
-  printArea.innerHTML = '';
-
-  const container = document.createElement('div');
-  container.className = 'container-big';
-  printArea.appendChild(container);
-
-  if (!data.length) {
-    container.innerHTML = '<p style="text-align:center;">ไม่พบข้อมูลให้ Print</p>';
-    return;
-  }
-
-  data.forEach(row => {
-    const sticker = document.createElement('div');
-    sticker.className = 'sticker-big';
-
-    const label = createLabel(row); // เรียกฟังก์ชันด้านบน
-    sticker.appendChild(label);
-
-    container.appendChild(sticker);
-  });
-}
-
-
-  // ปุ่มบันทึก Serial (ตัวอย่าง)
   if (saveSerialBtn) {
     saveSerialBtn.addEventListener('click', () => {
       const rowCount = serialTableBody.querySelectorAll('tr').length;
@@ -2346,39 +2374,39 @@ function buildSerialLabelsForPrint(data) {
     });
   }
 
-  // ปุ่ม Print Serial => ใช้ layout 80x100 จากด้านบน
- if (printSerialBtn) {
-  printSerialBtn.addEventListener('click', () => {
-    const data = collectSerialPrintData();
-    if (!data.length) {
-      alert('ยังไม่มี Serial ในตารางสำหรับพิมพ์');
-      return;
-    }
+  if (printSerialBtn) {
+    printSerialBtn.addEventListener('click', () => {
+      const data = collectSerialPrintData();
+      if (!data.length) {
+        alert('ยังไม่มี Serial ในตารางสำหรับพิมพ์');
+        return;
+      }
 
-    spinner.style.display = 'flex';
+      spinner.style.display = 'flex';
 
-    setTimeout(() => {
-      // สร้างฉลาก Serial แบบ Big
-      buildSerialLabelsForPrint(data);
-
-      // เผื่อเวลาให้ QR / Barcode วาดลง canvas เสร็จ
       setTimeout(() => {
-        spinner.style.display = 'none';
-        window.print();
-      }, 300);
-    }, 200);
-  });
-}
+        buildSerialLabelsForPrint(data);
 
-
+        setTimeout(() => {
+          spinner.style.display = 'none';
+          window.print();
+        }, 300);
+      }, 200);
+    });
+  }
 
   // เริ่มต้น
   loadMaterialData();
   loadEmployeeData();
+
+  // ✅ NEW: โหลด parts mapping หลังจาก materialDB พร้อมแล้ว (เพื่อแสดง status รวม)
+  loadPartsData();
+
   addNewRow();        // barcode tab
   addSerialRow();     // serial tab แถวแรก
   updateSerialSummary();
 </script>
+
 
 </body>
 </html>
