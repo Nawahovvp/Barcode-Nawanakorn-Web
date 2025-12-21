@@ -2,7 +2,8 @@
   const tabButtons = document.querySelectorAll('.tab-btn');
   const tabPanels  = {
     barcode: document.getElementById('tab-barcode'),
-    serial:  document.getElementById('tab-serial')
+    serial:  document.getElementById('tab-serial'),
+    grn:     document.getElementById('tab-grn')
   };
 
   tabButtons.forEach(btn => {
@@ -35,14 +36,16 @@
   const EMP_URL = 'https://opensheet.elk.sh/1eqVoLsZxGguEbRCC5rdI4iMVtQ7CK4T3uXRdx8zE3uw/Employee';
   const USER_URL = 'https://opensheet.elk.sh/1eqVoLsZxGguEbRCC5rdI4iMVtQ7CK4T3uXRdx8zE3uw/UserPlantCode';
 
-  // ✅ NEW: ฐาน Parts → Material mapping
+  // ? NEW: ฐาน Parts  Material mapping
   const PARTS_URL     = 'https://opensheet.elk.sh/1Bs0_VQuEp5hdKX33oIXBebz3avrD4wRoQtK_BUZQfzc/Mainsap_Parts';
+  const GRN_URL       = 'https://opensheet.elk.sh/1orr4yVzy2ViyljrH6ENWnBSysTPy4aOLRD4cBjyPdIM/Serial';
 
   let materialDB = [];
   let employeeDB = [];
   let userDB = [];
-  let partsDB    = [];     // ✅ NEW
-  let partsMap   = new Map(); // ✅ NEW: key=Parts, value=Material
+  let partsDB    = [];     // ? NEW
+  let partsMap   = new Map(); // ? NEW: key=Parts, value=Material
+  let grnDB      = [];
   let selectedPlant = '';
   let dataUrl = '';
   let currentUser = null;
@@ -56,6 +59,18 @@
   const empCodeInput = document.getElementById('empCodeInput');
   const empStatus    = document.getElementById('empStatus');
   const spinner      = document.getElementById('spinner');
+  const grnInvoiceFilter = document.getElementById('grnInvoiceFilter');
+  const grnDateFilter = document.getElementById('grnDateFilter');
+  const grnMaterialFilter = document.getElementById('grnMaterialFilter');
+  const grnTableBody = document.querySelector('#grnTable tbody');
+  const grnStatusEl = document.getElementById('grnStatus');
+  const grnPrintBtn = document.getElementById('grnPrintBtn');
+  const grnSelectAll = document.getElementById('grnSelectAll');
+  const grnFilters = {
+    invoice: '',
+    date: '',
+    material: ''
+  };
 
   let employeeCode = '';
   let employeeName = '';
@@ -103,7 +118,7 @@
     }
   }
 
-  // ✅ NEW: โหลดฐาน Parts และทำ map เพื่อค้นหาไว
+  // ? NEW: โหลดฐาน Parts และทำ map เพื่อค้นหาไว
   async function loadPartsData() {
     try {
       const res = await fetch(PARTS_URL);
@@ -149,13 +164,13 @@
     return trimmed;
   }
 
-  // ✅ NEW: normalize key สำหรับ Parts (กัน whitespace/ชนิดข้อมูล)
+  // ? NEW: normalize key สำหรับ Parts (กัน whitespace/ชนิดข้อมูล)
   function normalizePartsKey(raw) {
     if (!raw) return '';
     return String(raw).trim();
   }
 
-  // ✅ NEW: ถ้ากรอกเป็น Parts ให้ map เป็น Material
+  // ? NEW: ถ้ากรอกเป็น Parts ให้ map เป็น Material
   function mapPartsToMaterialIfFound(inputValue) {
     const key = normalizePartsKey(inputValue);
     if (!key) return null;
@@ -213,7 +228,7 @@
     });
   }
 
-  // ✅ แก้ตรงนี้: กรอก Material แล้วไปเช็ค Parts ก่อน
+  // ? แก้ตรงนี้: กรอก Material แล้วไปเช็ค Parts ก่อน
   function fillRowByMaterial(tr) {
     const inputs = tr.querySelectorAll('input');
     const [inputMat, inputDesc, inputBin, inputRemain, inputQty, inputPack] = inputs;
@@ -790,6 +805,13 @@
   const printSerialBtn     = document.getElementById('printSerialBtn');
   let serialNextIndex      = 1;
   const SERIAL_LOCK_MESSAGE = 'กรอก Material ก่อนจึงจะกรอก Serial ในตารางได้';
+  const SERIAL_SAVE_URL = 'https://script.google.com/macros/s/AKfycbxp4CCxoAEpPoyYIkPrVZGgZ6ocB4Z-CM6_rqU67Gl6h9UGATCVUYM2d8uWmDYJVrYfVg/exec';
+  const confirmModal = document.getElementById('confirmModal');
+  const confirmModalMessage = document.getElementById('confirmModalMessage');
+  const confirmSaveBtn = document.getElementById('confirmSaveBtn');
+  const cancelSaveBtn = document.getElementById('cancelSaveBtn');
+  const confirmModalTitle = document.getElementById('confirmModalTitle');
+  const cancelDefaultText = cancelSaveBtn ? cancelSaveBtn.textContent : '';
 
   function getNowString() {
     const now = new Date();
@@ -1087,6 +1109,143 @@
     return data;
   }
 
+  function collectSerialSaveData() {
+    const rows = Array.from(serialTableBody.querySelectorAll('tr'));
+    const data = [];
+
+    rows.forEach((tr, idx) => {
+      const inputs = tr.querySelectorAll('input');
+      if (inputs.length < 9) return;
+
+      const [
+        inputSerial,
+        inputPrefix,
+        inputSuffix,
+        inputSerialCP,
+        inputInvoice,
+        inputMat,
+        inputDesc,
+        inputBin,
+        inputDate
+      ] = inputs;
+
+      const serialCP = inputSerialCP.value.trim();
+      const material = inputMat.value.trim();
+
+      if (!serialCP || !material) return;
+
+      data.push({
+        IDrow: idx + 1,
+        SerialCP: serialCP,
+        Invoice: inputInvoice.value.trim(),
+        Material: material,
+        Description: inputDesc.value || '',
+        'storage bin': inputBin.value || '',
+        Date: inputDate.value || ''
+      });
+    });
+
+    return data;
+  }
+
+  function resetSerialForm() {
+    if (serialInvoiceInput) serialInvoiceInput.value = '';
+    if (serialMatInput) serialMatInput.value = '';
+    if (serialDescInput) serialDescInput.value = '';
+    if (serialBinInput) serialBinInput.value = '';
+    if (serialPrefixInput) serialPrefixInput.value = '';
+    if (serialSuffixInput) serialSuffixInput.value = '';
+    if (serialTableBody) serialTableBody.innerHTML = '';
+    serialNextIndex = 1;
+    addSerialRow();
+    updateSerialSummary();
+    updateSerialTableLock();
+    if (serialTopStatus) {
+      serialTopStatus.textContent = 'กรอก Invoice และ Material เพื่อดึง Description / Storage bin จากฐานข้อมูล';
+    }
+    if (serialStatusEl) {
+      serialStatusEl.textContent = 'แถวแรกถูกสร้างให้แล้ว กรอก Serial แล้วกด Enter เพื่อสร้างแถวถัดไป';
+    }
+  }
+
+  function toggleConfirmModal(open) {
+    if (!confirmModal) return;
+    confirmModal.classList.toggle('open', open);
+    confirmModal.setAttribute('aria-hidden', open ? 'false' : 'true');
+  }
+
+  function showConfirmModal(message, onConfirm) {
+    if (!confirmModal) {
+      if (typeof onConfirm === 'function') onConfirm();
+      return;
+    }
+
+    if (confirmModalMessage) {
+      confirmModalMessage.textContent = message;
+    }
+
+    toggleConfirmModal(true);
+
+    const handleConfirm = () => {
+      toggleConfirmModal(false);
+      if (typeof onConfirm === 'function') onConfirm();
+      cleanup();
+    };
+
+    const handleCancel = () => {
+      toggleConfirmModal(false);
+      cleanup();
+    };
+
+    const handleBackdrop = (event) => {
+      if (event.target === confirmModal) {
+        toggleConfirmModal(false);
+        cleanup();
+      }
+    };
+
+    const cleanup = () => {
+      if (confirmSaveBtn) confirmSaveBtn.removeEventListener('click', handleConfirm);
+      if (cancelSaveBtn) cancelSaveBtn.removeEventListener('click', handleCancel);
+      confirmModal.removeEventListener('click', handleBackdrop);
+    };
+
+    if (confirmSaveBtn) confirmSaveBtn.addEventListener('click', handleConfirm);
+    if (cancelSaveBtn) cancelSaveBtn.addEventListener('click', handleCancel);
+    confirmModal.addEventListener('click', handleBackdrop);
+  }
+
+  function showInfoModal(title, message) {
+    if (!confirmModal) return;
+    if (confirmModalTitle) confirmModalTitle.textContent = title;
+    if (confirmModalMessage) confirmModalMessage.textContent = message;
+    if (confirmSaveBtn) confirmSaveBtn.classList.add('is-hidden');
+    if (cancelSaveBtn) cancelSaveBtn.textContent = 'ตกลง';
+
+    toggleConfirmModal(true);
+
+    const handleClose = () => {
+      toggleConfirmModal(false);
+      if (confirmSaveBtn) confirmSaveBtn.classList.remove('is-hidden');
+      if (cancelSaveBtn) cancelSaveBtn.textContent = cancelDefaultText || 'ยกเลิก';
+      cleanup();
+    };
+
+    const handleBackdrop = (event) => {
+      if (event.target === confirmModal) {
+        handleClose();
+      }
+    };
+
+    const cleanup = () => {
+      if (cancelSaveBtn) cancelSaveBtn.removeEventListener('click', handleClose);
+      confirmModal.removeEventListener('click', handleBackdrop);
+    };
+
+    if (cancelSaveBtn) cancelSaveBtn.addEventListener('click', handleClose);
+    confirmModal.addEventListener('click', handleBackdrop);
+  }
+
   function createLabel(row) {
     const label = document.createElement('div');
     label.className = 'label-big label-serial-big';
@@ -1231,13 +1390,43 @@
   }
 
   if (saveSerialBtn) {
-    saveSerialBtn.addEventListener('click', () => {
-      const rowCount = serialTableBody.querySelectorAll('tr').length;
-      if (!rowCount) {
+    const performSerialSave = async () => {
+      const data = collectSerialSaveData();
+      if (!data.length) {
         alert('ยังไม่มี Serial ในตารางให้บันทึก');
         return;
       }
-      alert('ตัวอย่างปุ่ม "บันทึก": ยังไม่เชื่อมต่อฐานข้อมูล\nคุณสามารถนำข้อมูลในตารางไปต่อยอดบันทึกลง Google Sheet หรือระบบอื่นได้ครับ');
+
+      try {
+        saveSerialBtn.disabled = true;
+        serialStatusEl.textContent = 'กำลังบันทึกข้อมูลลง Google Sheet...';
+
+        const body = new URLSearchParams({
+          rows: JSON.stringify(data)
+        });
+
+        const res = await fetch(SERIAL_SAVE_URL, {
+          method: 'POST',
+          body
+        });
+
+        const result = await res.json();
+        if (!result || result.ok !== true) {
+          throw new Error((result && result.error) || 'บันทึกไม่สำเร็จ');
+        }
+
+        serialStatusEl.textContent = `บันทึกสำเร็จ ${result.inserted || data.length} แถว`;
+        showInfoModal('บันทึกสำเร็จ', `บันทึกข้อมูล ${result.inserted || data.length} แถวเรียบร้อยแล้ว`);
+        resetSerialForm();
+      } catch (err) {
+        serialStatusEl.textContent = `บันทึกไม่สำเร็จ: ${err.message || err}`;
+      } finally {
+        saveSerialBtn.disabled = false;
+      }
+    };
+
+    saveSerialBtn.addEventListener('click', () => {
+      showConfirmModal('ต้องการบันทึกข้อมูลลง Google Sheet ใช่หรือไม่', performSerialSave);
     });
   }
 
@@ -1263,6 +1452,263 @@
   }
 
   const loginGate = document.getElementById('loginGate');
+
+  function normalizeGrnRow(row) {
+    return {
+      SerialCP: row.SerialCP || row.Serial || row.serialCP || row.serialcp || '',
+      Invoice: row.Invoice || row.invoice || '',
+      Material: row.Material || row.material || '',
+      Description: row.Description || row.description || '',
+      Storagebin: row["storage bin"] || row["Storage bin"] || row.StorageBin || row.storageBin || row.storagebin || '',
+      Date: row.Date || row.date || ''
+    };
+  }
+
+  function applyGrnFilters(data, filters) {
+    return data.filter(row => {
+      if (filters.invoice && row.Invoice !== filters.invoice) return false;
+      if (filters.date && row.Date !== filters.date) return false;
+      if (filters.material && row.Material !== filters.material) return false;
+      return true;
+    });
+  }
+
+  function getUniqueValues(data, key) {
+    const set = new Set();
+    data.forEach(row => {
+      const val = row[key];
+      if (val) set.add(val);
+    });
+    return Array.from(set).sort((a, b) => String(a).localeCompare(String(b)));
+  }
+
+  function setGrnSelectOptions(selectEl, values, selectedValue) {
+    if (!selectEl) return selectedValue || '';
+    selectEl.innerHTML = '';
+    const allOption = document.createElement('option');
+    allOption.value = '';
+    allOption.textContent = 'ทั้งหมด';
+    selectEl.appendChild(allOption);
+
+    values.forEach(val => {
+      const option = document.createElement('option');
+      option.value = val;
+      option.textContent = val;
+      selectEl.appendChild(option);
+    });
+
+    if (selectedValue && values.includes(selectedValue)) {
+      selectEl.value = selectedValue;
+    } else {
+      selectEl.value = '';
+    }
+
+    return selectEl.value;
+  }
+
+  function renderGrnTable(rows) {
+    if (!grnTableBody) return;
+    grnTableBody.innerHTML = '';
+
+    if (grnSelectAll) grnSelectAll.checked = false;
+    rows.forEach(row => {
+      const tr = document.createElement('tr');
+
+      const tdSelect = document.createElement('td');
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.className = 'grn-checkbox';
+      checkbox.dataset.serial = row.SerialCP || '';
+      checkbox.dataset.material = row.Material || '';
+      checkbox.dataset.description = row.Description || '';
+      checkbox.dataset.storagebin = row.Storagebin || '';
+      tdSelect.appendChild(checkbox);
+      tr.appendChild(tdSelect);
+
+      const tdSerial = document.createElement('td');
+      tdSerial.textContent = row.SerialCP || '-';
+      tr.appendChild(tdSerial);
+
+      const tdInvoice = document.createElement('td');
+      tdInvoice.textContent = row.Invoice || '-';
+      tr.appendChild(tdInvoice);
+
+      const tdMaterial = document.createElement('td');
+      tdMaterial.textContent = row.Material || '-';
+      tr.appendChild(tdMaterial);
+
+      const tdDesc = document.createElement('td');
+      tdDesc.textContent = row.Description || '-';
+      tr.appendChild(tdDesc);
+
+      const tdBin = document.createElement('td');
+      tdBin.textContent = row.Storagebin || '-';
+      tr.appendChild(tdBin);
+
+      const tdDate = document.createElement('td');
+      tdDate.textContent = row.Date || '-';
+      tr.appendChild(tdDate);
+
+      grnTableBody.appendChild(tr);
+    });
+  }
+
+  function updateGrnFiltersAndTable() {
+    if (!grnDB.length) {
+      renderGrnTable([]);
+      if (grnStatusEl) grnStatusEl.textContent = 'ไม่พบข้อมูล GRN';
+      return;
+    }
+
+    const invoiceValues = getUniqueValues(
+      applyGrnFilters(grnDB, { date: grnFilters.date, material: grnFilters.material }),
+      'Invoice'
+    );
+    const dateValues = getUniqueValues(
+      applyGrnFilters(grnDB, { invoice: grnFilters.invoice, material: grnFilters.material }),
+      'Date'
+    );
+    const materialValues = getUniqueValues(
+      applyGrnFilters(grnDB, { invoice: grnFilters.invoice, date: grnFilters.date }),
+      'Material'
+    );
+
+    grnFilters.invoice = setGrnSelectOptions(grnInvoiceFilter, invoiceValues, grnFilters.invoice);
+    grnFilters.date = setGrnSelectOptions(grnDateFilter, dateValues, grnFilters.date);
+    grnFilters.material = setGrnSelectOptions(grnMaterialFilter, materialValues, grnFilters.material);
+
+    const filtered = applyGrnFilters(grnDB, grnFilters);
+    renderGrnTable(filtered);
+    if (grnStatusEl) grnStatusEl.textContent = `พบข้อมูล ${filtered.length} รายการ`;
+  }
+
+  async function loadGrnData() {
+    if (grnStatusEl) grnStatusEl.textContent = 'กำลังโหลดข้อมูล GRN...';
+    try {
+      const res = await fetch(GRN_URL);
+      const data = await res.json();
+      grnDB = Array.isArray(data) ? data.map(normalizeGrnRow) : [];
+      updateGrnFiltersAndTable();
+    } catch (err) {
+      if (grnStatusEl) grnStatusEl.textContent = 'โหลดข้อมูล GRN ไม่สำเร็จ';
+      grnDB = [];
+      renderGrnTable([]);
+    }
+  }
+
+  if (grnInvoiceFilter) {
+    grnInvoiceFilter.addEventListener('change', () => {
+      grnFilters.invoice = grnInvoiceFilter.value;
+      updateGrnFiltersAndTable();
+    });
+  }
+  if (grnDateFilter) {
+    grnDateFilter.addEventListener('change', () => {
+      grnFilters.date = grnDateFilter.value;
+      updateGrnFiltersAndTable();
+    });
+  }
+  if (grnMaterialFilter) {
+    grnMaterialFilter.addEventListener('change', () => {
+      grnFilters.material = grnMaterialFilter.value;
+      updateGrnFiltersAndTable();
+    });
+  }
+
+  if (grnStatusEl) {
+    loadGrnData();
+  }
+
+  if (grnPrintBtn) {
+    grnPrintBtn.addEventListener('click', () => {
+      if (!grnTableBody) return;
+      const selected = Array.from(grnTableBody.querySelectorAll('input.grn-checkbox:checked'));
+
+      if (!selected.length) {
+        alert('กรุณาเลือกอย่างน้อย 1 รายการเพื่อพิมพ์');
+        return;
+      }
+
+      const data = selected.map(item => ({
+        Material: item.dataset.material || '',
+        Serial: item.dataset.serial || '',
+        Description: item.dataset.description || '',
+        Storagebin: item.dataset.storagebin || ''
+      })).filter(row => row.Material && row.Serial);
+
+      if (!data.length) {
+        alert('ข้อมูลไม่ครบสำหรับพิมพ์');
+        return;
+      }
+
+      spinner.style.display = 'flex';
+
+      setTimeout(() => {
+        buildSerialLabelsForPrint(data);
+
+        setTimeout(() => {
+          spinner.style.display = 'none';
+          window.print();
+        }, 300);
+      }, 200);
+    });
+  }
+
+
+
+  if (grnSelectAll) {
+    grnSelectAll.addEventListener('change', () => {
+      if (!grnTableBody) return;
+      const checked = grnSelectAll.checked;
+      grnTableBody.querySelectorAll('input.grn-checkbox').forEach((checkbox) => {
+        checkbox.checked = checked;
+      });
+    });
+  }
+
+  const grnTableHead = document.querySelector('#grnTable thead');
+  if (grnTableHead) {
+    grnTableHead.addEventListener('click', async (event) => {
+      const th = event.target.closest('th');
+      if (!th) return;
+      if (!grnTableBody) return;
+      const headerText = th.textContent.trim();
+      if (!headerText) return;
+      const colIndex = Array.from(th.parentElement.children).indexOf(th);
+      if (colIndex < 0) return;
+      if (colIndex === 0) return;
+
+      const values = Array.from(grnTableBody.querySelectorAll('tr'))
+        .map(row => {
+          const cell = row.children[colIndex];
+          return cell ? cell.textContent.trim() : '';
+        })
+        .filter(val => val !== '');
+
+      if (!values.length) {
+        if (grnStatusEl) grnStatusEl.textContent = 'ไม่มีข้อมูลให้คัดลอก';
+        return;
+      }
+
+      const text = values.join('\n');
+
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(text);
+        } else {
+          const temp = document.createElement('textarea');
+          temp.value = text;
+          document.body.appendChild(temp);
+          temp.select();
+          document.execCommand('copy');
+          temp.remove();
+        }
+        if (grnStatusEl) grnStatusEl.textContent = `คัดลอกคอลัมน์: ${headerText} (${values.length} รายการ)`;
+      } catch (err) {
+        if (grnStatusEl) grnStatusEl.textContent = 'คัดลอกไม่สำเร็จ';
+      }
+    });
+  }
   const loginUserInput = document.getElementById('loginUserInput');
   const loginPassInput = document.getElementById('loginPassInput');
   const loginRemember = document.getElementById('loginRemember');
@@ -1547,3 +1993,6 @@
       handleLogin();
     }
   });
+
+
+

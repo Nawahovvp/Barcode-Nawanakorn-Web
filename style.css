@@ -417,8 +417,17 @@ body {
       transition: all 0.18s ease;
     }
 
-    .tab-btn span.icon {
-      font-size: 1rem;
+.tab-btn span.icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: currentColor;
+    }
+
+    .tab-btn span.icon svg {
+      width: 18px;
+      height: 18px;
+      fill: currentColor;
     }
 
     .tab-btn.active {
@@ -573,7 +582,16 @@ body {
     }
 
     .print-btn .emoji {
-      font-size: 1rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: currentColor;
+    }
+
+    .print-btn .emoji svg {
+      width: 18px;
+      height: 18px;
+      fill: currentColor;
     }
 
     /* ปุ่มลบแถว Serial */
@@ -600,7 +618,7 @@ body {
       flex-wrap: wrap;
     }
 
-    .btn-serial-primary {
+.btn-serial-primary {
       padding: 8px 16px;
       border-radius: 999px;
       border: none;
@@ -614,6 +632,21 @@ body {
       align-items: center;
       gap: 6px;
       transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+    }
+
+    .btn-serial-primary .btn-icon,
+    .btn-serial-outline .btn-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: currentColor;
+    }
+
+    .btn-serial-primary .btn-icon svg,
+    .btn-serial-outline .btn-icon svg {
+      width: 18px;
+      height: 18px;
+      fill: currentColor;
     }
 
     .btn-serial-primary:hover {
@@ -956,8 +989,9 @@ body {
     display: block !important;
   }
 
-  /* ✅ ซ่อน tab Serial ตอน print (ไม่งั้นจะเกะกะกระดาษ) */
-  #tab-serial {
+  /* ? ซ่อน tab Serial ตอน print (ไม่งั้นจะเกะกะกระดาษ) */
+  #tab-serial,
+  #tab-grn {
     display: none !important;
   }
       #printArea {
@@ -1046,6 +1080,55 @@ body {
   background: #f3f4f6;
   color: #4b5563;
   font-weight: 500;
+}
+
+/* ===== GRN Tab Filters ===== */
+.grn-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.grn-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 180px;
+}
+
+.grn-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.grn-select {
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid #d1d5db;
+  font-size: 0.85rem;
+  background: #f9fafb;
+  transition: all 0.15s ease;
+}
+
+.grn-select:focus {
+  outline: none;
+  border-color: var(--primary);
+  background: #ffffff;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+}
+
+.grn-actions {
+  margin-left: auto;
+  display: flex;
+  align-items: flex-end;
+}
+
+.grn-checkbox {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--primary);
+  cursor: pointer;
 }
 /* ===== ฉลาก Serial 80x100 mm (ใช้ตอน Print Serial) ===== */
 .container {
@@ -1297,3 +1380,287 @@ body {
   width: 20mm;
   height: 20mm;
 }
+
+/* ===== Canva-ish Pastel Theme Overrides ===== */
+:root {
+  --primary: #ff7aa2;
+  --primary-soft: #ffe4ee;
+  --bg: #f9f7ff;
+  --card-bg: #ffffff;
+  --border-soft: #e7e5f4;
+  --text-main: #2b2a3a;
+  --text-muted: #6d6a7c;
+  --tab-bg: #f0edff;
+  --tab-active: #ff7aa2;
+}
+
+body {
+  font-family: 'Baloo 2', 'Noto Sans Thai', sans-serif;
+  background:
+    radial-gradient(circle at 10% 10%, rgba(255, 199, 224, 0.6), transparent 40%),
+    radial-gradient(circle at 90% 15%, rgba(186, 230, 253, 0.55), transparent 45%),
+    linear-gradient(180deg, #f9f7ff, #fef6f9);
+  color: var(--text-main);
+}
+
+.app-shell {
+  max-width: 1150px;
+}
+
+header.app-header {
+  background: linear-gradient(120deg, rgba(255, 122, 162, 0.2), rgba(186, 230, 253, 0.25));
+  border: 1px solid rgba(255, 122, 162, 0.25);
+  padding: 14px 18px;
+  border-radius: 20px;
+  box-shadow: 0 16px 30px rgba(255, 122, 162, 0.12);
+}
+
+header.app-header h1 {
+  font-size: 1.6rem;
+  letter-spacing: 0.03em;
+}
+
+header.app-header .subtitle {
+  font-size: 0.85rem;
+  letter-spacing: 0.02em;
+  color: var(--text-muted);
+}
+
+.login-gate,
+.plant-gate {
+  background:
+    radial-gradient(circle at 12% 8%, rgba(255, 214, 231, 0.8), transparent 40%),
+    radial-gradient(circle at 88% 12%, rgba(186, 230, 253, 0.7), transparent 45%),
+    linear-gradient(180deg, #f9f7ff, #fef6f9);
+}
+
+.login-card,
+.plant-card {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(231, 229, 244, 0.9);
+  box-shadow: 0 28px 60px rgba(40, 30, 80, 0.12);
+}
+
+.login-title,
+.plant-title {
+  font-size: 1.35rem;
+  letter-spacing: 0.02em;
+}
+
+.login-input,
+.plant-select,
+.serial-input,
+#empCodeInput,
+.grn-select {
+  background: #ffffff;
+  border: 1px solid #e7e5f4;
+  color: var(--text-main);
+}
+
+.login-input:focus,
+.plant-select:focus,
+.serial-input:focus,
+#empCodeInput:focus,
+.grn-select:focus {
+  border-color: #ff9ab8;
+  box-shadow: 0 0 0 2px rgba(255, 122, 162, 0.2);
+}
+
+.menu-btn,
+.back-plant-btn {
+  background: #ffffff;
+  border: 1px solid rgba(255, 122, 162, 0.3);
+  color: #ff7aa2;
+}
+
+.menu-btn:hover,
+.back-plant-btn:hover {
+  background: rgba(255, 122, 162, 0.12);
+}
+
+.menu-panel {
+  background: #ffffff;
+  border: 1px solid rgba(231, 229, 244, 0.9);
+}
+
+.menu-panel-title {
+  color: #ff7aa2;
+}
+
+.menu-value {
+  color: #2b2a3a;
+}
+
+.menu-logout-btn {
+  background: rgba(248, 113, 113, 0.15);
+  border-color: rgba(248, 113, 113, 0.4);
+  color: #b91c1c;
+}
+
+.tabs {
+  background: #ffffff;
+  border: 1px solid rgba(231, 229, 244, 0.9);
+  box-shadow: 0 12px 24px rgba(90, 72, 130, 0.12);
+}
+
+.tab-btn {
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+  font-size: 0.75rem;
+}
+
+.tab-btn.active {
+  background: linear-gradient(120deg, #ff7aa2, #ffc9dd);
+  color: #2b2a3a;
+  box-shadow: 0 10px 22px rgba(255, 122, 162, 0.35);
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(231, 229, 244, 0.9);
+  box-shadow: 0 16px 30px rgba(86, 74, 118, 0.12);
+}
+
+.card-title {
+  font-size: 1.05rem;
+  letter-spacing: 0.04em;
+}
+
+.card-title-pill {
+  background: rgba(255, 122, 162, 0.16);
+  color: #d9466a;
+  border: 1px solid rgba(255, 122, 162, 0.25);
+}
+
+.print-btn,
+.btn-serial-primary,
+.btn-serial-outline {
+  border-radius: 16px;
+  letter-spacing: 0.06em;
+}
+
+.print-btn {
+  background: #ffffff;
+  border: 1px solid rgba(255, 122, 162, 0.45);
+  color: #d9466a;
+  box-shadow: 0 10px 18px rgba(255, 122, 162, 0.15);
+}
+
+.print-btn:hover {
+  background: #ff7aa2;
+  color: #ffffff;
+  box-shadow: 0 14px 24px rgba(255, 122, 162, 0.3);
+}
+
+.btn-serial-primary {
+  background: linear-gradient(120deg, #ff7aa2, #ffb6cf);
+  box-shadow: 0 10px 22px rgba(255, 122, 162, 0.3);
+}
+
+.btn-serial-outline {
+  background: #ffffff;
+  border: 1px solid rgba(255, 122, 162, 0.45);
+  color: #d9466a;
+}
+
+.btn-serial-outline:hover {
+  background: rgba(255, 122, 162, 0.12);
+}
+
+table {
+  background: #ffffff;
+  border: 1px solid rgba(231, 229, 244, 0.9);
+}
+
+thead {
+  background: linear-gradient(90deg, #ff7aa2, #ffd1e2);
+  color: #2b2a3a;
+}
+
+th, td {
+  border: 1px solid rgba(231, 229, 244, 0.9);
+  color: #2b2a3a;
+}
+
+td input,
+td input[readonly] {
+  background: #ffffff;
+  color: #2b2a3a;
+}
+
+tr:nth-child(even) td {
+  background: rgba(255, 248, 251, 0.9);
+}
+
+.status,
+.login-subtitle,
+.plant-subtitle,
+.plant-note,
+.serial-label,
+.grn-label {
+  color: var(--text-muted);
+}
+
+.delete-btn,
+.delete-row-btn {
+  background: rgba(248, 113, 113, 0.16);
+  border-color: rgba(248, 113, 113, 0.35);
+  color: #b91c1c;
+}
+
+.delete-btn:hover,
+.delete-row-btn:hover {
+  background: rgba(248, 113, 113, 0.35);
+}
+
+/* ===== Confirm Modal ===== */
+.modal {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15, 10, 30, 0.45);
+  z-index: 3000;
+  padding: 24px;
+}
+
+.modal.open {
+  display: flex;
+}
+
+.modal-card {
+  width: min(420px, 90vw);
+  background: #ffffff;
+  border-radius: 22px;
+  border: 1px solid rgba(231, 229, 244, 0.9);
+  box-shadow: 0 28px 60px rgba(40, 30, 80, 0.18);
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.modal-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.modal-message {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+.is-hidden {
+  display: none !important;
+}
+
+

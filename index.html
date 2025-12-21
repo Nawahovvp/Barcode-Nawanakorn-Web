@@ -98,12 +98,33 @@
     <!-- Tabs -->
     <div class="tabs">
       <button class="tab-btn active" data-tab="barcode">
-        <span class="icon">🏷️</span>
+        <span class="icon">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="2" y="4" width="2" height="16"></rect>
+            <rect x="6" y="4" width="1" height="16"></rect>
+            <rect x="9" y="4" width="2" height="16"></rect>
+            <rect x="13" y="4" width="1" height="16"></rect>
+            <rect x="16" y="4" width="2" height="16"></rect>
+            <rect x="20" y="4" width="1" height="16"></rect>
+          </svg>
+        </span>
         <span>Barcode</span>
       </button>
       <button class="tab-btn" data-tab="serial">
-        <span class="icon">#️⃣</span>
+        <span class="icon">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M5 9h14v2H5zM5 13h14v2H5zM9 5h2l-1 14h-2l1-14zm6 0h2l-1 14h-2l1-14z"></path>
+          </svg>
+        </span>
         <span>Serial Number</span>
+      </button>
+      <button class="tab-btn" data-tab="grn">
+        <span class="icon">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M7 4h10v2h3v14H4V6h3V4zm2 2v2h6V6H9zm-3 2v10h12V8H6z"></path>
+          </svg>
+        </span>
+        <span>GRN</span>
       </button>
     </div>
 
@@ -119,10 +140,22 @@
             </div>
             <div>
               <button id="printSmallBtn" class="print-btn">
-                <span class="emoji">🖨️</span> Print Small
+                <span class="emoji">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M6 3h12v5H6zM6 14h12v7H6z"></path>
+                    <rect x="4" y="9" width="16" height="4"></rect>
+                  </svg>
+                </span>
+                Print Small
               </button>
               <button id="printBigBtn" class="print-btn">
-                <span class="emoji">🖨️</span> Print Big
+                <span class="emoji">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M6 3h12v5H6zM6 14h12v7H6z"></path>
+                    <rect x="4" y="9" width="16" height="4"></rect>
+                  </svg>
+                </span>
+                Print Big
               </button>
             </div>
           </div>
@@ -178,94 +211,101 @@
 
     <!-- Tab: Serial Number -->
     <div id="tab-serial" class="tab-panel">
-      <!-- ฟอร์มข้อมูลด้านบน -->
-      <!-- ฟอร์มข้อมูลด้านบน -->
-<div class="card">
-  <div class="card-header-row">
-    <div class="card-title">
-      จัดการ Serial Number
-      <span class="card-title-pill">Invoice + Material + Serial</span>
-    </div>
-    <div class="serial-actions">
-      <button id="saveSerialBtn" class="btn-serial-primary">
-        💾 บันทึก
-      </button>
-      <button id="printSerialBtn" class="btn-serial-outline">
-        🖨️ Print Serial
-      </button>
-    </div>
-  </div>
+      <div class="card">
+        <div class="card-header-row">
+          <div class="card-title">
+            จัดการ Serial Number
+            <span class="card-title-pill">Invoice + Material + Serial</span>
+          </div>
+          <div class="serial-actions">
+            <button id="saveSerialBtn" class="btn-serial-primary">
+              <span class="btn-icon">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M6 3h9l3 3v15H6z"></path>
+                  <rect x="8" y="5" width="6" height="3"></rect>
+                  <rect x="8" y="12" width="8" height="7"></rect>
+                </svg>
+              </span>
+              บันทึก
+            </button>
+            <button id="printSerialBtn" class="btn-serial-outline">
+              <span class="btn-icon">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M6 3h12v5H6zM6 14h12v7H6z"></path>
+                  <rect x="4" y="9" width="16" height="4"></rect>
+                </svg>
+              </span>
+              Print Serial
+            </button>
+          </div>
+        </div>
 
-  <!-- Summary Chips (คงไว้เหมือนเดิมได้) -->
-  <div class="serial-summary-row">
-    <div class="serial-chip" id="serialSummaryInvoice">
-      <span class="serial-chip-label">Invoice</span>
-      <span class="serial-chip-value">-</span>
-    </div>
-    <div class="serial-chip" id="serialSummaryMaterial">
-      <span class="serial-chip-label">Material</span>
-      <span class="serial-chip-value">-</span>
-    </div>
-    <div class="serial-chip" id="serialSummaryCount">
-      <span class="serial-chip-label">Serial</span>
-      <span class="serial-chip-value">0 แถว</span>
-    </div>
-  </div>
+        <div class="serial-summary-row">
+          <div class="serial-chip" id="serialSummaryInvoice">
+            <span class="serial-chip-label">Invoice</span>
+            <span class="serial-chip-value">-</span>
+          </div>
+          <div class="serial-chip" id="serialSummaryMaterial">
+            <span class="serial-chip-label">Material</span>
+            <span class="serial-chip-value">-</span>
+          </div>
+          <div class="serial-chip" id="serialSummaryCount">
+            <span class="serial-chip-label">Serial</span>
+            <span class="serial-chip-value">0 แถว</span>
+          </div>
+        </div>
 
-  <!-- แถวที่ 1: Invoice + Material + Description + Storage bin -->
-  <div class="serial-form-row">
-    <div class="serial-field serial-narrow">
-      <span class="serial-label">Invoice</span>
-      <input id="serialInvoiceInput" type="text"
-             class="serial-input"
-             placeholder="กรอก Invoice" />
-    </div>
+        <div class="serial-form-row">
+          <div class="serial-field serial-narrow">
+            <span class="serial-label">Invoice</span>
+            <input id="serialInvoiceInput" type="text"
+                   class="serial-input"
+                   placeholder="กรอก Invoice" />
+          </div>
 
-    <div class="serial-field serial-narrow">
-      <span class="serial-label">Material</span>
-      <input id="serialMatInput" type="text"
-             class="serial-input"
-             placeholder="กรอก/สแกน Material" />
-    </div>
+          <div class="serial-field serial-narrow">
+            <span class="serial-label">Material</span>
+            <input id="serialMatInput" type="text"
+                   class="serial-input"
+                   placeholder="กรอก/สแกน Material" />
+          </div>
 
-    <div class="serial-field serial-wide">
-      <span class="serial-label">Description</span>
-      <input id="serialDescInput" type="text"
-             class="serial-input"
-             readonly />
-    </div>
+          <div class="serial-field serial-wide">
+            <span class="serial-label">Description</span>
+            <input id="serialDescInput" type="text"
+                   class="serial-input"
+                   readonly />
+          </div>
 
-    <div class="serial-field serial-narrow">
-      <span class="serial-label">Storage bin</span>
-      <input id="serialBinInput" type="text"
-             class="serial-input"
-             readonly />
-    </div>
-  </div>
+          <div class="serial-field serial-narrow">
+            <span class="serial-label">Storage bin</span>
+            <input id="serialBinInput" type="text"
+                   class="serial-input"
+                   readonly />
+          </div>
+        </div>
 
-  <!-- แถวที่ 2: Serial ตัวหน้า + Serial ตัวหลัง -->
-  <div class="serial-form-row">
-    <div class="serial-field serial-narrow">
-      <span class="serial-label">Serial ตัวหน้า</span>
-      <input id="serialPrefixInput" type="text"
-             class="serial-input"
-             placeholder="เช่น 0001" />
-    </div>
+        <div class="serial-form-row">
+          <div class="serial-field serial-narrow">
+            <span class="serial-label">Serial ตัวหน้า</span>
+            <input id="serialPrefixInput" type="text"
+                   class="serial-input"
+                   placeholder="เช่น 0001" />
+          </div>
 
-    <div class="serial-field serial-narrow">
-      <span class="serial-label">Serial ตัวหลัง</span>
-      <input id="serialSuffixInput" type="text"
-             class="serial-input"
-             placeholder="เช่น A" />
-    </div>
-  </div>
+          <div class="serial-field serial-narrow">
+            <span class="serial-label">Serial ตัวหลัง</span>
+            <input id="serialSuffixInput" type="text"
+                   class="serial-input"
+                   placeholder="เช่น A" />
+          </div>
+        </div>
 
-  <div class="status" id="serialTopStatus">
-    กรอก Invoice และ Material เพื่อดึง Description / Storage bin จากฐานข้อมูล
-  </div>
-</div>
+        <div class="status" id="serialTopStatus">
+          กรอก Invoice และ Material เพื่อดึง Description / Storage bin จากฐานข้อมูล
+        </div>
+      </div>
 
-      <!-- ตาราง Serial -->
       <div class="card">
         <div class="card-title">
           ตาราง Serial Number
@@ -293,16 +333,94 @@
         </div>
       </div>
     </div>
+
+    <!-- Tab: GRN -->
+    <div id="tab-grn" class="tab-panel">
+      <div class="card">
+        <div class="card-header-row">
+          <div class="card-title">
+            ข้อมูล GRN
+            <span class="card-title-pill">Serial Data</span>
+          </div>
+        </div>
+        <div class="grn-filters">
+          <div class="grn-field">
+            <span class="grn-label">Invoice</span>
+            <select id="grnInvoiceFilter" class="grn-select"></select>
+          </div>
+          <div class="grn-field">
+            <span class="grn-label">Date</span>
+            <select id="grnDateFilter" class="grn-select"></select>
+          </div>
+          <div class="grn-field">
+            <span class="grn-label">Material</span>
+            <select id="grnMaterialFilter" class="grn-select"></select>
+          </div>
+          <div class="grn-actions">
+            <button id="grnPrintBtn" class="btn-serial-outline" type="button">
+              <span class="btn-icon">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M6 3h12v5H6zM6 14h12v7H6z"></path>
+                  <rect x="4" y="9" width="16" height="4"></rect>
+                </svg>
+              </span>
+              Print Serial
+            </button>
+          </div>
+        </div>
+        <div class="status" id="grnStatus">กำลังโหลดข้อมูล GRN...</div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">ตาราง GRN</div>
+        <table id="grnTable">
+          <thead>
+            <tr>
+              <th style="width:60px;">
+                <input id="grnSelectAll" class="grn-checkbox" type="checkbox" aria-label="เลือกทั้งหมด">
+              </th>
+              <th style="width:180px;">SerialCP</th>
+              <th style="width:140px;">Invoice</th>
+              <th style="width:140px;">Material</th>
+              <th>Description</th>
+              <th style="width:140px;">Storage bin</th>
+              <th style="width:160px;">Date</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div id="confirmModal" class="modal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="confirmModalTitle">
+      <div id="confirmModalTitle" class="modal-title">ยืนยันการบันทึก</div>
+      <div id="confirmModalMessage" class="modal-message">
+        ต้องการบันทึกข้อมูลลง Google Sheet ใช่หรือไม่
+      </div>
+      <div class="modal-actions">
+        <button id="confirmSaveBtn" class="btn-serial-primary" type="button">
+          <span class="btn-icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M6 3h9l3 3v15H6z"></path>
+              <rect x="8" y="5" width="6" height="3"></rect>
+              <rect x="8" y="12" width="8" height="7"></rect>
+            </svg>
+          </span>
+          ยืนยัน
+        </button>
+        <button id="cancelSaveBtn" class="btn-serial-outline" type="button">
+          ยกเลิก
+        </button>
+      </div>
+    </div>
   </div>
 
   <!-- QRCode & Barcode libs -->
   <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
 
- <script src="barcode.js"></script>
-
-
+  <script src="barcode.js"></script>
 </body>
 </html>
-
-
