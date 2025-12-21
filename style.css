@@ -1,0 +1,1295 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;700&display=swap');
+
+    :root {
+      --primary: #2563eb;
+      --primary-soft: #e0edff;
+      --bg: #f3f4f8;
+      --card-bg: #ffffff;
+      --border-soft: #e2e8f0;
+      --text-main: #111827;
+      --text-muted: #6b7280;
+      --tab-bg: #ffffff;
+      --tab-active: #2563eb;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+body {
+      font-family: 'Noto Sans Thai', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      margin: 0;
+      padding: 24px;
+      background: radial-gradient(circle at top, #e0ebff 0, #f3f4f8 45%, #f9fafb 100%);
+  color: var(--text-main);
+}
+
+.app-shell.is-hidden {
+  display: none;
+}
+
+.login-gate {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at top, #dbeafe 0, #eef2ff 45%, #f8fafc 100%);
+  z-index: 2600;
+  padding: 24px;
+}
+
+.login-card {
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 24px 28px;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.15);
+  border: 1px solid #e2e8f0;
+  width: min(520px, 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.login-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.login-subtitle {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.login-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.login-input {
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid #d1d5db;
+  font-size: 0.95rem;
+  background: #f9fafb;
+  font-family: inherit;
+}
+
+.login-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+  background: #ffffff;
+}
+
+.login-remember {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.login-btn {
+  margin-top: 4px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: none;
+  background: linear-gradient(120deg, #2563eb, #3b82f6);
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.35);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+}
+
+.login-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 24px rgba(37, 99, 235, 0.45);
+  opacity: 0.95;
+}
+
+.plant-gate {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at top, #dbeafe 0, #eef2ff 45%, #f8fafc 100%);
+  z-index: 2500;
+  padding: 24px;
+}
+
+.plant-card {
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 24px 28px;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.15);
+  border: 1px solid #e2e8f0;
+  width: min(520px, 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.plant-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.plant-subtitle {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.plant-form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.plant-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.plant-select {
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid #d1d5db;
+  font-size: 0.95rem;
+  background: #f9fafb;
+  font-family: inherit;
+}
+
+.plant-select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+  background: #ffffff;
+}
+
+.plant-enter-btn {
+  margin-top: 8px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: none;
+  background: linear-gradient(120deg, #2563eb, #3b82f6);
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.35);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+}
+
+.plant-enter-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 24px rgba(37, 99, 235, 0.45);
+  opacity: 0.95;
+}
+
+.plant-note {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+    .app-shell {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    header.app-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .back-plant-btn {
+      padding: 6px 14px;
+      border-radius: 999px;
+      border: 1px solid #cbd5f5;
+      background: #eef2ff;
+      color: #1e40af;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+
+    .back-plant-btn:hover {
+      background: #dbeafe;
+      transform: translateY(-1px);
+    }
+
+    header.app-header .title-block {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    header.app-header h1 {
+      margin: 0;
+      font-size: 1.4rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    header.app-header .subtitle {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: rgba(37, 99, 235, 0.08);
+      color: var(--primary);
+      font-size: 0.75rem;
+      font-weight: 600;
+      gap: 6px;
+    }
+
+    .badge-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.25);
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      position: relative;
+    }
+
+    .menu-btn {
+      border: 1px solid #cbd5f5;
+      background: #eef2ff;
+      color: #1e40af;
+      border-radius: 16px;
+      padding: 8px 12px;
+      display: inline-flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      font-weight: 600;
+      min-width: 90px;
+      text-align: center;
+      transition: all 0.15s ease;
+    }
+
+    .menu-btn:hover {
+      background: #dbeafe;
+      transform: translateY(-1px);
+    }
+
+    .menu-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #1e3a8a;
+    }
+
+    .menu-caret {
+      font-size: 0.8rem;
+      color: #1e3a8a;
+    }
+
+    .menu-panel {
+      position: absolute;
+      right: 0;
+      top: calc(100% + 8px);
+      background: #ffffff;
+      border-radius: 16px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 16px 40px rgba(15, 23, 42, 0.12);
+      padding: 12px 14px;
+      min-width: 260px;
+      display: none;
+      z-index: 1200;
+    }
+
+    .menu-panel.open {
+      display: block;
+    }
+
+    .menu-panel-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #1e3a8a;
+      margin-bottom: 8px;
+    }
+
+    .menu-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .menu-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 0.8rem;
+    }
+
+    .menu-label {
+      color: var(--text-muted);
+    }
+
+    .menu-value {
+      color: #111827;
+      font-weight: 600;
+      text-align: right;
+    }
+
+    .menu-logout-btn {
+      width: 100%;
+      border: 1px solid #fca5a5;
+      background: #fee2e2;
+      color: #b91c1c;
+      border-radius: 12px;
+      padding: 8px 10px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .menu-logout-btn:hover {
+      background: #fecaca;
+      transform: translateY(-1px);
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 4px;
+      border-radius: 999px;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      margin-bottom: 16px;
+      width: fit-content;
+    }
+
+    .tab-btn {
+      border: none;
+      background: transparent;
+      border-radius: 999px;
+      padding: 6px 16px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.18s ease;
+    }
+
+    .tab-btn span.icon {
+      font-size: 1rem;
+    }
+
+    .tab-btn.active {
+      background: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.35);
+    }
+
+    .tab-panel {
+      display: none;
+    }
+
+    .tab-panel.active {
+      display: block;
+    }
+
+    /* Cards & table (Barcode tab) */
+    .card {
+      background: var(--card-bg);
+      border-radius: 18px;
+      padding: 16px 20px;
+      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.04);
+      border: 1px solid var(--border-soft);
+      margin-bottom: 16px;
+    }
+
+    .card-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+
+    .card-title {
+      font-size: 1rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-title-pill {
+      font-size: 0.75rem;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--primary-soft);
+      color: var(--primary);
+    }
+
+    .status {
+      font-size: 0.8rem;
+      margin-top: 6px;
+      color: var(--text-muted);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      background: #fff;
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    thead {
+      background: linear-gradient(to right, #2563eb, #1d4ed8);
+      color: #fff;
+    }
+
+    th, td {
+      border: 1px solid #e5e7eb;
+      padding: 6px 8px;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+
+    th {
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    td input {
+      width: 100%;
+      box-sizing: border-box;
+      border: none;
+      padding: 4px 6px;
+      font-size: 0.9rem;
+      font-family: inherit;
+    }
+
+    td input[readonly] {
+      background: #f3f4f6;
+      color: #4b5563;
+    }
+
+    tr:nth-child(even) td {
+      background: #f9fafb;
+    }
+
+    .not-found {
+      color: #dc2626;
+      font-size: 0.8rem;
+    }
+
+    #empCodeInput {
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid #d1d5db;
+      min-width: 220px;
+      margin-left: 4px;
+      font-size: 0.9rem;
+    }
+
+    #empCodeInput:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.25);
+    }
+
+    .employee-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-top: 6px;
+      margin-bottom: 4px;
+      font-size: 0.9rem;
+    }
+
+    .print-btn {
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--primary);
+      background: #ffffff;
+      cursor: pointer;
+      margin-left: 6px;
+      font-size: 0.9rem;
+      color: var(--primary);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 10px rgba(37, 99, 235, 0.15);
+      transition: all 0.18s ease;
+    }
+
+    .print-btn:hover {
+      background: var(--primary);
+      color: #ffffff;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 16px rgba(37, 99, 235, 0.25);
+    }
+
+    .print-btn .emoji {
+      font-size: 1rem;
+    }
+
+    /* ปุ่มลบแถว Serial */
+    .delete-btn {
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid #ef4444;
+      background: #fee2e2;
+      color: #b91c1c;
+      font-size: 0.75rem;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .delete-btn:hover {
+      background: #fecaca;
+    }
+
+    /* ========= Serial tab extra UI (Canva-ish) ========= */
+    .serial-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-serial-primary {
+      padding: 8px 16px;
+      border-radius: 999px;
+      border: none;
+      background: linear-gradient(to right, #2563eb, #4f46e5);
+      color: #ffffff;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+    }
+
+    .btn-serial-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 24px rgba(37, 99, 235, 0.45);
+      opacity: 0.95;
+    }
+
+    .btn-serial-outline {
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid #2563eb;
+      background: #eff6ff;
+      color: #1d4ed8;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.15s ease, transform 0.15s ease;
+    }
+
+    .btn-serial-outline:hover {
+      background: #dbeafe;
+      transform: translateY(-1px);
+    }
+
+    .serial-summary-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+      margin-bottom: 6px;
+    }
+
+    .serial-chip {
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(37, 99, 235, 0.06);
+      border: 1px dashed rgba(37, 99, 235, 0.3);
+      font-size: 0.8rem;
+      color: #1e3a8a;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .serial-chip-label {
+      opacity: 0.7;
+    }
+
+    .serial-chip-value {
+      font-weight: 600;
+    }
+
+    /* ========= สไตล์ฉลาก Small 102x30 mm ========= */
+    #printArea {
+      display: none;
+    }
+    .container-small {
+      display: block;
+      width: 106mm;
+    }
+    .sticker-small {
+      width: 106mm;
+      height: 30mm;
+      display: flex;
+      flex-direction: row;
+      background: white;
+      box-sizing: border-box;
+      margin-bottom: 0;
+    }
+    .label-small {
+      width: 53mm;
+      height: 30mm;
+      box-sizing: border-box;
+      padding: 1mm;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border-right: 0.5px solid #ccc;
+    }
+    .label-small:last-child {
+      border-right: none;
+    }
+    .row-small {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      margin-bottom: 1mm;
+    }
+    .qr-small {
+      width: 10mm;
+      height: 10mm;
+      margin-right: 5mm;
+      margin-left: 3mm;
+    }
+    .material-small {
+      font-size: 24px;
+      font-weight: bold;
+      text-align: left;
+      margin: 0;
+      line-height: 1;
+    }
+    .technician-small {
+      font-size: 10px;
+      text-align: left;
+      margin: 0;
+      margin-right: 2mm;
+      line-height: 1;
+    }
+    .department-small {
+      font-size: 10px;
+      text-align: left;
+      margin: 0;
+      margin-right: 2mm;
+      line-height: 1;
+    }
+    .description-small {
+      font-size: 10px;
+      font-weight: bold;
+      text-align: left;
+      line-height: 1.2;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      word-wrap: break-word;
+      margin: 0;
+      margin-left: 2mm;
+    }
+    .location-small {
+      font-size: 12px;
+      font-weight: bold;
+      text-align: left;
+      margin-top: 1px;
+      margin-bottom: 0;
+      line-height: 1.1;
+      margin-left: 2mm;
+    }
+    .lot-line-small {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: bold;
+      margin-top: 0;
+      margin-bottom: 0;
+      line-height: 1.1;
+      margin-left: 2mm;
+      margin-right: 1mm;
+    }
+    .barcode-small {
+      margin-left: 2mm;
+      width: 15mm !important;
+      height: 6mm !important;
+    }
+
+    /* ========= สไตล์ฉลาก Big 80x100 mm ========= */
+    .container-big {
+      display: block;
+      width: 80mm;
+    }
+    .sticker-big {
+      width: 80mm;
+      height: 100mm;
+      display: flex;
+      flex-direction: column;
+      background: white;
+      box-sizing: border-box;
+      margin-bottom: 0;
+      position: relative;
+    }
+    .label-big {
+      width: 80mm;
+      height: 100mm;
+      box-sizing: border-box;
+      padding: 2mm;
+      padding-bottom: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 0;
+      position: relative;
+    }
+    .label-serial-big {
+      justify-content: flex-start;
+      gap: 1mm;
+    }
+    .label-serial-big .row-big {
+      margin-bottom: 1mm;
+    }
+    .label-serial-big .info-block-big {
+      margin-top: 0;
+    }
+    .label-serial-big .description-big {
+      margin-top: 0;
+    }
+    .label-serial-big .bottom-container-big {
+      margin-top: auto;
+    }
+    .row-big {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      margin-bottom: 2mm;
+    }
+    .bottom-container-big {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+    .qr-big {
+      width: 14mm;
+      height: 14mm;
+      margin-right: 2mm;
+      margin-left: 3mm;
+    }
+    .barcode-big {
+      width: 20mm !important;
+      height: 6mm !important;
+      margin-top: 1mm;
+      margin-left: 3mm;
+    }
+    .text-container-big {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-width: 50mm;
+    }
+    .material-big {
+      font-size: 40px;
+      font-weight: bold;
+      text-align: left;
+      margin: 0;
+      line-height: 1.1;
+    }
+    .technician-big {
+      font-size: 16px;
+      text-align: left;
+      margin: 0;
+      line-height: 1.3;
+    }
+    .department-big {
+      font-size: 16px;
+      text-align: left;
+      margin: 0;
+      line-height: 1.3;
+    }
+    .description-big {
+      font-size: 20px;
+      font-weight: bold;
+      text-align: left;
+      line-height: 1.3;
+      width: calc(100% - 4mm);
+      margin: 2mm 0 0 3mm;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      word-wrap: break-word;
+    }
+    .location-big {
+      font-size: 25px;
+      font-weight: bold;
+      text-align: left;
+      margin-top: 0;
+      margin-bottom: 0;
+      line-height: 1.3;
+      margin-left: 3mm;
+    }
+    .lot-line-big {
+      font-size: 20px;
+      font-weight: bold;
+      margin-top: 0;
+      margin-bottom: 0;
+      line-height: 1.3;
+      margin-left: 3mm;
+      margin-right: 2mm;
+    }
+    .center-pack-unit-big {
+      position: absolute;
+      top: 55%;
+      left: 50%;
+      transform: translate(-50%, -30%);
+      font-size: 60px;
+      font-weight: bold;
+      text-align: center;
+      width: 80%;
+      margin: 0;
+      padding: 0;
+      line-height: 1;
+    }
+
+    /* Spinner */
+    .spinner-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+    }
+    .spinner {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #4CAF50;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+    }
+    #spinner { display: none; }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @media print {
+  header.app-header,
+  .tabs,
+  .print-btn,
+  .spinner-container,
+  #appRoot {
+    display: none !important;
+  }
+#tab-barcode {
+    display: block !important;
+  }
+
+  /* ✅ ซ่อน tab Serial ตอน print (ไม่งั้นจะเกะกะกระดาษ) */
+  #tab-serial {
+    display: none !important;
+  }
+      #printArea {
+        display: block !important;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Noto Sans Thai', sans-serif;
+        background: #ffffff;
+      }
+
+      .sticker-small,
+      .sticker-big {
+        page-break-inside: avoid;
+        margin: 0;
+      }
+    }
+.container, .sticker, .label {
+    page-break-inside: avoid;
+  }
+  
+    .delete-row-btn {
+      border: 1px solid #fecaca;
+      background: #fee2e2;
+      color: #b91c1c;
+      border-radius: 999px;
+      padding: 2px 8px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .delete-row-btn:hover {
+      background: #ef4444;
+      color: #ffffff;
+      border-color: #fca5a5;
+    }
+    /* ===== Serial Form UI (จัดการ Serial Number) ===== */
+.serial-form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.serial-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 160px;
+  flex: 1;
+}
+
+.serial-field.serial-wide {
+  flex: 1.5;
+}
+
+.serial-field.serial-narrow {
+  max-width: 200px;
+}
+
+.serial-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.serial-input {
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid #d1d5db;
+  font-size: 0.85rem;
+  background: #f9fafb;
+  transition: all 0.15s ease;
+}
+
+.serial-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  background: #ffffff;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+}
+
+.serial-input[readonly] {
+  background: #f3f4f6;
+  color: #4b5563;
+  font-weight: 500;
+}
+/* ===== ฉลาก Serial 80x100 mm (ใช้ตอน Print Serial) ===== */
+.container {
+  display: block;
+  width: 80mm;
+}
+.sticker {
+  width: 80mm;
+  height: 100mm;
+  display: flex;
+  flex-direction: column;
+  background: white;
+  box-sizing: border-box;
+  margin-bottom: 0;
+  position: relative;
+}
+.label {
+  width: 80mm;
+  height: 100mm;
+  box-sizing: border-box;
+  padding: 2mm;
+  padding-bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0;
+  position: relative;
+}
+.row {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  margin-bottom: 0;   /* เดิม 0.5mm ลดให้ชิด */
+  margin-top: 5mm;
+}
+
+
+
+/* คอลัมน์ซ้าย: QR + Barcode เรียงบน–ล่าง */
+.left-col-serial {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: 3mm;
+  margin-right: 2mm;
+}
+
+/* ทำ QR ให้เล็กลง */
+.qr {
+  width: 12mm;
+  height: 12mm;
+  margin: 0 0 1mm 0;
+}
+
+/* Barcode ใต้ QR ให้พอดีกับความกว้างของ QR */
+.barcode-in-text {
+  width: 12mm !important;
+  height: 6mm !important;
+  margin: 0;
+  background: white;
+}
+
+.text-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 50mm;
+  align-items: flex-end;   /* ชิดขวา */
+  margin-right: 3mm;       /* ระยะจากขอบขวา */
+  margin-top: 0;
+}
+
+.material {
+  font-size: 30px;
+  font-weight: bold;
+  text-align: right;
+  margin: 0;
+  line-height: 1.0;
+}
+
+
+
+.barcode-in-text {
+  width: 100% !important;
+  height: 8mm !important;
+  margin-top: 1mm;
+  background: white;
+}
+
+.description {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: left;
+  line-height: 1.3;
+  width: calc(100% - 3mm);
+  margin: 0 0 0 3mm;   /* 👉 เปลี่ยน margin-left เป็น 3mm, margin-top 0 ให้ชิดใต้ row/barcode */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-wrap: break-word;
+}
+.serial-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 0 0 0 3mm;   /* 👉 เปลี่ยน margin-left เป็น 3mm, margin-top 0 ให้ชิดใต้ description */
+  width: calc(100% - 3mm);
+}
+.serial-info {
+  display: flex;
+  flex-direction: row;    /* 👉 เรียงแนวนอน */
+  align-items: baseline;  /* 👉 ให้ตัวหนังสือสูงใกล้ ๆ กัน */
+  gap: 0px;               /* 👉 เว้นระยะระหว่าง S/N: กับเลข Serial */
+  width: 100%;
+}
+
+.serial-label {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: left;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.serial-text {
+  font-size: 24px;
+  font-weight: bold;
+  text-align: left;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.firstrear-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 1mm 0 0 3mm;
+  width: calc(100% - 4mm);
+}
+.firstrear-label {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: left;
+  margin: 0;
+  line-height: 1.2;
+}
+.firstrear-text {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: left;
+  margin: 0;
+  line-height: 1.2;
+}
+.location {
+  font-size: 25px;
+  font-weight: bold;
+  text-align: left;
+  margin-top: 0;
+  margin-bottom: 0;
+  line-height: 1.3;
+  margin-left: 3mm;
+}
+.lot-line {
+  font-size: 25px;
+  font-weight: bold;
+  margin-top: 0;
+  margin-bottom: 0;
+  line-height: 1.3;
+  margin-left: 3mm;
+  margin-right: 2mm;
+}
+.center-serial-qr {
+  position: absolute;
+  top: 65%;
+  left: 50%;
+  transform: translate(-50%, -30%);
+  width: 15mm;
+  height: 15mm;
+  margin-top: 2mm;
+}
+/* ===== Serial on Big Label (80x100 for Serial) ===== */
+.serial-big {
+  font-size: 18px;
+  font-weight: bold;
+  text-align: left;
+  line-height: 1.2;
+  margin-left: 3mm;
+  margin-top: 1mm;
+  margin-bottom: 0;
+}
+
+.barcode-serial-big {
+  width: 30mm !important;
+  height: 8mm !important;
+  margin-left: 3mm;
+  margin-top: 1mm;
+}
+/* QR Code สำหรับ Serial บนฉลาก Big */
+.qr-serial-big {
+  width: 14mm;
+  height: 14mm;
+  margin-left: 3mm;
+  margin-top: 1mm;
+}
+
+/* แถว S/N บนฉลาก Big */
+.serial-big {
+  font-size: 18px;
+  font-weight: bold;
+  text-align: left;
+  line-height: 1.2;
+  margin-left: 3mm;
+  margin-top: 1mm;
+  margin-bottom: 0;
+}
+/* บล็อกข้อมูล Description + S/N + QR Serial ใต้ Barcode 128 */
+.info-block-big {
+  margin-left: 3mm;
+  margin-right: 3mm;
+  margin-top: 2mm;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;  /* ชิดซ้าย */
+  width: calc(100% - 6mm);  /* กว้างเต็มหน้ากระดาษ ลบ margin ซ้ายขวา */
+}
+
+/* Description เฉพาะในฉลาก Serial ให้กินเต็มบล็อก */
+.info-block-big .description-big {
+  width: 100%;
+  margin: 0 0 1mm 0;
+  text-align: left;
+}
+
+/* แถว S/N บนฉลาก Big */
+.serial-big {
+  font-size: 18px;
+  font-weight: bold;
+  text-align: left;
+  line-height: 1.2;
+  margin: 0 0 1mm 0;
+}
+
+/* QR Code สำหรับ Serial อยู่ใต้ S/N ชิดซ้าย */
+.qr-serial-big {
+  width: 20mm;
+  height: 20mm;
+}
+
