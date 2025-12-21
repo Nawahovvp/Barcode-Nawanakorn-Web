@@ -789,6 +789,7 @@
   const saveSerialBtn      = document.getElementById('saveSerialBtn');
   const printSerialBtn     = document.getElementById('printSerialBtn');
   let serialNextIndex      = 1;
+  const SERIAL_LOCK_MESSAGE = 'กรอก Material ก่อนจึงจะกรอก Serial ในตารางได้';
 
   function getNowString() {
     const now = new Date();
@@ -816,6 +817,24 @@
     }
   }
 
+  function isSerialMaterialReady() {
+    return serialMatInput && serialMatInput.value.trim();
+  }
+
+  function updateSerialTableLock() {
+    if (!serialTableBody) return;
+    const ready = isSerialMaterialReady();
+    const serialInputs = serialTableBody.querySelectorAll('.serial-entry-input');
+    serialInputs.forEach(input => {
+      input.disabled = !ready;
+    });
+    if (!ready && serialStatusEl) {
+      serialStatusEl.textContent = SERIAL_LOCK_MESSAGE;
+    } else if (ready && serialStatusEl && serialStatusEl.textContent === SERIAL_LOCK_MESSAGE) {
+      serialStatusEl.textContent = 'แถวแรกถูกสร้างให้แล้ว กรอก Serial แล้วกด Enter เพื่อสร้างแถวถัดไป';
+    }
+  }
+
   if (serialInvoiceInput) {
     serialInvoiceInput.addEventListener('input', updateSerialSummary);
   }
@@ -825,10 +844,11 @@
     if (!mat) {
       serialDescInput.value = '';
       serialBinInput.value  = '';
-      serialTopStatus.textContent = 'กรอก Material เพื่อดึง Description / Storage bin จากฐานข้อมูล';
-      updateSerialSummary();
-      return;
-    }
+    serialTopStatus.textContent = 'กรอก Material เพื่อดึง Description / Storage bin จากฐานข้อมูล';
+    updateSerialSummary();
+    updateSerialTableLock();
+    return;
+  }
 
     const normalized = normalizeMaterialCode(mat);
     serialMatInput.value = normalized;
@@ -840,6 +860,7 @@
       serialTopStatus.innerHTML =
         `<span class="not-found">ไม่พบ Material หรือไม่มี Description: ${normalized}</span>`;
       updateSerialSummary();
+      updateSerialTableLock();
       return;
     }
 
@@ -847,6 +868,7 @@
     serialBinInput.value  = info.storageBin || '';
     serialTopStatus.textContent = '';
     updateSerialSummary();
+    updateSerialTableLock();
   }
 
   let serialMatTimer = null;
@@ -886,7 +908,9 @@
     const tdSerial = document.createElement('td');
     const inputSerial = document.createElement('input');
     inputSerial.type = 'text';
+    inputSerial.className = 'serial-entry-input';
     inputSerial.placeholder = 'กรอก Serial แล้วกด Enter';
+    inputSerial.disabled = !isSerialMaterialReady();
     tdSerial.appendChild(inputSerial);
     tr.appendChild(tdSerial);
 
@@ -999,6 +1023,7 @@
     serialTableBody.appendChild(tr);
     inputSerial.focus();
     updateSerialSummary();
+    updateSerialTableLock();
   }
 
   function reindexSerialRows() {
@@ -1522,4 +1547,3 @@
       handleLogin();
     }
   });
-

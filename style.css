@@ -637,6 +637,10 @@ body {
       transition: background 0.15s ease, transform 0.15s ease;
     }
 
+    #printSerialBtn {
+      margin-top: 10px;
+    }
+
     .btn-serial-outline:hover {
       background: #dbeafe;
       transform: translateY(-1px);
@@ -803,6 +807,7 @@ body {
     .label-serial-big {
       justify-content: flex-start;
       gap: 1mm;
+      padding-top: calc(2mm + 10mm);
     }
     .label-serial-big .row-big {
       margin-bottom: 1mm;
@@ -1292,4 +1297,3 @@ body {
   width: 20mm;
   height: 20mm;
 }
-
