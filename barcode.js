@@ -1,5 +1,8 @@
 ﻿// ==== ระบบสลับแท็บ ====
   const tabButtons = document.querySelectorAll('.tab-btn');
+  const barcodeTabBtn = document.querySelector('[data-tab="barcode"]');
+  const serialTabBtn = document.querySelector('[data-tab="serial"]');
+  const grnTabBtn = document.querySelector('[data-tab="grn"]');
   const tabPanels  = {
     barcode: document.getElementById('tab-barcode'),
     serial:  document.getElementById('tab-serial'),
@@ -1874,6 +1877,7 @@
 
     selectedPlant = plant;
     dataUrl = PLANT_URLS[plant];
+    updateTabAvailability();
 
     if (badgeText) {
       badgeText.textContent = `โหมดทำงาน: Barcode (${selectedPlant})`;
@@ -1883,6 +1887,24 @@
     if (appShell) appShell.classList.remove('is-hidden');
 
     startApp();
+  }
+
+  function updateTabAvailability() {
+    const showSerialAndGrn = selectedPlant === '0301';
+
+    if (serialTabBtn) serialTabBtn.style.display = showSerialAndGrn ? '' : 'none';
+    if (grnTabBtn) grnTabBtn.style.display = showSerialAndGrn ? '' : 'none';
+
+    if (tabPanels.serial) tabPanels.serial.style.display = showSerialAndGrn ? '' : 'none';
+    if (tabPanels.grn) tabPanels.grn.style.display = showSerialAndGrn ? '' : 'none';
+
+    if (!showSerialAndGrn && tabPanels.barcode && barcodeTabBtn) {
+      tabButtons.forEach(b => b.classList.remove('active'));
+      barcodeTabBtn.classList.add('active');
+      Object.keys(tabPanels).forEach(key => {
+        tabPanels[key].classList.toggle('active', key === 'barcode');
+      });
+    }
   }
 
   async function startApp() {
@@ -1903,6 +1925,7 @@
     partsMap = new Map();
     nextIndex = 1;
     serialNextIndex = 1;
+    updateTabAvailability();
 
     if (tableBody) tableBody.innerHTML = '';
     if (serialTableBody) serialTableBody.innerHTML = '';
@@ -1949,6 +1972,7 @@
   if (loginGate) loginGate.style.display = 'flex';
   if (plantGate) plantGate.style.display = 'none';
   setMenuUserInfo(null);
+  updateTabAvailability();
 
   if (menuBtn && menuPanel) {
     menuBtn.addEventListener('click', (event) => {
